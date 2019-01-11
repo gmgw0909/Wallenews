@@ -1,31 +1,31 @@
 package com.pipnet.wallenews.http.service;
 
-import com.pipnet.wallenews.bean.UserLogin;
-import com.pipnet.wallenews.bean.WeatherInfo;
-import com.pipnet.wallenews.bean.response.ResponseObject;
+import com.pipnet.wallenews.bean.response.Response;
 
 import io.reactivex.Flowable;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
- * Created by mzb on 2017/8/20.
+ * Created by LeeBoo on 2019/1/11.
  * 网络访问的接口
  */
 
 public interface ServiceInterface {
 
     /**
+     * 获取验证码
+     */
+    @GET("register/message/sendMobileCode")
+    Flowable<Response> sendMobileCode(@Query("mobile") String mobile);
+
+    /**
      * ⼿机快速登录
      */
-    @POST("user/login")
-    Flowable<ResponseObject<UserLogin>> login(@Header("mobile") String mobileHeader,
-                                              @Header("token") String tokeHeader,
-                                              @Body RequestBody route);
-    @GET("adat/sk/{cityId}.html")
-    Flowable<WeatherInfo> getWeatherInfo(@Path("cityId") String cityId);
+    @POST("login")
+    Flowable<Response> login(@Body RequestBody body);
+
 }

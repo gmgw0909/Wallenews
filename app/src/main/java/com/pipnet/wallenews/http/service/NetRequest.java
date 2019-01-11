@@ -1,15 +1,22 @@
 package com.pipnet.wallenews.http.service;
 
-import com.pipnet.wallenews.bean.WeatherInfo;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.RetrofitManager;
 
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 /**
  * Created by LeeBoo on 2017/8/18.
@@ -18,16 +25,44 @@ import io.reactivex.schedulers.Schedulers;
 public class NetRequest {
 
     /**
-     * test(api)
+     * 获取验证码
      */
-    public static void test(String cityId, Subscriber<WeatherInfo> subscriber) {
-        toSubscriber(RetrofitManager.getInstance().getServiceInterface().getWeatherInfo(cityId), subscriber);
+    public static void sendMobileCode(String phone, Subscriber<Response> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().sendMobileCode(phone), subscriber);
+    }
+
+    /**
+     * 验证码登陆
+     * username:VerificationCode:<手机号码>
+     * password:<短信验证码>
+     * rememberMe:true
+     * loginBackUrl:/myspace/me
+     */
+    public static void login(String phone, String verCode, Subscriber<Response> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("username", phone);
+        map.put("password", verCode);
+        map.put("rememberMe", true);
+        map.put("loginBackUrl", "/myspace/me");
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().login(getRequestBody(map)), subscriber);
+    }
+
+    //======================================================上面是所有后台接口=========================================================
+
+    /**
+     * 抽象调度者
+     */
+    private static <T> void toSubscriber(Flowable<T> flowable, Subscriber<T> subscriber) {
+        flowable.compose(NetRequest.<T>rxSchedulerTransformer())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
     }
 
     /**
      * 统一线程处理
      */
-    public static <T> FlowableTransformer<T, T> rxSchedulerTransformer() {
+    private static <T> FlowableTransformer<T, T> rxSchedulerTransformer() {
         return new FlowableTransformer<T, T>() {
             @Override
             public Publisher<T> apply(Flowable<T> upstream) {
@@ -39,12 +74,12 @@ public class NetRequest {
     }
 
     /**
-     * 抽象调度者
+     * 处理请求数据为RequestBody
      */
-    public static <T> void toSubscriber(Flowable<T> flowable, Subscriber<T> subscriber) {
-        flowable.compose(NetRequest.<T>rxSchedulerTransformer())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(subscriber);
+    private static RequestBody getRequestBody(Map<String, Object> map) {
+        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),
+                gson.toJson(map));
+        return body;
     }
 }

@@ -8,11 +8,14 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Response {
 
-    @SerializedName("code")
+    @SerializedName("errorCode")
     public String code;
 
-    @SerializedName("message")
+    @SerializedName("errorMsg")
     public String msg;
 
+    public String status;
+
+    public String success;
 
 }
