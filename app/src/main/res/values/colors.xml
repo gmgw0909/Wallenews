@@ -9,10 +9,14 @@
     <color name="text_333">#333333</color>
     <color name="text_666">#666666</color>
     <color name="text_999">#999999</color>
+    <color name="text_tab_normal">#647686</color>
+    <color name="text_tab_blue">#1c9df3</color>
 
     <color name="line_light">#f2f2f2</color>
     <color name="line_normal">#c2c2c2</color>
     <color name="line_dark">#a3a3a3</color>
 
     <color name="blue">#3399ff</color>
+
+    <color name="background">#F5F5F5</color>
 </resources>

@@ -1,7 +1,7 @@
 package com.pipnet.wallenews.http;
 
 import com.pipnet.wallenews.http.interceptor.HeaderInterceptor;
-import com.pipnet.wallenews.http.interceptor.LoggingInterceptor;
+import com.pipnet.wallenews.http.interceptor.HttpLoggingInterceptor;
 import com.pipnet.wallenews.http.interceptor.RewriteCacheControlInterceptor;
 import com.pipnet.wallenews.http.service.ServiceInterface;
 
@@ -27,7 +27,9 @@ public final class RetrofitManager {
         builder.connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         builder.addNetworkInterceptor(RewriteCacheControlInterceptor.getInstance());
         builder.addInterceptor(HeaderInterceptor.getInstance());//设置请求头
-        builder.addInterceptor(LoggingInterceptor.getInstance());//打印日志(放最后)
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        builder.addInterceptor(httpLoggingInterceptor);//打印日志(放最后)
         //Retrofit
         retrofit = new Retrofit.Builder()
                 .client(builder.build())

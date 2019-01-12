@@ -28,6 +28,7 @@ public class HeaderInterceptor implements Interceptor {
         Request original = chain.request();
         Request request = original.newBuilder()
                 .header("Accept", "application/json")
+                .header("Content-Type", "application/x-www-form-urlencoded")
                 .method(original.method(), original.body())
                 .build();
         return chain.proceed(request);

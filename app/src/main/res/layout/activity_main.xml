@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <FrameLayout
+        android:id="@+id/frame_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/frameMenu"
+        android:layout_alignParentTop="true" />
+
+    <FrameLayout
+        android:id="@+id/frameMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:background="#59cccccc"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/llHome"
+                style="@style/home_bottom_tab_item_layout">
+
+                <ImageView
+                    android:id="@+id/ivHome"
+                    style="@style/home_bottom_tab_image"
+                    android:src="@mipmap/tab_icon_zy_s" />
+
+                <TextView
+                    android:id="@+id/tvHome"
+                    style="@style/home_bottom_tab_text"
+                    android:text="瓦砾"
+                    android:textColor="@color/text_tab_blue" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llFind"
+                style="@style/home_bottom_tab_item_layout">
+
+                <ImageView
+                    android:id="@+id/ivFind"
+                    style="@style/home_bottom_tab_image"
+                    android:src="@mipmap/tab_icon_ss_d" />
+
+                <TextView
+                    android:id="@+id/tvFind"
+                    style="@style/home_bottom_tab_text"
+                    android:text="发现" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llMessage"
+                style="@style/home_bottom_tab_item_layout">
+
+                <ImageView
+                    android:id="@+id/ivMessage"
+                    style="@style/home_bottom_tab_image"
+                    android:src="@mipmap/tab_icon_xx_d" />
+
+                <TextView
+                    android:id="@+id/tvMessage"
+                    style="@style/home_bottom_tab_text"
+                    android:text="消息" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/llMy"
+                style="@style/home_bottom_tab_item_layout">
+
+                <ImageView
+                    android:id="@+id/ivMy"
+                    style="@style/home_bottom_tab_image"
+                    android:src="@mipmap/tab_icon_wd_d" />
+
+                <TextView
+                    android:id="@+id/tvMy"
+                    style="@style/home_bottom_tab_text"
+                    android:text="我的" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/line_dark" />
+    </FrameLayout>
+
+</RelativeLayout>

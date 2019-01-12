@@ -1,5 +1,6 @@
 package com.pipnet.wallenews.module.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
@@ -9,9 +10,11 @@ import android.widget.TextView;
 
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.base.BaseActivity;
+import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
+import com.pipnet.wallenews.module.MainActivity;
 import com.pipnet.wallenews.util.CheckUtils;
 import com.pipnet.wallenews.util.ToastUtil;
 import com.pipnet.wallenews.widgets.ClearEditText;
@@ -74,8 +77,10 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onNext(Response response) {
                 ToastUtil.show(response.msg);
-                btnGetCode.setEnabled(false);
-                myCount.start();
+                if (response.success) {
+                    btnGetCode.setEnabled(false);
+                    myCount.start();
+                }
             }
         });
     }
@@ -107,10 +112,16 @@ public class LoginActivity extends BaseActivity {
             etCode.requestFocus();
             return;
         }
-        NetRequest.login(phone, code, new BaseSubscriber<Response>() {
+        NetRequest.login("VerificationCode:" + phone, code, new BaseSubscriber<LoginInfo>() {
             @Override
-            public void onNext(Response response) {
-
+            public void onNext(LoginInfo info) {
+                if (!TextUtils.isEmpty(info.status) && info.status.equals("OK")) {
+                    //登录成功
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
+                } else {
+                    ToastUtil.show(info.error);
+                }
             }
         });
     }

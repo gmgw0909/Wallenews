@@ -8,7 +8,6 @@ import android.view.WindowManager;
 
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.base.BaseActivity;
-import com.pipnet.wallenews.module.login.LoginActivity;
 
 public class SplashActivity extends BaseActivity {
 
@@ -22,7 +21,8 @@ public class SplashActivity extends BaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                finish();
             }
         }, 2000);
     }

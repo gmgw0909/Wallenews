@@ -14,8 +14,11 @@ public class Response {
     @SerializedName("errorMsg")
     public String msg;
 
+    @SerializedName("error")
+    public String error;
+
     public String status;
 
-    public String success;
+    public boolean success;
 
 }

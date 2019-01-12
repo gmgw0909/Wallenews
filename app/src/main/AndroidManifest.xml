@@ -27,6 +27,7 @@
         </activity>
 
         <activity android:name=".module.login.LoginActivity" />
+        <activity android:name=".module.MainActivity" />
     </application>
 
 </manifest>

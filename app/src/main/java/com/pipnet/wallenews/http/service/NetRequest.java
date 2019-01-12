@@ -2,13 +2,13 @@ package com.pipnet.wallenews.http.service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.RetrofitManager;
 
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import io.reactivex.Flowable;
@@ -38,13 +38,8 @@ public class NetRequest {
      * rememberMe:true
      * loginBackUrl:/myspace/me
      */
-    public static void login(String phone, String verCode, Subscriber<Response> subscriber) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("username", phone);
-        map.put("password", verCode);
-        map.put("rememberMe", true);
-        map.put("loginBackUrl", "/myspace/me");
-        toSubscriber(RetrofitManager.getInstance().getServiceInterface().login(getRequestBody(map)), subscriber);
+    public static void login(String phone, String verCode, Subscriber<LoginInfo> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().login(phone, verCode, true, "/myspace/me"), subscriber);
     }
 
     //======================================================上面是所有后台接口=========================================================
@@ -74,7 +69,7 @@ public class NetRequest {
     }
 
     /**
-     * 处理请求数据为RequestBody
+     * 处理请求数据为json格式
      */
     private static RequestBody getRequestBody(Map<String, Object> map) {
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
