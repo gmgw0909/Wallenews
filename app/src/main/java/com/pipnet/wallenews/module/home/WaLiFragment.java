@@ -1,25 +1,21 @@
 package com.pipnet.wallenews.module.home;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.pipnet.wallenews.R;
-import com.pipnet.wallenews.base.BaseFragment;
-
-import butterknife.ButterKnife;
+import com.pipnet.wallenews.base.LazyFragment;
 
 /**
  * Created by LeeBoo on 2019/1/12.
  */
 
-public class WaLiFragment extends BaseFragment {
+public class WaLiFragment extends LazyFragment {
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_wali, null);
-        ButterKnife.bind(this, view);
-        return view;
+    protected int setContentView() {
+        return R.layout.fragment_wali;
+    }
+
+    @Override
+    protected void lazyLoad() {
+
     }
 }
