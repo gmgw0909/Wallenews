@@ -27,7 +27,9 @@
         </activity>
 
         <activity android:name=".module.login.LoginActivity" />
+        <activity android:name=".module.login.BindPhoneActivity" />
         <activity android:name=".module.MainActivity" />
+        <activity android:name=".module.WebViewActivity" />
     </application>
 
 </manifest>

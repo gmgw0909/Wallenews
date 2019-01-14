@@ -1,6 +1,8 @@
 package com.pipnet.wallenews.module.home;
 
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.view.View;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.adapter.WaLiAdapter;
+import com.pipnet.wallenews.adapter.WaLiHeaderAdapter;
 import com.pipnet.wallenews.base.LazyFragment;
 import com.pipnet.wallenews.bean.PageList;
 import com.pipnet.wallenews.bean.response.Response;
@@ -39,8 +42,21 @@ public class WaLiFragment extends LazyFragment implements IRefreshPage, BaseQuic
 
     @Override
     protected void lazyLoad() {
+        List<Response> list = new ArrayList<>();
+        list.add(new Response());
+        list.add(new Response());
+        list.add(new Response());
+        list.add(new Response());
+        list.add(new Response());
+        list.add(new Response());
+        list.add(new Response());
+
         View header = LayoutInflater.from(getActivity()).inflate(R.layout.header_wali, null);
         RecyclerView headerRV = header.findViewById(R.id.recycler_header);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(OrientationHelper.HORIZONTAL);
+        headerRV.setLayoutManager(layoutManager);
+        headerRV.setAdapter(new WaLiHeaderAdapter(list));
         refreshLoadMoreHelper = new RefreshLoadMoreHelper<>(this, refreshLayout, recyclerView, WaLiAdapter.class);
         refreshLoadMoreHelper.getAdapter().addHeaderView(header);
         refreshLoadMoreHelper.setOnItemClickListener(this);
