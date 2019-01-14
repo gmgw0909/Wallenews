@@ -1,7 +1,6 @@
 package com.pipnet.wallenews.module.login;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.view.View;
@@ -21,7 +20,6 @@ import com.pipnet.wallenews.util.ToastUtil;
 import com.pipnet.wallenews.widgets.ClearEditText;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginActivity extends BaseActivity {
@@ -36,10 +34,12 @@ public class LoginActivity extends BaseActivity {
     MyCount myCount;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
+    public int setContentView() {
+        return R.layout.activity_login;
+    }
+
+    @Override
+    public void initViewData() {
         etPhone.setText("17521506239");
         etCode.setText("452361");
     }

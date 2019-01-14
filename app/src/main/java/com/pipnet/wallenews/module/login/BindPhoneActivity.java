@@ -1,6 +1,5 @@
 package com.pipnet.wallenews.module.login;
 
-import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.view.View;
@@ -17,7 +16,6 @@ import com.pipnet.wallenews.util.ToastUtil;
 import com.pipnet.wallenews.widgets.ClearEditText;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class BindPhoneActivity extends BaseActivity {
@@ -32,10 +30,12 @@ public class BindPhoneActivity extends BaseActivity {
     MyCount myCount;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bind_phone);
-        ButterKnife.bind(this);
+    public int setContentView() {
+        return R.layout.activity_bind_phone;
+    }
+
+    @Override
+    public void initViewData() {
     }
 
     @OnClick({R.id.btn_get_code, R.id.btn_bind})

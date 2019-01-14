@@ -3,15 +3,15 @@ package com.pipnet.wallenews.module;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.pipnet.wallenews.R;
-import com.pipnet.wallenews.base.BaseActivity;
 import com.pipnet.wallenews.module.login.LoginActivity;
 import com.pipnet.wallenews.util.SPUtils;
 
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

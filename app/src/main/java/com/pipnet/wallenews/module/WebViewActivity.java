@@ -3,37 +3,41 @@ package com.pipnet.wallenews.module;
 import android.annotation.SuppressLint;
 import android.net.http.SslError;
 import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.base.BaseActivity;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class WebViewActivity extends BaseActivity {
 
     @BindView(R.id.web)
     WebView webView;
+    @BindView(R.id.title)
+    TextView tv_title;
 
     public static final String KEY_TITLE = "title";
     public static final String KEY_URL = "url";
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_web_view);
-        ButterKnife.bind(this);
+    public int setContentView() {
+        return R.layout.activity_web_view;
+    }
+
+    @Override
+    public void initViewData() {
         initWebSettings();
         initWebClient();
         String title = getIntent().getStringExtra(KEY_TITLE);
+        tv_title.setText(title);
         String url = getIntent().getStringExtra(KEY_URL);
         webView.loadUrl(url);
     }
@@ -80,5 +84,10 @@ public class WebViewActivity extends BaseActivity {
                 handler.proceed();
             }
         };
+    }
+
+    @OnClick(R.id.btn_left)
+    public void onViewClicked() {
+        finish();
     }
 }

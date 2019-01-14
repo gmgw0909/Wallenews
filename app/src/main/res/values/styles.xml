@@ -34,4 +34,13 @@
         <item name="android:layout_centerHorizontal">true</item>
     </style>
 
+    <style name="SwitchCompat" parent="Theme.AppCompat.Light">
+
+        <item name="colorControlActivated">#00000000</item>
+
+        <item name="colorSwitchThumbNormal">#00000000</item>
+
+        <item name="android:colorForeground">#00000000</item>
+    </style>
+
 </resources>

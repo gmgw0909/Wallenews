@@ -10,7 +10,6 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.bean.LoginInfo;
-import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.module.WebViewActivity;
 
 import java.util.List;
@@ -33,9 +32,11 @@ public class MineGridAdapter extends BaseQuickAdapter<LoginInfo.PropertiesBean, 
         helper.getView(R.id.item).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContext.startActivity(new Intent(mContext, WebViewActivity.class)
-                        .putExtra(WebViewActivity.KEY_TITLE, item.name)
-                        .putExtra(WebViewActivity.KEY_URL, item.url));
+                if (!TextUtils.isEmpty(item.name)) {
+                    mContext.startActivity(new Intent(mContext, WebViewActivity.class)
+                            .putExtra(WebViewActivity.KEY_TITLE, item.name)
+                            .putExtra(WebViewActivity.KEY_URL, item.url));
+                }
             }
         });
     }

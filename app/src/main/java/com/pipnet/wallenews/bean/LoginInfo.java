@@ -35,6 +35,7 @@ public class LoginInfo{
     public String uid;
     public int userId;
     public String userName;
+    public String avatar;
     public List<PropertiesBean> properties;
 
     public static class PropertiesBean {

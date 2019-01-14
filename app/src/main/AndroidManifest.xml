@@ -30,6 +30,8 @@
         <activity android:name=".module.login.BindPhoneActivity" />
         <activity android:name=".module.MainActivity" />
         <activity android:name=".module.WebViewActivity" />
+        <activity android:name=".module.mine.EditActivity" />
+        <activity android:name=".module.mine.SettingActivity" />
     </application>
 
 </manifest>
