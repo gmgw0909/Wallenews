@@ -41,7 +41,6 @@ public class WaLiFragment extends LazyFragment implements IRefreshPage, BaseQuic
     protected void lazyLoad() {
         View header = LayoutInflater.from(getActivity()).inflate(R.layout.header_wali, null);
         RecyclerView headerRV = header.findViewById(R.id.recycler_header);
-        
         refreshLoadMoreHelper = new RefreshLoadMoreHelper<>(this, refreshLayout, recyclerView, WaLiAdapter.class);
         refreshLoadMoreHelper.getAdapter().addHeaderView(header);
         refreshLoadMoreHelper.setOnItemClickListener(this);
