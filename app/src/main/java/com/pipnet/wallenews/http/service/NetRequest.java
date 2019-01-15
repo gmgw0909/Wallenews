@@ -9,6 +9,7 @@ import com.pipnet.wallenews.http.RetrofitManager;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 
+import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Flowable;
@@ -16,7 +17,9 @@ import io.reactivex.FlowableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.http.Part;
 
 /**
  * Created by LeeBoo on 2017/8/18.
@@ -40,6 +43,20 @@ public class NetRequest {
      */
     public static void login(String phone, String verCode, Subscriber<LoginInfo> subscriber) {
         toSubscriber(RetrofitManager.getInstance().getServiceInterface().login(phone, verCode, true, "/myspace/me"), subscriber);
+    }
+
+    /**
+     * 上传图片
+     */
+    public static void uploadImg(List<MultipartBody.Part> parts, Subscriber<Response> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().uploadImg(parts), subscriber);
+    }
+
+    /**
+     * 修改用户信息 头像 昵称 个人简介
+     */
+    public static void modify(String uid, Map<String, String> map, Subscriber<Response> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().modify(uid, map), subscriber);
     }
 
     //======================================================上面是所有后台接口=========================================================

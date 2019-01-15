@@ -10,8 +10,12 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.base.BaseActivity;
+import com.pipnet.wallenews.bean.response.Response;
+import com.pipnet.wallenews.http.service.NetRequest;
+import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
 import com.pipnet.wallenews.matisse.GifSizeFilter;
 import com.pipnet.wallenews.matisse.Glide4Engine;
+import com.pipnet.wallenews.util.FileUtils;
 import com.pipnet.wallenews.util.ToastUtil;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.zhihu.matisse.Matisse;
@@ -19,12 +23,16 @@ import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.filter.Filter;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
+import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 /**
  * Created by LeeBoo on 2019/1/14.
@@ -71,14 +79,12 @@ public class EditActivity extends BaseActivity {
         }
     }
 
-    List<Uri> mSelected;
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
-            mSelected = Matisse.obtainResult(data);
-            Log.d("Matisse", "mSelected: " + mSelected);
+            String path = Matisse.obtainPathResult(data).get(0);
+            upLoadImg(FileUtils.imageToBase64(path));
         }
     }
 
@@ -124,5 +130,20 @@ public class EditActivity extends BaseActivity {
 
                     }
                 });
+    }
+
+    private void upLoadImg(String path) {
+        File file = new File(path);
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM);
+        RequestBody photoRequestBody = RequestBody.create(MediaType.parse("image/png"), file);
+        builder.addFormDataPart("file[]", "avatar.png", photoRequestBody);
+        List<MultipartBody.Part> parts = builder.build().parts();
+        NetRequest.uploadImg(parts, new BaseSubscriber<Response>() {
+            @Override
+            public void onNext(Response response) {
+
+            }
+        });
     }
 }
