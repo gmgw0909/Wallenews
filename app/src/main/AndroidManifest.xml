@@ -31,7 +31,23 @@
         <activity android:name=".module.MainActivity" />
         <activity android:name=".module.WebViewActivity" />
         <activity android:name=".module.mine.EditActivity" />
+        <activity android:name=".module.mine.EditNameActivity" />
+        <activity android:name=".module.mine.EditIntroActivity" />
         <activity android:name=".module.mine.SettingActivity" />
+        <activity android:name=".module.mine.AboutActivity" />
+        <activity android:name=".module.mine.ModifyPhoneActivity" />
+        <activity android:name=".module.mine.FollowingActivity" />
+        <activity android:name=".module.mine.FollowerActivity" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.pipnet.wallenews.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths_public" />
+        </provider>
     </application>
 
 </manifest>

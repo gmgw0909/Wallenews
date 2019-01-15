@@ -17,10 +17,26 @@
     <TextView
         android:id="@+id/btn_left"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerVertical="true"
         android:drawableLeft="@mipmap/icon_fh"
-        android:padding="16dp" />
+        android:gravity="center"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textColor="@color/text_333"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/btn_right"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textColor="@color/text_333"
+        android:textSize="14sp" />
 
     <View
         android:layout_width="match_parent"

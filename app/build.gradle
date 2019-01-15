@@ -42,4 +42,8 @@ dependencies {
     // RecyclerView
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
     implementation 'com.github.arvinljw:ItemDecorationHelper:v1.0.1'
+    // Matisse
+    implementation 'com.zhihu.android:matisse:0.5.2-beta4'
+    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
 }

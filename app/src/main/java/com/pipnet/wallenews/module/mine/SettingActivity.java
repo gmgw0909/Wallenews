@@ -1,5 +1,6 @@
 package com.pipnet.wallenews.module.mine;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -39,10 +40,13 @@ public class SettingActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.rl_edit:
+                startActivity(new Intent(SettingActivity.this, EditActivity.class));
                 break;
             case R.id.rl_phone:
+                startActivity(new Intent(SettingActivity.this, ModifyPhoneActivity.class));
                 break;
             case R.id.rl_about:
+                startActivity(new Intent(SettingActivity.this, AboutActivity.class));
                 break;
             case R.id.btn_logout:
                 SPUtils.clear();

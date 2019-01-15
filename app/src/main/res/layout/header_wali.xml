@@ -11,6 +11,8 @@
         android:layout_marginBottom="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:text="置顶话题"
         android:textColor="@color/text_333"
         android:textSize="17sp" />
