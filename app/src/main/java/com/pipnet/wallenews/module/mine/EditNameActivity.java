@@ -1,10 +1,19 @@
 package com.pipnet.wallenews.module.mine;
 
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.base.BaseActivity;
+import com.pipnet.wallenews.bean.LoginInfo;
+import com.pipnet.wallenews.bean.response.Response;
+import com.pipnet.wallenews.http.service.NetRequest;
+import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
+import com.pipnet.wallenews.util.SPUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -21,6 +30,8 @@ public class EditNameActivity extends BaseActivity {
     TextView btnLeft;
     @BindView(R.id.btn_right)
     TextView btnRight;
+    @BindView(R.id.et_name)
+    EditText etName;
 
     @Override
     public int setContentView() {
@@ -42,9 +53,20 @@ public class EditNameActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.btn_right:
-
+                editName();
                 break;
         }
+    }
+
+    private void editName() {
+        Map<String, String> map = new HashMap<>();
+        map.put("userUUID", etName.getText().toString());
+        NetRequest.modify(SPUtils.getObject(LoginInfo.class).uid, map, new BaseSubscriber<Response>() {
+            @Override
+            public void onNext(Response response) {
+
+            }
+        });
     }
 
 }

@@ -33,6 +33,7 @@ public class LoginInfo{
     public String status;
     public String error;
     public String uid;
+    public String rememberMe;
     public int userId;
     public String userName;
     public String avatar;

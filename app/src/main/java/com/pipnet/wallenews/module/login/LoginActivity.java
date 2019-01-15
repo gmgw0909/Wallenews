@@ -117,7 +117,7 @@ public class LoginActivity extends BaseActivity {
             return;
         }
         //"VerificationCode:" +
-        NetRequest.login(phone, code, new BaseSubscriber<LoginInfo>() {
+        NetRequest.login("VerificationCode:" +phone, code, new BaseSubscriber<LoginInfo>() {
             @Override
             public void onNext(LoginInfo info) {
                 if (!TextUtils.isEmpty(info.status) && info.status.equals("OK")) {

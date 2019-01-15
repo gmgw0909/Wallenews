@@ -49,7 +49,7 @@ public class SettingActivity extends BaseActivity {
                 startActivity(new Intent(SettingActivity.this, AboutActivity.class));
                 break;
             case R.id.btn_logout:
-                SPUtils.clear();
+                SPUtils.setBoolean("isLogin",false);
                 break;
         }
     }

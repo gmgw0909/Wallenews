@@ -1,8 +1,9 @@
 package com.pipnet.wallenews.http;
 
+import com.pipnet.wallenews.http.interceptor.AddCookiesInterceptor;
 import com.pipnet.wallenews.http.interceptor.HeaderInterceptor;
 import com.pipnet.wallenews.http.interceptor.HttpLoggingInterceptor;
-import com.pipnet.wallenews.http.interceptor.RewriteCacheControlInterceptor;
+import com.pipnet.wallenews.http.interceptor.ReceivedCookiesInterceptor;
 import com.pipnet.wallenews.http.service.ServiceInterface;
 
 import java.util.concurrent.TimeUnit;
@@ -25,11 +26,13 @@ public final class RetrofitManager {
         //OkHttpClient.Builder
         builder = new OkHttpClient.Builder();
         builder.connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        builder.addNetworkInterceptor(RewriteCacheControlInterceptor.getInstance());
+//        builder.addNetworkInterceptor(RewriteCacheControlInterceptor.getInstance());
         builder.addInterceptor(HeaderInterceptor.getInstance());//设置请求头
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         builder.addInterceptor(httpLoggingInterceptor);//打印日志(放最后)
+        builder.addInterceptor(new AddCookiesInterceptor());
+        builder.addInterceptor(new ReceivedCookiesInterceptor());
         //Retrofit
         retrofit = new Retrofit.Builder()
                 .client(builder.build())
