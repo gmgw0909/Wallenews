@@ -71,7 +71,6 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
-            android:text="LeeBoo"
             android:textColor="@color/text_999" />
 
         <ImageView
@@ -110,7 +109,6 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
-            android:text="暂无简介"
             android:textColor="@color/text_999" />
 
         <ImageView

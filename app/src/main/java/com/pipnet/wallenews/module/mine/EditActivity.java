@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.base.BaseActivity;
+import com.pipnet.wallenews.base.Constans;
 import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.bean.UploadResponse;
 import com.pipnet.wallenews.bean.response.Response;
@@ -24,6 +25,10 @@ import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.filter.Filter;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.HashMap;
@@ -64,8 +69,20 @@ public class EditActivity extends BaseActivity {
 
     @Override
     public void initViewData() {
+        EventBus.getDefault().register(this);
         title.setText("编辑个人资料");
         info = SPUtils.getObject(LoginInfo.class);
+        initUserInfo(info);
+    }
+
+    private void initUserInfo(LoginInfo info) {
+        tvName.setText(TextUtils.isEmpty(info.nickName) ? "" : info.nickName);
+        tvIntro.setText(TextUtils.isEmpty(info.introduction) ? "" : info.introduction);
+        if (!TextUtils.isEmpty(info.avatar)) {
+            avatar.setImageURI(info.avatar);
+        } else {
+            avatar.setImageResource(R.mipmap.default_avatar);
+        }
     }
 
     @OnClick({R.id.btn_left, R.id.rl_avatar, R.id.rl_name, R.id.intro})
@@ -161,7 +178,7 @@ public class EditActivity extends BaseActivity {
     private void modifyAvatar(final String url) {
         Map<String, String> map = new HashMap<>();
         map.put("image", url);
-        NetRequest.modify(info.uid, map, new BaseSubscriber<Response>() {
+        NetRequest.modify(info.userId + "", map, new BaseSubscriber<Response>() {
             @Override
             public void onNext(Response response) {
                 if (!TextUtils.isEmpty(response.status) && response.status.equals("OK")) {
@@ -169,8 +186,22 @@ public class EditActivity extends BaseActivity {
                     info.avatar = url;
                     SPUtils.setObject(info);
                     avatar.setImageURI(url);
+                    EventBus.getDefault().post(Constans.REFRESH_USER);
                 }
             }
         });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(String event) {
+        if (event.equals(Constans.REFRESH_USER)) {
+            initUserInfo(SPUtils.getObject(LoginInfo.class));
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

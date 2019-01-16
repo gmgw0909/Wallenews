@@ -7,12 +7,15 @@ import android.widget.TextView;
 
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.base.BaseActivity;
+import com.pipnet.wallenews.base.Constans;
 import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
 import com.pipnet.wallenews.util.SPUtils;
 import com.pipnet.wallenews.util.ToastUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -78,13 +81,14 @@ public class EditIntroActivity extends BaseActivity {
         }
         Map<String, String> map = new HashMap<>();
         map.put("introduction", intro);
-        NetRequest.modify(info.uid, map, new BaseSubscriber<Response>() {
+        NetRequest.modify(info.userId+"", map, new BaseSubscriber<Response>() {
             @Override
             public void onNext(Response response) {
                 if (!TextUtils.isEmpty(response.status) && response.status.equals("OK")) {
                     ToastUtil.show("修改成功");
                     info.introduction = intro;
                     SPUtils.setObject(info);
+                    EventBus.getDefault().post(Constans.REFRESH_USER);
                     finish();
                 }
             }

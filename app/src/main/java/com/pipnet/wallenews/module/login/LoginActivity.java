@@ -40,8 +40,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void initViewData() {
-        etPhone.setText("17521506239");
-        etCode.setText("452361");
+        etPhone.setText("15656238290");
     }
 
     @OnClick({R.id.btn_get_code, R.id.btn_login, R.id.btn_wx_login})
@@ -117,7 +116,7 @@ public class LoginActivity extends BaseActivity {
             return;
         }
         //"VerificationCode:" +
-        NetRequest.login("VerificationCode:" +phone, code, new BaseSubscriber<LoginInfo>() {
+        NetRequest.login("VerificationCode:" + phone, code, new BaseSubscriber<LoginInfo>() {
             @Override
             public void onNext(LoginInfo info) {
                 if (!TextUtils.isEmpty(info.status) && info.status.equals("OK")) {

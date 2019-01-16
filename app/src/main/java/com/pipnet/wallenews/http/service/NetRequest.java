@@ -66,6 +66,13 @@ public class NetRequest {
         toSubscriber(RetrofitManager.getInstance().getServiceInterface().mySpace(), subscriber);
     }
 
+    /**
+     * 绑定手机号
+     */
+    public static void bindMobile(String mobilePhoneNumber, String verificationCode, Subscriber<Response> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().bindMobile(mobilePhoneNumber, verificationCode), subscriber);
+    }
+
     //======================================================上面是所有后台接口=========================================================
 
     /**

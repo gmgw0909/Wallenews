@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.adapter.MineGridAdapter;
+import com.pipnet.wallenews.base.Constans;
 import com.pipnet.wallenews.base.LazyFragment;
 import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.bean.response.Response;
@@ -17,6 +18,10 @@ import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
 import com.pipnet.wallenews.uihelpers.GridItemDecoration;
 import com.pipnet.wallenews.util.SPUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +55,7 @@ public class MineFragment extends LazyFragment {
 
     @Override
     protected void lazyLoad() {
+        EventBus.getDefault().register(this);
         LoginInfo info = SPUtils.getObject(LoginInfo.class);
         list.addAll(info.properties);
         initUserInfo(info);
@@ -66,6 +72,8 @@ public class MineFragment extends LazyFragment {
             list.add(new LoginInfo.PropertiesBean());
         }
         gridRv.setAdapter(new MineGridAdapter(list));
+
+        getUerInfo();
     }
 
     private void initUserInfo(LoginInfo info) {
@@ -101,5 +109,18 @@ public class MineFragment extends LazyFragment {
 
             }
         });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(String event) {
+        if (event.equals(Constans.REFRESH_USER)) {
+            initUserInfo(SPUtils.getObject(LoginInfo.class));
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
     }
 }

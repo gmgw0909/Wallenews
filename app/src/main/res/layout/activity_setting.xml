@@ -71,6 +71,15 @@
             android:layout_centerVertical="true"
             android:src="@mipmap/icon_gd" />
 
+        <TextView
+            android:id="@+id/tv_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:textColor="@color/text_999" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
