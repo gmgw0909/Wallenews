@@ -3,6 +3,7 @@ package com.pipnet.wallenews.http.service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pipnet.wallenews.bean.LoginInfo;
+import com.pipnet.wallenews.bean.UploadResponse;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.RetrofitManager;
 
@@ -19,7 +20,6 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.http.Part;
 
 /**
  * Created by LeeBoo on 2017/8/18.
@@ -48,7 +48,7 @@ public class NetRequest {
     /**
      * 上传图片
      */
-    public static void uploadImg(List<MultipartBody.Part> parts, Subscriber<Response> subscriber) {
+    public static void uploadImg(List<MultipartBody.Part> parts, Subscriber<UploadResponse> subscriber) {
         toSubscriber(RetrofitManager.getInstance().getServiceInterface().uploadImg(parts), subscriber);
     }
 
@@ -57,6 +57,13 @@ public class NetRequest {
      */
     public static void modify(String uid, Map<String, String> map, Subscriber<Response> subscriber) {
         toSubscriber(RetrofitManager.getInstance().getServiceInterface().modify(uid, map), subscriber);
+    }
+
+    /**
+     * 个人中心
+     */
+    public static void mySpace(Subscriber<Response> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().mySpace(), subscriber);
     }
 
     //======================================================上面是所有后台接口=========================================================

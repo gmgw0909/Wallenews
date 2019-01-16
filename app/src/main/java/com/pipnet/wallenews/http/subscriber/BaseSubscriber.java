@@ -44,7 +44,7 @@ public abstract class BaseSubscriber<T> extends ResourceSubscriber<T> {
         } else if (e instanceof SocketTimeoutException) {
             mErrorMsg = "网络连接超时！";
         } else {
-            mErrorMsg = e.getMessage();
+            mErrorMsg = e.toString();
         }
         XLog.e(mErrorMsg);
     }

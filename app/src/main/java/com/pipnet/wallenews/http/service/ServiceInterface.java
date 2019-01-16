@@ -1,6 +1,7 @@
 package com.pipnet.wallenews.http.service;
 
 import com.pipnet.wallenews.bean.LoginInfo;
+import com.pipnet.wallenews.bean.UploadResponse;
 import com.pipnet.wallenews.bean.response.Response;
 
 import java.util.List;
@@ -53,6 +54,11 @@ public interface ServiceInterface {
      */
     @POST("ajaxUpload")
     @Multipart
-    Flowable<Response> uploadImg(@Part List<MultipartBody.Part> parts);
+    Flowable<UploadResponse> uploadImg(@Part List<MultipartBody.Part> parts);
 
+    /**
+     * 个人中心
+     */
+    @GET("myspace/me?loginUrl=/register/message/notLogin")
+    Flowable<Response> mySpace();
 }

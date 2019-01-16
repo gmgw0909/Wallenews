@@ -16,6 +16,7 @@
         android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
         android:hint="请输入昵称"
+        android:maxLength="25"
         android:textColor="@color/text_333"
         android:textSize="14sp" />
 

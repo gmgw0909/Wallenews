@@ -2,20 +2,22 @@ package com.pipnet.wallenews.module.mine;
 
 import android.Manifest;
 import android.content.Intent;
-import android.net.Uri;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.base.BaseActivity;
+import com.pipnet.wallenews.bean.LoginInfo;
+import com.pipnet.wallenews.bean.UploadResponse;
 import com.pipnet.wallenews.bean.response.Response;
+import com.pipnet.wallenews.http.Router;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
 import com.pipnet.wallenews.matisse.GifSizeFilter;
 import com.pipnet.wallenews.matisse.Glide4Engine;
-import com.pipnet.wallenews.util.FileUtils;
+import com.pipnet.wallenews.util.SPUtils;
 import com.pipnet.wallenews.util.ToastUtil;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.zhihu.matisse.Matisse;
@@ -24,7 +26,9 @@ import com.zhihu.matisse.filter.Filter;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -49,6 +53,8 @@ public class EditActivity extends BaseActivity {
     @BindView(R.id.tv_intro)
     TextView tvIntro;
 
+    LoginInfo info;
+
     private static final int REQUEST_CODE_CHOOSE = 1001;
 
     @Override
@@ -59,6 +65,7 @@ public class EditActivity extends BaseActivity {
     @Override
     public void initViewData() {
         title.setText("编辑个人资料");
+        info = SPUtils.getObject(LoginInfo.class);
     }
 
     @OnClick({R.id.btn_left, R.id.rl_avatar, R.id.rl_name, R.id.intro})
@@ -84,7 +91,7 @@ public class EditActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
             String path = Matisse.obtainPathResult(data).get(0);
-            upLoadImg(FileUtils.imageToBase64(path));
+            upLoadImg(path);
         }
     }
 
@@ -132,17 +139,37 @@ public class EditActivity extends BaseActivity {
                 });
     }
 
+    //上传图片
     private void upLoadImg(String path) {
         File file = new File(path);
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM);
         RequestBody photoRequestBody = RequestBody.create(MediaType.parse("image/png"), file);
-        builder.addFormDataPart("file[]", "avatar.png", photoRequestBody);
+        builder.addFormDataPart("files[]", "avatar.png", photoRequestBody);
         List<MultipartBody.Part> parts = builder.build().parts();
-        NetRequest.uploadImg(parts, new BaseSubscriber<Response>() {
+        NetRequest.uploadImg(parts, new BaseSubscriber<UploadResponse>() {
+            @Override
+            public void onNext(UploadResponse response) {
+                if (response.files != null && response.files.size() > 0) {
+                    modifyAvatar(Router.BASE_URL + response.files.get(0).url);
+                }
+            }
+        });
+    }
+
+    //修改头像
+    private void modifyAvatar(final String url) {
+        Map<String, String> map = new HashMap<>();
+        map.put("image", url);
+        NetRequest.modify(info.uid, map, new BaseSubscriber<Response>() {
             @Override
             public void onNext(Response response) {
-
+                if (!TextUtils.isEmpty(response.status) && response.status.equals("OK")) {
+                    ToastUtil.show("修改成功");
+                    info.avatar = url;
+                    SPUtils.setObject(info);
+                    avatar.setImageURI(url);
+                }
             }
         });
     }

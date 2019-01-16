@@ -12,6 +12,9 @@ import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.adapter.MineGridAdapter;
 import com.pipnet.wallenews.base.LazyFragment;
 import com.pipnet.wallenews.bean.LoginInfo;
+import com.pipnet.wallenews.bean.response.Response;
+import com.pipnet.wallenews.http.service.NetRequest;
+import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
 import com.pipnet.wallenews.uihelpers.GridItemDecoration;
 import com.pipnet.wallenews.util.SPUtils;
 
@@ -88,5 +91,15 @@ public class MineFragment extends LazyFragment {
                 startActivity(new Intent(getActivity(), EditActivity.class));
                 break;
         }
+    }
+
+    //网络获取用户信息
+    private void getUerInfo() {
+        NetRequest.mySpace(new BaseSubscriber<Response>() {
+            @Override
+            public void onNext(Response response) {
+
+            }
+        });
     }
 }

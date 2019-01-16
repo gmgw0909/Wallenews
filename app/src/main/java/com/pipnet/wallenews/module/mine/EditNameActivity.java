@@ -1,5 +1,6 @@
 package com.pipnet.wallenews.module.mine;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -11,6 +12,7 @@ import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
 import com.pipnet.wallenews.util.SPUtils;
+import com.pipnet.wallenews.util.ToastUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +35,8 @@ public class EditNameActivity extends BaseActivity {
     @BindView(R.id.et_name)
     EditText etName;
 
+    LoginInfo info;
+
     @Override
     public int setContentView() {
         return R.layout.activity_edit_name;
@@ -44,6 +48,10 @@ public class EditNameActivity extends BaseActivity {
         btnLeft.setText("取消");
         btnLeft.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         btnRight.setText("完成");
+
+        info = SPUtils.getObject(LoginInfo.class);
+        etName.setText(info.nickName);
+        etName.setSelection(info.nickName.length());
     }
 
     @OnClick({R.id.btn_left, R.id.btn_right})
@@ -59,12 +67,26 @@ public class EditNameActivity extends BaseActivity {
     }
 
     private void editName() {
+        final String name = etName.getText().toString();
+        if (TextUtils.isEmpty(name)) {
+            ToastUtil.show("输入不能为空");
+            return;
+        }
+        if (name.equals(info.nickName)) {
+            finish();
+            return;
+        }
         Map<String, String> map = new HashMap<>();
-        map.put("userUUID", etName.getText().toString());
-        NetRequest.modify(SPUtils.getObject(LoginInfo.class).uid, map, new BaseSubscriber<Response>() {
+        map.put("userUUID", name);
+        NetRequest.modify(info.uid, map, new BaseSubscriber<Response>() {
             @Override
             public void onNext(Response response) {
-
+                if (!TextUtils.isEmpty(response.status) && response.status.equals("OK")) {
+                    ToastUtil.show("修改成功");
+                    info.nickName = info.userName = name;
+                    SPUtils.setObject(info);
+                    finish();
+                }
             }
         });
     }

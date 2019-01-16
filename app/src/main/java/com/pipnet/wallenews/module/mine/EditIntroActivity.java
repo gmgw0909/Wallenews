@@ -1,11 +1,21 @@
 package com.pipnet.wallenews.module.mine;
 
-import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.base.BaseActivity;
+import com.pipnet.wallenews.bean.LoginInfo;
+import com.pipnet.wallenews.bean.response.Response;
+import com.pipnet.wallenews.http.service.NetRequest;
+import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
+import com.pipnet.wallenews.util.SPUtils;
+import com.pipnet.wallenews.util.ToastUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -22,6 +32,10 @@ public class EditIntroActivity extends BaseActivity {
     TextView btnLeft;
     @BindView(R.id.btn_right)
     TextView btnRight;
+    @BindView(R.id.et_intro)
+    EditText etIntro;
+
+    LoginInfo info;
 
     @Override
     public int setContentView() {
@@ -34,6 +48,10 @@ public class EditIntroActivity extends BaseActivity {
         btnLeft.setText("取消");
         btnLeft.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         btnRight.setText("完成");
+
+        info = SPUtils.getObject(LoginInfo.class);
+        etIntro.setText(info.introduction);
+        etIntro.setSelection(info.introduction.length());
     }
 
     @OnClick({R.id.btn_left, R.id.btn_right})
@@ -43,9 +61,34 @@ public class EditIntroActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.btn_right:
-
+                editIntro();
                 break;
         }
+    }
+
+    private void editIntro() {
+        final String intro = etIntro.getText().toString();
+        if (TextUtils.isEmpty(intro)) {
+            ToastUtil.show("输入不能为空");
+            return;
+        }
+        if (intro.equals(info.introduction)) {
+            finish();
+            return;
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put("introduction", intro);
+        NetRequest.modify(info.uid, map, new BaseSubscriber<Response>() {
+            @Override
+            public void onNext(Response response) {
+                if (!TextUtils.isEmpty(response.status) && response.status.equals("OK")) {
+                    ToastUtil.show("修改成功");
+                    info.introduction = intro;
+                    SPUtils.setObject(info);
+                    finish();
+                }
+            }
+        });
     }
 
 }

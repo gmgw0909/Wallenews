@@ -23,19 +23,23 @@ public class AddCookiesInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request.Builder builder = chain.request().newBuilder();
+        HashSet<String> header = new HashSet<>();
         HashSet<String> preferences = (HashSet) App.getInstance().getSharedPreferences("cookie_config",
                 App.getInstance().MODE_PRIVATE).getStringSet("cookie", null);
+        if (preferences != null) {
+            header.addAll(preferences);
+        }
         LoginInfo info = SPUtils.getObject(LoginInfo.class);
         if (info != null) {
             if (!TextUtils.isEmpty(info.uid)) {
-                preferences.add("uid=" + info.uid);
+                header.add("uid=" + info.uid);
             }
             if (!TextUtils.isEmpty(info.rememberMe)) {
-                preferences.add("rememberMe" + info.rememberMe);
+                header.add("rememberMe" + info.rememberMe);
             }
         }
-        if (preferences != null) {
-            for (String cookie : preferences) {
+        if (header != null) {
+            for (String cookie : header) {
                 builder.addHeader("Cookie", cookie);
                 Log.v("OkHttp", "Adding Header: " + cookie);
             }
