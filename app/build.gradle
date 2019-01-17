@@ -48,4 +48,6 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     // EventBus
     implementation 'org.greenrobot:eventbus:3.0.0'
+
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
 }

@@ -20,6 +20,10 @@ import butterknife.OnClick;
 
 public class BindPhoneActivity extends BaseActivity {
 
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.btn_right)
+    TextView btnRight;
     @BindView(R.id.et_phone)
     ClearEditText etPhone;
     @BindView(R.id.et_code)
@@ -36,11 +40,19 @@ public class BindPhoneActivity extends BaseActivity {
 
     @Override
     public void initViewData() {
+        title.setText("绑定手机");
+        btnRight.setText("跳过");
     }
 
-    @OnClick({R.id.btn_get_code, R.id.btn_bind})
+    @OnClick({R.id.btn_left, R.id.btn_right, R.id.btn_get_code, R.id.btn_bind})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.btn_left:
+                finish();
+                break;
+            case R.id.btn_right:
+
+                break;
             case R.id.btn_get_code:
                 getVerCode();
                 break;

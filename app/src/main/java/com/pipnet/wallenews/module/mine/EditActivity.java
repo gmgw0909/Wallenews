@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.base.BaseActivity;
-import com.pipnet.wallenews.base.Constans;
+import com.pipnet.wallenews.base.Constants;
 import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.bean.UploadResponse;
 import com.pipnet.wallenews.bean.response.Response;
@@ -186,7 +186,7 @@ public class EditActivity extends BaseActivity {
                     info.avatar = url;
                     SPUtils.setObject(info);
                     avatar.setImageURI(url);
-                    EventBus.getDefault().post(Constans.REFRESH_USER);
+                    EventBus.getDefault().post(Constants.REFRESH_USER);
                 }
             }
         });
@@ -194,7 +194,7 @@ public class EditActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(String event) {
-        if (event.equals(Constans.REFRESH_USER)) {
+        if (event.equals(Constants.REFRESH_USER)) {
             initUserInfo(SPUtils.getObject(LoginInfo.class));
         }
     }

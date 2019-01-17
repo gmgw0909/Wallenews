@@ -6,9 +6,11 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.base.BaseActivity;
+import com.pipnet.wallenews.base.Constants;
 import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
@@ -18,6 +20,9 @@ import com.pipnet.wallenews.util.CheckUtils;
 import com.pipnet.wallenews.util.SPUtils;
 import com.pipnet.wallenews.util.ToastUtil;
 import com.pipnet.wallenews.widgets.ClearEditText;
+import com.tencent.mm.opensdk.modelmsg.SendAuth;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -32,6 +37,7 @@ public class LoginActivity extends BaseActivity {
     TextView btnGetCode;
 
     MyCount myCount;
+    IWXAPI api;//微信api
 
     @Override
     public int setContentView() {
@@ -40,6 +46,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void initViewData() {
+        regToWx();
         etPhone.setText("15656238290");
     }
 
@@ -137,7 +144,25 @@ public class LoginActivity extends BaseActivity {
      * 微信登录
      */
     private void wxLogin() {
-        startActivity(new Intent(LoginActivity.this, BindPhoneActivity.class));
+        sendOauthRequest();
+//        startActivity(new Intent(LoginActivity.this, BindPhoneActivity.class));
+    }
+
+    private void regToWx() {
+        api = WXAPIFactory.createWXAPI(this, Constants.APP_ID, true);
+        api.registerApp(Constants.APP_ID);
+    }
+
+    //发送微信登录请求
+    private void sendOauthRequest() {
+        if (!api.isWXAppInstalled()) {
+            ToastUtil.show("您还未安装微信客户端");
+            return;
+        }
+        final SendAuth.Req req = new SendAuth.Req();
+        req.scope = "snsapi_userinfo";
+        req.state = "login";
+        api.sendReq(req);
     }
 
     class MyCount extends CountDownTimer {

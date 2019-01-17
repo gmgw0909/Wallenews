@@ -39,6 +39,13 @@
         <activity android:name=".module.mine.FollowingActivity" />
         <activity android:name=".module.mine.FollowerActivity" />
 
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.pipnet.wallenews.fileprovider"

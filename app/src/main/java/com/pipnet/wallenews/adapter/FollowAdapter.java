@@ -11,17 +11,11 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.pipnet.wallenews.R;
-import com.pipnet.wallenews.base.Constans;
 import com.pipnet.wallenews.bean.FollowResponse;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
-import com.pipnet.wallenews.util.SPUtils;
-import com.pipnet.wallenews.util.ToastUtil;
 
-import org.greenrobot.eventbus.EventBus;
-
-import java.util.Collections;
 import java.util.List;
 
 /**

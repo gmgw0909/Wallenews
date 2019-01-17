@@ -9,7 +9,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.base.ActivityController;
 import com.pipnet.wallenews.base.BaseActivity;
-import com.pipnet.wallenews.base.Constans;
+import com.pipnet.wallenews.base.Constants;
 import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.module.login.LoginActivity;
 import com.pipnet.wallenews.util.SPUtils;
@@ -79,7 +79,7 @@ public class SettingActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(String event) {
-        if (event.equals(Constans.REFRESH_USER)) {
+        if (event.equals(Constants.REFRESH_USER)) {
             String avatarUrl = SPUtils.getObject(LoginInfo.class).avatar;
             if (!TextUtils.isEmpty(avatarUrl)) {
                 avatar.setImageURI(avatarUrl);

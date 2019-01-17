@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.base.BaseActivity;
-import com.pipnet.wallenews.base.Constans;
+import com.pipnet.wallenews.base.Constants;
 import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
@@ -88,7 +88,7 @@ public class EditNameActivity extends BaseActivity {
                     ToastUtil.show("修改成功");
                     info.nickName = info.userName = name;
                     SPUtils.setObject(info);
-                    EventBus.getDefault().post(Constans.REFRESH_USER);
+                    EventBus.getDefault().post(Constants.REFRESH_USER);
                     finish();
                 }
             }

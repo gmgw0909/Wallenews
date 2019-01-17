@@ -1,6 +1,5 @@
 package com.pipnet.wallenews.module.home;
 
-import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -19,8 +18,6 @@ import com.pipnet.wallenews.bean.PageList;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
-import com.pipnet.wallenews.module.MainActivity;
-import com.pipnet.wallenews.module.login.LoginActivity;
 import com.pipnet.wallenews.uihelpers.IRefreshPage;
 import com.pipnet.wallenews.uihelpers.RefreshLoadMoreHelper;
 import com.pipnet.wallenews.util.SPUtils;
