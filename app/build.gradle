@@ -17,6 +17,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
 }
 
 dependencies {
@@ -48,6 +50,6 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     // EventBus
     implementation 'org.greenrobot:eventbus:3.0.0'
-
+    //微信
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
 }

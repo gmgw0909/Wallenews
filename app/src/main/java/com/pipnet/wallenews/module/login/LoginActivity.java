@@ -159,7 +159,7 @@ public class LoginActivity extends BaseActivity {
             ToastUtil.show("您还未安装微信客户端");
             return;
         }
-        final SendAuth.Req req = new SendAuth.Req();
+        SendAuth.Req req = new SendAuth.Req();
         req.scope = "snsapi_userinfo";
         req.state = "login";
         api.sendReq(req);
