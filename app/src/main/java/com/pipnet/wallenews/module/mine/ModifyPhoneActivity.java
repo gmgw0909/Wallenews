@@ -134,6 +134,8 @@ public class ModifyPhoneActivity extends BaseActivity {
                     SPUtils.setObject(info);
                     EventBus.getDefault().post(Constans.REFRESH_USER);
                     finish();
+                } else {
+                    ToastUtil.show("服务器出错");
                 }
             }
         });

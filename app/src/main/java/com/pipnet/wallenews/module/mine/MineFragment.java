@@ -89,7 +89,7 @@ public class MineFragment extends LazyFragment {
         }
     }
 
-    @OnClick({R.id.btn_setting, R.id.name})
+    @OnClick({R.id.btn_setting, R.id.name, R.id.ll_follow, R.id.ll_followed})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_setting:
@@ -97,6 +97,12 @@ public class MineFragment extends LazyFragment {
                 break;
             case R.id.name:
                 startActivity(new Intent(getActivity(), EditActivity.class));
+                break;
+            case R.id.ll_follow:
+                startActivity(new Intent(getActivity(), FollowingActivity.class));
+                break;
+            case R.id.ll_followed:
+                startActivity(new Intent(getActivity(), FollowerActivity.class));
                 break;
         }
     }
