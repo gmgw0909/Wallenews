@@ -1,9 +1,11 @@
 package com.pipnet.wallenews.module.home;
 
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -12,12 +14,17 @@ import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.adapter.WaLiAdapter;
 import com.pipnet.wallenews.adapter.WaLiHeaderAdapter;
 import com.pipnet.wallenews.base.LazyFragment;
+import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.bean.PageList;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
+import com.pipnet.wallenews.module.MainActivity;
+import com.pipnet.wallenews.module.login.LoginActivity;
 import com.pipnet.wallenews.uihelpers.IRefreshPage;
 import com.pipnet.wallenews.uihelpers.RefreshLoadMoreHelper;
+import com.pipnet.wallenews.util.SPUtils;
+import com.pipnet.wallenews.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,10 +101,15 @@ public class WaLiFragment extends LazyFragment implements IRefreshPage, BaseQuic
 
     //网络获取用户信息
     private void getUerInfo() {
-        NetRequest.mySpace(new BaseSubscriber<Response>() {
+        NetRequest.mySpace(new BaseSubscriber<LoginInfo>() {
             @Override
-            public void onNext(Response response) {
-
+            public void onNext(LoginInfo info) {
+                if (!TextUtils.isEmpty(info.status) && info.status.equals("OK") && info.isLogged) {
+                    //刷新用户信息
+                    SPUtils.setObject(info);
+                } else {
+                    ToastUtil.show("登录失效,重新登录");
+                }
             }
         });
     }

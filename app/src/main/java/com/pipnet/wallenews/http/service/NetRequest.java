@@ -64,7 +64,7 @@ public class NetRequest {
     /**
      * 个人中心
      */
-    public static void mySpace(Subscriber<Response> subscriber) {
+    public static void mySpace(Subscriber<LoginInfo> subscriber) {
         toSubscriber(RetrofitManager.getInstance().getServiceInterface().mySpace(), subscriber);
     }
 

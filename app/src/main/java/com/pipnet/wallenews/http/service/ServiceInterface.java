@@ -59,7 +59,7 @@ public interface ServiceInterface {
      * 个人中心
      */
     @GET("myspace/me?loginUrl=/register/message/notLogin")
-    Flowable<Response> mySpace();
+    Flowable<LoginInfo> mySpace();
 
     /**
      * 用户信息修改
