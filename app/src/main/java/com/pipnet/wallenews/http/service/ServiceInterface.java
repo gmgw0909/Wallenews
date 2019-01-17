@@ -1,5 +1,6 @@
 package com.pipnet.wallenews.http.service;
 
+import com.pipnet.wallenews.bean.FollowResponse;
 import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.bean.UploadResponse;
 import com.pipnet.wallenews.bean.response.Response;
@@ -66,4 +67,23 @@ public interface ServiceInterface {
     @POST("myspace/bindMobile")
     @FormUrlEncoded
     Flowable<Response> bindMobile(@Field("mobilePhoneNumber") String mobilePhoneNumber, @Field("verificationCode") String verificationCode);
+
+    /**
+     * 我关注的人
+     */
+    @GET("we/friendRel/followList")
+    Flowable<FollowResponse> followList(@Query("cursor") String cursor);
+
+    /**
+     * 关注我的人
+     */
+    @GET("we/friendRel/followerList")
+    Flowable<FollowResponse> followerList(@Query("cursor") String cursor);
+
+    /**
+     * 关注和取消关注
+     */
+    @POST("we/friendRel/follow")
+    @FormUrlEncoded
+    Flowable<Response> follow(@Field("friendId") String friendId,@Field("isConfirmed") String isConfirmed);
 }

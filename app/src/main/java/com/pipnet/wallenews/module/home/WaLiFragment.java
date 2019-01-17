@@ -14,6 +14,8 @@ import com.pipnet.wallenews.adapter.WaLiHeaderAdapter;
 import com.pipnet.wallenews.base.LazyFragment;
 import com.pipnet.wallenews.bean.PageList;
 import com.pipnet.wallenews.bean.response.Response;
+import com.pipnet.wallenews.http.service.NetRequest;
+import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
 import com.pipnet.wallenews.uihelpers.IRefreshPage;
 import com.pipnet.wallenews.uihelpers.RefreshLoadMoreHelper;
 
@@ -42,6 +44,7 @@ public class WaLiFragment extends LazyFragment implements IRefreshPage, BaseQuic
 
     @Override
     protected void lazyLoad() {
+        getUerInfo();
         List<Response> list = new ArrayList<>();
         list.add(new Response());
         list.add(new Response());
@@ -84,26 +87,18 @@ public class WaLiFragment extends LazyFragment implements IRefreshPage, BaseQuic
         list.add(new Response());
         list.add(new Response());
         list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
         PageList pageList = new PageList();
         pageList.setData(list);
         refreshLoadMoreHelper.loadSuccess(pageList);
+    }
+
+    //网络获取用户信息
+    private void getUerInfo() {
+        NetRequest.mySpace(new BaseSubscriber<Response>() {
+            @Override
+            public void onNext(Response response) {
+
+            }
+        });
     }
 }

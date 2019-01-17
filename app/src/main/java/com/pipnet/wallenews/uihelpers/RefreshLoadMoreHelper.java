@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -82,6 +83,32 @@ public class RefreshLoadMoreHelper<T> implements SwipeRefreshLayout.OnRefreshLis
         } else {
             refreshLayout.setRefreshing(false);
             adapter.notifyDataSetChanged();
+        }
+    }
+
+    public void loadOk(PageList<T> list, String cursor) {
+        if (TextUtils.isEmpty(cursor)) {
+            items.clear();
+        }
+        items.addAll(list.getData());
+        if (firstPage == 0) {
+            adapter.setEnableLoadMore(list.hasNextStartWithZero());
+        } else {
+            adapter.setEnableLoadMore(list.hasNext());
+        }
+        if (currPage > firstPage) {
+            adapter.loadMoreComplete();
+        } else {
+            refreshLayout.setRefreshing(false);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    public void loadNoData(String cursor) {
+        if (TextUtils.isEmpty(cursor)) {//刷新
+            refreshLayout.setRefreshing(false);
+        } else {//加载更多
+            adapter.loadMoreFail();
         }
     }
 

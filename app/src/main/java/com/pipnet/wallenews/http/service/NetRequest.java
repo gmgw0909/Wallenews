@@ -2,6 +2,7 @@ package com.pipnet.wallenews.http.service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.pipnet.wallenews.bean.FollowResponse;
 import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.bean.UploadResponse;
 import com.pipnet.wallenews.bean.response.Response;
@@ -20,6 +21,7 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.http.Field;
 
 /**
  * Created by LeeBoo on 2017/8/18.
@@ -71,6 +73,33 @@ public class NetRequest {
      */
     public static void bindMobile(String mobilePhoneNumber, String verificationCode, Subscriber<Response> subscriber) {
         toSubscriber(RetrofitManager.getInstance().getServiceInterface().bindMobile(mobilePhoneNumber, verificationCode), subscriber);
+    }
+
+    /**
+     * 我关注的人
+     */
+    public static void followList(String cursor, Subscriber<FollowResponse> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().followList(cursor), subscriber);
+    }
+
+    /**
+     * 关注我的人
+     */
+    public static void followerList(String cursor, Subscriber<FollowResponse> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().followerList(cursor), subscriber);
+    }
+
+    /**
+     * 关注和取消关注
+     */
+    public static void follow(String friendId, boolean follow, Subscriber<Response> subscriber) {
+        String isConfirmed;//confirmed(关注)/tobe(取消关注)
+        if (follow) {
+            isConfirmed = "confirmed";
+        } else {
+            isConfirmed = "tobe";
+        }
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().follow(friendId, isConfirmed), subscriber);
     }
 
     //======================================================上面是所有后台接口=========================================================

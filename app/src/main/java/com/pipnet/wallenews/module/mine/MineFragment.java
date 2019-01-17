@@ -72,8 +72,6 @@ public class MineFragment extends LazyFragment {
             list.add(new LoginInfo.PropertiesBean());
         }
         gridRv.setAdapter(new MineGridAdapter(list));
-
-        getUerInfo();
     }
 
     private void initUserInfo(LoginInfo info) {
@@ -105,16 +103,6 @@ public class MineFragment extends LazyFragment {
                 startActivity(new Intent(getActivity(), FollowerActivity.class));
                 break;
         }
-    }
-
-    //网络获取用户信息
-    private void getUerInfo() {
-        NetRequest.mySpace(new BaseSubscriber<Response>() {
-            @Override
-            public void onNext(Response response) {
-
-            }
-        });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
