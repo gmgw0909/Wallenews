@@ -9,6 +9,5 @@ public class Constants {
 
     //微信登录
     public static final String APP_ID = "wxc7143c99655fd622";
-    public static final String ACC_TOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/access_token";
     public static final String APP_SECRET = "7152e3e3b2a28e09628e75f78f3e18d5";
 }

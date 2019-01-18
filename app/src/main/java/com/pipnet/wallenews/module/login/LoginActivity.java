@@ -24,6 +24,10 @@ import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -46,8 +50,14 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void initViewData() {
+        EventBus.getDefault().register(this);
         regToWx();
         etPhone.setText("15656238290");
+    }
+
+    private void regToWx() {
+        api = WXAPIFactory.createWXAPI(this, Constants.APP_ID, true);
+        api.registerApp(Constants.APP_ID);
     }
 
     @OnClick({R.id.btn_get_code, R.id.btn_login, R.id.btn_wx_login})
@@ -60,7 +70,7 @@ public class LoginActivity extends BaseActivity {
                 login();
                 break;
             case R.id.btn_wx_login:
-                wxLogin();
+                sendOauthRequest();
                 break;
         }
     }
@@ -140,19 +150,6 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    /**
-     * 微信登录
-     */
-    private void wxLogin() {
-        sendOauthRequest();
-//        startActivity(new Intent(LoginActivity.this, BindPhoneActivity.class));
-    }
-
-    private void regToWx() {
-        api = WXAPIFactory.createWXAPI(this, Constants.APP_ID, true);
-        api.registerApp(Constants.APP_ID);
-    }
-
     //发送微信登录请求
     private void sendOauthRequest() {
         if (!api.isWXAppInstalled()) {
@@ -163,6 +160,44 @@ public class LoginActivity extends BaseActivity {
         req.scope = "snsapi_userinfo";
         req.state = "login";
         api.sendReq(req);
+    }
+
+    /**
+     * 微信登录
+     */
+    private void wxLogin(String jsonStr) {
+        NetRequest.login(jsonStr, "123456", new BaseSubscriber<LoginInfo>() {
+            @Override
+            public void onNext(LoginInfo info) {
+                if (!TextUtils.isEmpty(info.status) && info.status.equals("OK")) {
+                    if (TextUtils.isEmpty(info.mobilePhoneNumber)) {
+                        startActivity(new Intent(LoginActivity.this, BindPhoneActivity.class));
+                        return;
+                    }
+                    //登录成功
+                    SPUtils.setBoolean("isLogin", true);
+                    //保存用户信息
+                    SPUtils.setObject(info);
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
+                } else {
+                    ToastUtil.show(info.error);
+                }
+            }
+        });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(String event) {
+        if (event.contains(Constants.APP_ID)) {
+            wxLogin(event.replace(Constants.APP_ID, ""));
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     class MyCount extends CountDownTimer {

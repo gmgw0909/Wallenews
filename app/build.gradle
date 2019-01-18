@@ -11,8 +11,28 @@ android {
         versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs {
+        debug {
+            keyAlias 'LeeBoo'
+            keyPassword 'libao7713365'
+            storeFile file('../walle_keystore.jks')
+            storePassword 'libao7713365'
+        }
+        release {//发布版签名配置
+            keyAlias 'LeeBoo'
+            keyPassword 'libao7713365'
+            storeFile file('../walle_keystore.jks')
+            storePassword 'libao7713365'
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
