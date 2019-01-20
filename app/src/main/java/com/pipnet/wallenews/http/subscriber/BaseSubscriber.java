@@ -2,6 +2,7 @@ package com.pipnet.wallenews.http.subscriber;
 
 import com.pipnet.wallenews.App;
 import com.pipnet.wallenews.util.NetUtil;
+import com.pipnet.wallenews.util.ToastUtil;
 import com.pipnet.wallenews.util.XLog;
 
 import java.net.SocketTimeoutException;
@@ -45,6 +46,7 @@ public abstract class BaseSubscriber<T> extends ResourceSubscriber<T> {
             mErrorMsg = "网络连接超时！";
         } else {
             mErrorMsg = e.toString();
+            ToastUtil.show("请求服务器失败");
         }
         XLog.e(mErrorMsg);
     }

@@ -1,12 +1,13 @@
 package com.pipnet.wallenews.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by LeeBoo on 2019/1/12.
  */
 
-public class LoginInfo{
+public class LoginInfo implements Serializable {
 
     /**
      * followCount : 0
@@ -39,7 +40,7 @@ public class LoginInfo{
     public String avatar;
     public List<PropertiesBean> properties;
 
-    public static class PropertiesBean {
+    public static class PropertiesBean implements Serializable {
         /**
          * count : -1
          * image : http://www.mubbox.com/diting-web/upload/2018/10/11/09650c092e784967d243de7534612979_icon%20wd%20jf@3x.png

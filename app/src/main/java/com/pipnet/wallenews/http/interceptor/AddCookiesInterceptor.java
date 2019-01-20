@@ -3,7 +3,6 @@ package com.pipnet.wallenews.http.interceptor;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.pipnet.wallenews.App;
 import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.util.SPUtils;
 
@@ -24,8 +23,7 @@ public class AddCookiesInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request.Builder builder = chain.request().newBuilder();
         HashSet<String> header = new HashSet<>();
-        HashSet<String> preferences = (HashSet) App.getInstance().getSharedPreferences("cookie_config",
-                App.getInstance().MODE_PRIVATE).getStringSet("cookie", null);
+        HashSet<String> preferences = (HashSet<String>) SPUtils.getStringSet("cookie",null);
         if (preferences != null) {
             header.addAll(preferences);
         }

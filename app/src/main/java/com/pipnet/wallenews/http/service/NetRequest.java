@@ -21,7 +21,6 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.http.Field;
 
 /**
  * Created by LeeBoo on 2017/8/18.
@@ -73,6 +72,13 @@ public class NetRequest {
      */
     public static void bindMobile(String mobilePhoneNumber, String verificationCode, Subscriber<Response> subscriber) {
         toSubscriber(RetrofitManager.getInstance().getServiceInterface().bindMobile(mobilePhoneNumber, verificationCode), subscriber);
+    }
+
+    /**
+     * 绑定微信
+     */
+    public static void bindWX(String username, Subscriber<Response> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().bindWX(username), subscriber);
     }
 
     /**

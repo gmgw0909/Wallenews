@@ -6,14 +6,10 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.pipnet.wallenews.App;
+import com.pipnet.wallenews.base.ActivityController;
 import com.pipnet.wallenews.base.Constants;
-import com.pipnet.wallenews.bean.LoginInfo;
-import com.pipnet.wallenews.http.service.NetRequest;
-import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
 import com.pipnet.wallenews.util.ToastUtil;
 import com.pipnet.wallenews.util.XLog;
-import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
@@ -26,7 +22,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -44,6 +39,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActivityController.addActivity(this);
         api = WXAPIFactory.createWXAPI(this, Constants.APP_ID, true);
         api.handleIntent(this.getIntent(), this);
     }
@@ -117,6 +113,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                     jsonObject = new JSONObject(response.body().string());
                     String access_token = jsonObject.getString("access_token");
                     String openid = jsonObject.getString("openid");
+                    Log.e("Ok==access_token=", jsonObject.toString());
                     if (!TextUtils.isEmpty(access_token)) {
                         getUserInfo(access_token, openid);
                     } else {
@@ -159,8 +156,10 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                 try {
                     jsonObject = new JSONObject(response.body().string());
                     jsonObject.put("source", "WX");
+                    Log.e("Ok==wx_info=", jsonObject.toString());
                     //登录
                     EventBus.getDefault().post(Constants.APP_ID + jsonObject.toString());
+                    finish();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {

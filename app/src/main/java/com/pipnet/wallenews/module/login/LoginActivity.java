@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.base.BaseActivity;
@@ -170,18 +169,19 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onNext(LoginInfo info) {
                 if (!TextUtils.isEmpty(info.status) && info.status.equals("OK")) {
-                    if (TextUtils.isEmpty(info.mobilePhoneNumber)) {
-                        startActivity(new Intent(LoginActivity.this, BindPhoneActivity.class));
-                        return;
-                    }
-                    //登录成功
-                    SPUtils.setBoolean("isLogin", true);
                     //保存用户信息
                     SPUtils.setObject(info);
+                    //登录成功
+                    SPUtils.setBoolean("isLogin", true);
+                    if (TextUtils.isEmpty(info.mobilePhoneNumber)) {
+                        startActivity(new Intent(LoginActivity.this, BindPhoneActivity.class)
+                                .putExtra("UserInfo", info));
+                        return;
+                    }
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                 } else {
-                    ToastUtil.show(info.error);
+                    ToastUtil.show("微信登录失败");
                 }
             }
         });

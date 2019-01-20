@@ -54,7 +54,12 @@ public class MineFragment extends LazyFragment {
     protected void lazyLoad() {
         EventBus.getDefault().register(this);
         LoginInfo info = SPUtils.getObject(LoginInfo.class);
-        list.addAll(info.properties);
+        if (info.properties != null) {
+            list.addAll(info.properties);
+            for (int i = 0; i < 9 - info.properties.size(); i++) {
+                list.add(new LoginInfo.PropertiesBean());
+            }
+        }
         initUserInfo(info);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3);
         GridItemDecoration divider = new GridItemDecoration.Builder(getActivity())
@@ -65,9 +70,6 @@ public class MineFragment extends LazyFragment {
                 .build();
         gridRv.addItemDecoration(divider);
         gridRv.setLayoutManager(gridLayoutManager);
-        for (int i = 0; i < 9 - info.properties.size(); i++) {
-            list.add(new LoginInfo.PropertiesBean());
-        }
         gridRv.setAdapter(new MineGridAdapter(list));
     }
 

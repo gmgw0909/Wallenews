@@ -62,11 +62,18 @@ public interface ServiceInterface {
     Flowable<LoginInfo> mySpace();
 
     /**
-     * 用户信息修改
+     * 绑定手机号
      */
     @POST("myspace/bindMobile")
     @FormUrlEncoded
     Flowable<Response> bindMobile(@Field("mobilePhoneNumber") String mobilePhoneNumber, @Field("verificationCode") String verificationCode);
+
+    /**
+     * 绑定微信
+     */
+    @POST("myspace/bindWX")
+    @FormUrlEncoded
+    Flowable<Response> bindWX(@Field("username") String username);
 
     /**
      * 我关注的人
@@ -85,5 +92,6 @@ public interface ServiceInterface {
      */
     @POST("we/friendRel/follow")
     @FormUrlEncoded
-    Flowable<Response> follow(@Field("friendId") String friendId,@Field("isConfirmed") String isConfirmed);
+    Flowable<Response> follow(@Field("friendId") String friendId, @Field("isConfirmed") String isConfirmed);
+
 }

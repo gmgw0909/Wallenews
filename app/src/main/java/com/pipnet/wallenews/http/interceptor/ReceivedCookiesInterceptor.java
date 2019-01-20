@@ -1,8 +1,6 @@
 package com.pipnet.wallenews.http.interceptor;
 
-import android.content.SharedPreferences;
-
-import com.pipnet.wallenews.App;
+import com.pipnet.wallenews.util.SPUtils;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -24,10 +22,7 @@ public class ReceivedCookiesInterceptor implements Interceptor {
             for (String header : originalResponse.headers("Set-Cookie")) {
                 cookies.add(header);
             }
-            SharedPreferences.Editor config = App.getInstance().getSharedPreferences("cookie_config", App.getInstance().MODE_PRIVATE)
-                    .edit();
-            config.putStringSet("cookie", cookies);
-            config.commit();
+            SPUtils.setStringSet("cookie", cookies);
         }
         return originalResponse;
     }

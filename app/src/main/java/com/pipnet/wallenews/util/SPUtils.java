@@ -7,6 +7,9 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.pipnet.wallenews.App;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by LeeBoo on 2017/09/14 0027.
  */
@@ -56,6 +59,14 @@ public class SPUtils {
 
     public static long getLong(final String key, final long defaultValue) {
         return getSharedPrefs().getLong(key, defaultValue);
+    }
+
+    public static void setStringSet(final String key, final HashSet<String> value) {
+        getSharedPrefs().edit().putStringSet(key, value).commit();
+    }
+
+    public static Set<String> getStringSet(final String key, final Set<String> defaultValue) {
+        return getSharedPrefs().getStringSet(key, defaultValue);
     }
 
     public static <T> T getObject(Class<T> clazz) {
