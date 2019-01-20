@@ -1,12 +1,12 @@
 package com.pipnet.wallenews.module.home;
 
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.pipnet.wallenews.R;
@@ -22,6 +22,7 @@ import com.pipnet.wallenews.uihelpers.IRefreshPage;
 import com.pipnet.wallenews.uihelpers.RefreshLoadMoreHelper;
 import com.pipnet.wallenews.util.SPUtils;
 import com.pipnet.wallenews.util.ToastUtil;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,11 @@ public class WaLiFragment extends LazyFragment implements IRefreshPage, BaseQuic
     @BindView(R.id.recycler_article)
     RecyclerView recyclerView;
     @BindView(R.id.refresh_layout)
-    SwipeRefreshLayout refreshLayout;
+    SmartRefreshLayout refreshLayout;
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.btn_left)
+    TextView btnLeft;
 
     private RefreshLoadMoreHelper<Response> refreshLoadMoreHelper;
 
@@ -48,6 +53,8 @@ public class WaLiFragment extends LazyFragment implements IRefreshPage, BaseQuic
 
     @Override
     protected void lazyLoad() {
+        title.setText("瓦砾");
+        btnLeft.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         getUerInfo();
         List<Response> list = new ArrayList<>();
         list.add(new Response());

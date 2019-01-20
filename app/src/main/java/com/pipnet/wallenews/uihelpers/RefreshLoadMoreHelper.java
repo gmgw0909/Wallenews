@@ -1,7 +1,6 @@
 package com.pipnet.wallenews.uihelpers;
 
 import android.content.Context;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -10,6 +9,10 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.bean.PageList;
+import com.pipnet.wallenews.widgets.CarRefreshHeader;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import net.arvin.itemdecorationhelper.ItemDecorationFactory;
 
@@ -21,22 +24,24 @@ import java.util.List;
  * Function：
  * Desc：
  */
-public class RefreshLoadMoreHelper<T> implements SwipeRefreshLayout.OnRefreshListener, BaseQuickAdapter.RequestLoadMoreListener {
+public class RefreshLoadMoreHelper<T> implements OnRefreshListener, BaseQuickAdapter.RequestLoadMoreListener {
     private int firstPage = 0;
     private int currPage = firstPage;
 
-    private SwipeRefreshLayout refreshLayout;
+    private SmartRefreshLayout refreshLayout;
 
     private List<T> items;
     private BaseQuickAdapter<T, BaseViewHolder> adapter;
     private IRefreshPage refreshPage;
 
-    public RefreshLoadMoreHelper(IRefreshPage refreshPage, SwipeRefreshLayout refreshLayout, RecyclerView recyclerView, Class<? extends BaseQuickAdapter<T, BaseViewHolder>> adapterClass, int... adapterLayoutId) {
+    public RefreshLoadMoreHelper(IRefreshPage refreshPage, SmartRefreshLayout refreshLayout, RecyclerView recyclerView, Class<? extends BaseQuickAdapter<T, BaseViewHolder>> adapterClass, int... adapterLayoutId) {
         this.refreshPage = refreshPage;
         this.refreshLayout = refreshLayout;
 
         Context context = recyclerView.getContext();
-        refreshLayout.setColorSchemeColors(context.getResources().getColor(R.color.colorPrimary));
+//        refreshLayout.setColorSchemeColors(context.getResources().getColor(R.color.colorPrimary));
+        refreshLayout.setRefreshHeader(new CarRefreshHeader(context));
+        refreshLayout.setEnableLoadmore(false);//加载更多由BaseQuickAdapter完成
         refreshLayout.setOnRefreshListener(this);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -59,13 +64,7 @@ public class RefreshLoadMoreHelper<T> implements SwipeRefreshLayout.OnRefreshLis
     }
 
     public void autoRefresh() {
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-                onRefresh();
-            }
-        });
+        refreshLayout.autoRefresh();
     }
 
     public void loadSuccess(PageList<T> response) {
@@ -81,7 +80,7 @@ public class RefreshLoadMoreHelper<T> implements SwipeRefreshLayout.OnRefreshLis
         if (currPage > firstPage) {
             adapter.loadMoreComplete();
         } else {
-            refreshLayout.setRefreshing(false);
+            refreshLayout.finishRefresh();
             adapter.notifyDataSetChanged();
         }
     }
@@ -99,14 +98,14 @@ public class RefreshLoadMoreHelper<T> implements SwipeRefreshLayout.OnRefreshLis
         if (currPage > firstPage) {
             adapter.loadMoreComplete();
         } else {
-            refreshLayout.setRefreshing(false);
+            refreshLayout.finishRefresh();
             adapter.notifyDataSetChanged();
         }
     }
 
     public void loadNoData(String cursor) {
         if (TextUtils.isEmpty(cursor)) {//刷新
-            refreshLayout.setRefreshing(false);
+            refreshLayout.finishRefresh();
         } else {//加载更多
             adapter.loadMoreFail();
         }
@@ -116,7 +115,7 @@ public class RefreshLoadMoreHelper<T> implements SwipeRefreshLayout.OnRefreshLis
         if (currPage > firstPage) {
             adapter.loadMoreFail();
         } else {
-            refreshLayout.setRefreshing(false);
+            refreshLayout.finishRefresh();
         }
     }
 
@@ -133,7 +132,7 @@ public class RefreshLoadMoreHelper<T> implements SwipeRefreshLayout.OnRefreshLis
     }
 
     @Override
-    public void onRefresh() {
+    public void onRefresh(RefreshLayout refreshlayout) {
         currPage = firstPage;
         if (refreshPage != null) {
             refreshPage.loadData();

@@ -1,6 +1,5 @@
 package com.pipnet.wallenews.module.mine;
 
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -8,15 +7,14 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.adapter.FollowAdapter;
-import com.pipnet.wallenews.adapter.WaLiAdapter;
 import com.pipnet.wallenews.base.BaseActivity;
 import com.pipnet.wallenews.bean.FollowResponse;
 import com.pipnet.wallenews.bean.PageList;
-import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
 import com.pipnet.wallenews.uihelpers.IRefreshPage;
 import com.pipnet.wallenews.uihelpers.RefreshLoadMoreHelper;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -28,7 +26,7 @@ public class FollowingActivity extends BaseActivity implements IRefreshPage, Bas
     @BindView(R.id.recycler_article)
     RecyclerView recyclerView;
     @BindView(R.id.refresh_layout)
-    SwipeRefreshLayout refreshLayout;
+    SmartRefreshLayout refreshLayout;
 
     private RefreshLoadMoreHelper<FollowResponse.Feeds> refreshLoadMoreHelper;
     PageList list = new PageList();
