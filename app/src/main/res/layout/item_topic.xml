@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:text="1 游戏"
+        android:textColor="@color/text_333"
+        android:textSize="17sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="42dp"
+        android:text="121瓦片"
+        android:textColor="@color/text_666"
+        android:textSize="14sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="36dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shape_find_topic_item_bg">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="80dp"
+            android:maxLines="2"
+            android:padding="8dp"
+            android:text="是一个在前端比较常用的模块，可以对本地数据进行存储、修改、删除，并且该数据是永久保存的"
+            android:textColor="@color/text_333"
+            android:textSize="16sp" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/img1"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            app:actualImageScaleType="centerCrop"
+            app:placeholderImage="@mipmap/pic_tj_default"
+            app:placeholderImageScaleType="centerCrop"
+            app:roundBottomLeft="false"
+            app:roundBottomRight="true"
+            app:roundTopLeft="false"
+            app:roundTopRight="true"
+            app:roundedCornerRadius="10dp" />
+    </RelativeLayout>
+</LinearLayout>
