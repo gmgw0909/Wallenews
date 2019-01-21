@@ -8,6 +8,13 @@ import android.util.Log;
 
 import com.pipnet.wallenews.base.ActivityController;
 import com.pipnet.wallenews.base.Constants;
+import com.pipnet.wallenews.bean.LoginInfo;
+import com.pipnet.wallenews.http.service.NetRequest;
+import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
+import com.pipnet.wallenews.module.MainActivity;
+import com.pipnet.wallenews.module.login.BindPhoneActivity;
+import com.pipnet.wallenews.module.login.LoginActivity;
+import com.pipnet.wallenews.util.SPUtils;
 import com.pipnet.wallenews.util.ToastUtil;
 import com.pipnet.wallenews.util.XLog;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
@@ -34,7 +41,9 @@ import okhttp3.Response;
  */
 
 public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
+
     private IWXAPI api;
+    String state;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +77,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                 SendAuth.Resp sendResp = (SendAuth.Resp) resp;
                 if (sendResp != null) {
                     String code = sendResp.code;
+                    state = sendResp.state;
                     getAccessToken(code);
                 }
                 break;
@@ -157,13 +167,55 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                     jsonObject = new JSONObject(response.body().string());
                     jsonObject.put("source", "WX");
                     Log.e("Ok==wx_info=", jsonObject.toString());
-                    //登录
-                    EventBus.getDefault().post(Constants.APP_ID + jsonObject.toString());
-                    finish();
+                    if (!TextUtils.isEmpty(state)) {
+                        if (state.equals("login")) {
+                            //登录
+                            wxLogin(jsonObject.toString());
+                        } else {
+                            //绑定
+                            NetRequest.bindWX(jsonObject.toString(), new BaseSubscriber<com.pipnet.wallenews.bean.response.Response>() {
+                                @Override
+                                public void onNext(com.pipnet.wallenews.bean.response.Response response) {
+                                    if (!TextUtils.isEmpty(response.status) && response.status.equals("OK")) {
+                                        EventBus.getDefault().post("BIND_WX_OK");
+                                        ToastUtil.show("绑定成功");
+                                    }
+                                    finish();
+                                }
+                            });
+                        }
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
+     * 微信登录
+     */
+    private void wxLogin(String jsonStr) {
+        NetRequest.login(jsonStr, "123456", new BaseSubscriber<LoginInfo>() {
+            @Override
+            public void onNext(LoginInfo info) {
+                if (!TextUtils.isEmpty(info.status) && info.status.equals("OK")) {
+                    //保存用户信息
+                    SPUtils.setObject(info);
+                    //登录成功
+                    SPUtils.setBoolean("isLogin", true);
+                    if (TextUtils.isEmpty(info.mobilePhoneNumber)) {
+                        startActivity(new Intent(WXEntryActivity.this, BindPhoneActivity.class)
+                                .putExtra("UserInfo", info));
+                        return;
+                    }
+                    startActivity(new Intent(WXEntryActivity.this, MainActivity.class));
+                    finish();
+                } else {
+                    ToastUtil.show("微信登录失败");
+                    finish();
                 }
             }
         });

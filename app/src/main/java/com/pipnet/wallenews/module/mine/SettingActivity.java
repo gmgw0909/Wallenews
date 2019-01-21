@@ -94,7 +94,7 @@ public class SettingActivity extends BaseActivity {
         }
         SendAuth.Req req = new SendAuth.Req();
         req.scope = "snsapi_userinfo";
-        req.state = "login";
+        req.state = "bind";
         api.sendReq(req);
     }
 
@@ -134,17 +134,8 @@ public class SettingActivity extends BaseActivity {
             if (!TextUtils.isEmpty(SPUtils.getObject(LoginInfo.class).mobilePhoneNumber)) {
                 tvPhone.setText(SPUtils.getObject(LoginInfo.class).mobilePhoneNumber);
             }
-        } else if (event.contains(Constants.APP_ID)) {
-            NetRequest.bindWX(event.replace(Constants.APP_ID, ""), new BaseSubscriber<Response>() {
-                @Override
-                public void onNext(Response response) {
-                    if (!TextUtils.isEmpty(response.status) && response.status.equals("OK")) {
-                        ToastUtil.show("绑定成功");
-                    } else {
-                        switchBind.setChecked(false);
-                    }
-                }
-            });
+        } else if (event.equals("BIND_WX_OK")) {
+            switchBind.setChecked(false);
         }
     }
 

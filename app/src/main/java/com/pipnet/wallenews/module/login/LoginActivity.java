@@ -23,10 +23,6 @@ import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -49,7 +45,6 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void initViewData() {
-        EventBus.getDefault().register(this);
         regToWx();
         etPhone.setText("15656238290");
     }
@@ -159,45 +154,6 @@ public class LoginActivity extends BaseActivity {
         req.scope = "snsapi_userinfo";
         req.state = "login";
         api.sendReq(req);
-    }
-
-    /**
-     * 微信登录
-     */
-    private void wxLogin(String jsonStr) {
-        NetRequest.login(jsonStr, "123456", new BaseSubscriber<LoginInfo>() {
-            @Override
-            public void onNext(LoginInfo info) {
-                if (!TextUtils.isEmpty(info.status) && info.status.equals("OK")) {
-                    //保存用户信息
-                    SPUtils.setObject(info);
-                    //登录成功
-                    SPUtils.setBoolean("isLogin", true);
-                    if (TextUtils.isEmpty(info.mobilePhoneNumber)) {
-                        startActivity(new Intent(LoginActivity.this, BindPhoneActivity.class)
-                                .putExtra("UserInfo", info));
-                        return;
-                    }
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                    finish();
-                } else {
-                    ToastUtil.show("微信登录失败");
-                }
-            }
-        });
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(String event) {
-        if (event.contains(Constants.APP_ID)) {
-            wxLogin(event.replace(Constants.APP_ID, ""));
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 
     class MyCount extends CountDownTimer {
