@@ -80,17 +80,21 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                     state = sendResp.state;
                     getAccessToken(code);
                 }
+                finish();
                 break;
             case BaseResp.ErrCode.ERR_USER_CANCEL:
                 XLog.e("ERR_USER_CANCEL");
                 //发送取消
+                finish();
                 break;
             case BaseResp.ErrCode.ERR_AUTH_DENIED:
                 XLog.e("ERR_AUTH_DENIED");
                 //发送被拒绝
+                finish();
                 break;
             default:
                 //发送返回
+                finish();
                 break;
         }
 

@@ -58,14 +58,10 @@ public class BindPhoneActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.btn_right:
-                if (TextUtils.isEmpty(info.uid)){
+                if (TextUtils.isEmpty(info.uid)) {
                     finish();
                     return;
                 }
-                //登录成功
-                SPUtils.setBoolean("isLogin", true);
-                //保存用户信息
-                SPUtils.setObject(info);
                 ActivityController.finishAll();
                 startActivity(new Intent(BindPhoneActivity.this, MainActivity.class));
                 break;
