@@ -108,6 +108,13 @@ public class NetRequest {
         toSubscriber(RetrofitManager.getInstance().getServiceInterface().follow(friendId, isConfirmed), subscriber);
     }
 
+    /**
+     * 瓦砾首页
+     */
+    public static void feeds(String cursor, Subscriber<FollowResponse> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().feeds(cursor, "newFeed"), subscriber);
+    }
+
     //======================================================上面是所有后台接口=========================================================
 
     /**

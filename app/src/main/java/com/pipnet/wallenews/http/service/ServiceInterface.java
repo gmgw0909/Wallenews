@@ -94,4 +94,10 @@ public interface ServiceInterface {
     @FormUrlEncoded
     Flowable<Response> follow(@Field("friendId") String friendId, @Field("isConfirmed") String isConfirmed);
 
+    /**
+     * 瓦砾首页
+     */
+    @GET("we/feedFlow/feeds")
+    Flowable<FollowResponse> feeds(@Query("cursor") String cursor, @Query("direction") String direction);
+
 }
