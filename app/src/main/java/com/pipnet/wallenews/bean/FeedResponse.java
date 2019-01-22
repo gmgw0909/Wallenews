@@ -61,7 +61,7 @@ public class FeedResponse {
             public int forwardCount;
             public String gif;
             public boolean hasRecommend;
-            public int id;
+            public long id;
             public boolean ifForward;
             public boolean ifLike;
             public String images;

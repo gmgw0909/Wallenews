@@ -1,6 +1,7 @@
 package com.pipnet.wallenews.module.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -41,7 +42,7 @@ import butterknife.BindView;
  * Created by LeeBoo on 2019/1/12.
  */
 
-public class WaLiFragment extends LazyFragment implements OnRefreshListener, BaseQuickAdapter.RequestLoadMoreListener {
+public class WaLiFragment extends LazyFragment implements OnRefreshListener, BaseQuickAdapter.RequestLoadMoreListener, BaseQuickAdapter.OnItemClickListener {
 
     @BindView(R.id.recycler_article)
     RecyclerView recyclerView;
@@ -146,7 +147,13 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
                 .build(recyclerView));
         recyclerView.setAdapter(adapter);
         adapter.setOnLoadMoreListener(this, recyclerView);
+        adapter.setOnItemClickListener(this);
         adapter.setEmptyView(R.layout.layout_empty);
         refreshLayout.autoRefresh();
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        startActivity(new Intent(getActivity(), FeedDetailActivity.class).putExtra("FEED_ID", list.get(position).content.id));
     }
 }
