@@ -16,7 +16,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="14dp"
-            app:placeholderImage="@mipmap/tab_icon_wd_d"
+            app:placeholderImage="@mipmap/default_avatar"
             app:placeholderImageScaleType="centerCrop"
             app:roundAsCircle="true" />
 

@@ -1,5 +1,6 @@
 package com.pipnet.wallenews.http.service;
 
+import com.pipnet.wallenews.bean.FeedResponse;
 import com.pipnet.wallenews.bean.FollowResponse;
 import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.bean.UploadResponse;
@@ -98,6 +99,6 @@ public interface ServiceInterface {
      * 瓦砾首页
      */
     @GET("we/feedFlow/feeds")
-    Flowable<FollowResponse> feeds(@Query("cursor") String cursor, @Query("direction") String direction);
+    Flowable<FeedResponse> feeds(@Query("cursor") long cursor, @Query("direction") String direction);
 
 }

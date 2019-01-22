@@ -2,6 +2,7 @@ package com.pipnet.wallenews.http.service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.pipnet.wallenews.bean.FeedResponse;
 import com.pipnet.wallenews.bean.FollowResponse;
 import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.bean.UploadResponse;
@@ -111,8 +112,8 @@ public class NetRequest {
     /**
      * 瓦砾首页
      */
-    public static void feeds(String cursor, Subscriber<FollowResponse> subscriber) {
-        toSubscriber(RetrofitManager.getInstance().getServiceInterface().feeds(cursor, "newFeed"), subscriber);
+    public static void feeds(long cursor, String direction,Subscriber<FeedResponse> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().feeds(cursor, direction), subscriber);
     }
 
     //======================================================上面是所有后台接口=========================================================

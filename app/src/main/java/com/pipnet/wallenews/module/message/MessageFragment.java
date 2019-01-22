@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.adapter.WaLiAdapter;
+import com.pipnet.wallenews.adapter.WaLiHeaderAdapter;
 import com.pipnet.wallenews.base.LazyFragment;
 import com.pipnet.wallenews.bean.PageList;
 import com.pipnet.wallenews.bean.response.Response;
@@ -45,7 +46,7 @@ public class MessageFragment extends LazyFragment implements IRefreshPage, BaseQ
     protected void lazyLoad() {
         title.setText("消息");
         btnLeft.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
-        refreshLoadMoreHelper = new RefreshLoadMoreHelper<>(this, refreshLayout, recyclerView, WaLiAdapter.class);
+        refreshLoadMoreHelper = new RefreshLoadMoreHelper<>(this, refreshLayout, recyclerView, WaLiHeaderAdapter.class);
         refreshLoadMoreHelper.setOnItemClickListener(this);
         refreshLoadMoreHelper.autoRefresh();
     }

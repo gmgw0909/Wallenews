@@ -1,5 +1,6 @@
 package com.pipnet.wallenews.module.home;
 
+import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,8 @@ import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.adapter.WaLiAdapter;
 import com.pipnet.wallenews.adapter.WaLiHeaderAdapter;
 import com.pipnet.wallenews.base.LazyFragment;
+import com.pipnet.wallenews.bean.FeedResponse;
+import com.pipnet.wallenews.bean.FollowResponse;
 import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.bean.PageList;
 import com.pipnet.wallenews.bean.response.Response;
@@ -22,7 +25,12 @@ import com.pipnet.wallenews.uihelpers.IRefreshPage;
 import com.pipnet.wallenews.uihelpers.RefreshLoadMoreHelper;
 import com.pipnet.wallenews.util.SPUtils;
 import com.pipnet.wallenews.util.ToastUtil;
+import com.pipnet.wallenews.widgets.CarRefreshHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import net.arvin.itemdecorationhelper.ItemDecorationFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +41,7 @@ import butterknife.BindView;
  * Created by LeeBoo on 2019/1/12.
  */
 
-public class WaLiFragment extends LazyFragment implements IRefreshPage, BaseQuickAdapter.OnItemClickListener {
+public class WaLiFragment extends LazyFragment implements OnRefreshListener, BaseQuickAdapter.RequestLoadMoreListener {
 
     @BindView(R.id.recycler_article)
     RecyclerView recyclerView;
@@ -44,7 +52,10 @@ public class WaLiFragment extends LazyFragment implements IRefreshPage, BaseQuic
     @BindView(R.id.btn_left)
     TextView btnLeft;
 
-    private RefreshLoadMoreHelper<Response> refreshLoadMoreHelper;
+    private long upCursor = 0;
+    private long downCursor = 0;
+    List<FeedResponse.FeedsBean> list = new ArrayList<>();
+    WaLiAdapter adapter;
 
     @Override
     protected int setContentView() {
@@ -53,54 +64,11 @@ public class WaLiFragment extends LazyFragment implements IRefreshPage, BaseQuic
 
     @Override
     protected void lazyLoad() {
+        upCursor = SPUtils.getLong("upCursor", 0);
         title.setText("瓦砾");
         btnLeft.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         getUerInfo();
-        List<Response> list = new ArrayList<>();
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-
-        View header = LayoutInflater.from(getActivity()).inflate(R.layout.header_wali, null);
-        RecyclerView headerRV = header.findViewById(R.id.recycler_header);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(OrientationHelper.HORIZONTAL);
-        headerRV.setLayoutManager(layoutManager);
-        headerRV.setAdapter(new WaLiHeaderAdapter(list));
-        refreshLoadMoreHelper = new RefreshLoadMoreHelper<>(this, refreshLayout, recyclerView, WaLiAdapter.class);
-        refreshLoadMoreHelper.getAdapter().addHeaderView(header);
-        refreshLoadMoreHelper.setOnItemClickListener(this);
-        refreshLoadMoreHelper.autoRefresh();
-    }
-
-    @Override
-    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-
-    }
-
-    @Override
-    public void loadData() {
-        List<Response> list = new ArrayList<>();
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        PageList pageList = new PageList();
-        pageList.setData(list);
-        refreshLoadMoreHelper.loadSuccess(pageList);
+        initView(getActivity(), adapter = new WaLiAdapter(list));
     }
 
     //网络获取用户信息
@@ -116,5 +84,69 @@ public class WaLiFragment extends LazyFragment implements IRefreshPage, BaseQuic
                 }
             }
         });
+    }
+
+    private void getNetData(final String direction, final long cursor) {
+        NetRequest.feeds(cursor, direction, new BaseSubscriber<FeedResponse>() {
+            @Override
+            public void onNext(FeedResponse followResponse) {
+                if (followResponse.feeds != null && followResponse.feeds.size() > 0) {
+                    List<FeedResponse.FeedsBean> list_ = followResponse.feeds;
+                    downCursor = list_.get(list_.size() - 1).cursor;
+                    if (direction.equals("newFeed")) {
+                        upCursor = list_.get(0).cursor;
+                        SPUtils.setLong("upCursor", cursor);
+                        list.clear();
+                    }
+                    list.addAll(list_);
+                    adapter.notifyDataSetChanged();
+                    adapter.loadMoreComplete();
+                } else {
+                    adapter.loadMoreEnd();
+                }
+                refreshLayout.finishRefresh();
+            }
+        });
+    }
+
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        getNetData("newFeed", upCursor);
+    }
+
+    @Override
+    public void onLoadMoreRequested() {
+        getNetData("oldFeed", downCursor);
+    }
+
+    private void initView(Context context, BaseQuickAdapter adapter) {
+        List<Response> list = new ArrayList<>();
+        list.add(new Response());
+        list.add(new Response());
+        list.add(new Response());
+        list.add(new Response());
+        list.add(new Response());
+        list.add(new Response());
+        list.add(new Response());
+        //初始化头部
+        View header = LayoutInflater.from(getActivity()).inflate(R.layout.header_wali, null);
+        RecyclerView headerRV = header.findViewById(R.id.recycler_header);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(OrientationHelper.HORIZONTAL);
+        headerRV.setLayoutManager(layoutManager);
+        headerRV.setAdapter(new WaLiHeaderAdapter(list));
+        adapter.addHeaderView(header);
+        //初始化Feeds列表
+        refreshLayout.setRefreshHeader(new CarRefreshHeader(context));
+        refreshLayout.setEnableLoadmore(false);//加载更多由BaseQuickAdapter完成
+        refreshLayout.setOnRefreshListener(this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.addItemDecoration(new ItemDecorationFactory.DividerBuilder()
+                .dividerColor(context.getResources().getColor(R.color.line_light))
+                .build(recyclerView));
+        recyclerView.setAdapter(adapter);
+        adapter.setOnLoadMoreListener(this, recyclerView);
+        adapter.setEmptyView(R.layout.layout_empty);
+        refreshLayout.autoRefresh();
     }
 }
