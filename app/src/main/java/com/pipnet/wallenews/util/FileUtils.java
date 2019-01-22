@@ -1,13 +1,19 @@
 package com.pipnet.wallenews.util;
 
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Base64;
 
+import com.pipnet.wallenews.App;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 public class FileUtils {
+
+    private static String DIR_NAME = "wali/";
     /**
      * 将图片转换成Base64编码的字符串
      * @param path
@@ -41,6 +47,23 @@ public class FileUtils {
 
         }
         return result;
+    }
+
+    private static String getRootPath() {
+        // 判断SD卡是否存在，并且是否具有读写权限
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            return Environment.getExternalStorageDirectory().getPath() + "/";
+        } else {
+            return App.getInstance().getCacheDir().getAbsolutePath() + "/android/data/" + App.getInstance().getPackageName() + "/";
+        }
+    }
+
+    public static String getDirpath() {
+        String filePath = getRootPath() + DIR_NAME;
+        File f = new File(filePath);
+        if (!f.exists())
+            f.mkdir();
+        return filePath;
     }
 
 }
