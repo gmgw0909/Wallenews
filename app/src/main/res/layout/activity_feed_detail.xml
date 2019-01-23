@@ -65,6 +65,13 @@
             android:background="@color/line_light" />
     </RelativeLayout>
 
+    <ImageView
+        android:id="@+id/load_page_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@mipmap/detail_load_page" />
+
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"

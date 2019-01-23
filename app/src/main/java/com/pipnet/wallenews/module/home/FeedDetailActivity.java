@@ -4,11 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -17,6 +19,7 @@ import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.adapter.CommentAdapter;
 import com.pipnet.wallenews.base.BaseActivity;
 import com.pipnet.wallenews.bean.FeedDetailsInfo;
+import com.pipnet.wallenews.bean.FeedResponse;
 import com.pipnet.wallenews.bean.RepliesResponse;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
@@ -36,7 +39,7 @@ import java.util.regex.Pattern;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class FeedDetailActivity extends BaseActivity implements OnRefreshListener, BaseQuickAdapter.RequestLoadMoreListener {
+public class FeedDetailActivity extends BaseActivity implements OnRefreshListener {
 
     @BindView(R.id.title_avatar)
     SimpleDraweeView titleAvatar;
@@ -48,11 +51,16 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
     RecyclerView recyclerComment;
     @BindView(R.id.refresh_layout)
     SmartRefreshLayout refreshLayout;
+    @BindView(R.id.load_page_view)
+    ImageView loadPageView;
 
+    TextView name;
+    SimpleDraweeView avatar;
     WebView webView;
 
     long id = 0;
-
+    int page = 1;
+    List<RepliesResponse.RepliesBean> list = new ArrayList<>();
     CommentAdapter adapter;
 
     @Override
@@ -62,25 +70,19 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
 
     @Override
     public void initViewData() {
-        List<RepliesResponse.RepliesBean> data = new ArrayList<>();
-        data.add(new RepliesResponse.RepliesBean());
-        initView(this, adapter = new CommentAdapter(data));
+        initView(this, adapter = new CommentAdapter(list));
         id = getIntent().getLongExtra("FEED_ID", 0);
         NetRequest.detail(id, new BaseSubscriber<FeedDetailsInfo>() {
             @Override
             public void onNext(FeedDetailsInfo feedDetailsInfo) {
+                name.setText(feedDetailsInfo.content.authorName);
+                if (!TextUtils.isEmpty(feedDetailsInfo.content.authorImage)) {
+                    avatar.setImageURI(feedDetailsInfo.content.authorImage);
+                }
                 webView.addJavascriptInterface(new JavascriptInterface(FeedDetailActivity.this, returnImageUrlsFromHtml(feedDetailsInfo.content.content)), "imagelistner");
                 webView.loadDataWithBaseURL(null, feedDetailsInfo.content.content, "text/html", "utf-8", null);
             }
         });
-
-        NetRequest.replies(id, 1, new BaseSubscriber<RepliesResponse>() {
-            @Override
-            public void onNext(RepliesResponse repliesResponse) {
-
-            }
-        });
-
     }
 
     @OnClick({R.id.btn_left, R.id.btn_right})
@@ -97,8 +99,8 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
     private void initView(Context context, BaseQuickAdapter adapter) {
         //初始化头部
         View header = LayoutInflater.from(context).inflate(R.layout.item_feed_header, null);
-        TextView name = header.findViewById(R.id.title_name);
-        SimpleDraweeView avatar = header.findViewById(R.id.title_avatar);
+        name = header.findViewById(R.id.title_name);
+        avatar = header.findViewById(R.id.title_avatar);
         webView = header.findViewById(R.id.web_view);
         intWebView(webView);
         adapter.addHeaderView(header);
@@ -111,9 +113,9 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
                 .dividerColor(context.getResources().getColor(R.color.line_light))
                 .build(recyclerComment));
         recyclerComment.setAdapter(adapter);
-        adapter.setOnLoadMoreListener(this, recyclerComment);
-        adapter.setEmptyView(R.layout.layout_empty);
+//        adapter.setEmptyView(R.layout.layout_empty);
 //        refreshLayout.autoRefresh();
+        getComments(page);
     }
 
     @SuppressLint("JavascriptInterface")
@@ -135,6 +137,8 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
                         + "    objs[i].onclick=function()  " + "    {  "
                         + "        window.imagelistner.openImage(this.src);  "
                         + "    }  " + "}" + "})()");
+
+                loadPageView.setVisibility(View.GONE);
             }
         });
     }
@@ -164,12 +168,34 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
-
+        page = 1;
+        getComments(page);
     }
 
-    @Override
-    public void onLoadMoreRequested() {
+//    @Override
+//    public void onLoadMoreRequested() {
+//        page++;
+//        getComments(page);
+//    }
 
+    private void getComments(final int page) {
+        NetRequest.replies(id, page, new BaseSubscriber<RepliesResponse>() {
+            @Override
+            public void onNext(RepliesResponse repliesResponse) {
+                if (repliesResponse.replies != null && repliesResponse.replies.size() > 0) {
+                    List<RepliesResponse.RepliesBean> list_ = repliesResponse.replies;
+                    if (page == 1) {
+                        list.clear();
+                    }
+                    list.addAll(list_);
+                    adapter.notifyDataSetChanged();
+                    adapter.loadMoreComplete();
+                } else {
+                    adapter.loadMoreEnd();
+                }
+                refreshLayout.finishRefresh();
+            }
+        });
     }
 
 }
