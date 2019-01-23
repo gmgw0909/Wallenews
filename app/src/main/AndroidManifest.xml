@@ -40,6 +40,7 @@
         <activity android:name=".module.mine.FollowerActivity" />
         <activity android:name=".module.home.FeedDetailActivity" />
         <activity android:name=".module.image.ImagePagerActivity" />
+        <activity android:name=".module.mine.UserDetailActivity" />
 
         <activity
             android:name=".wxapi.WXEntryActivity"
