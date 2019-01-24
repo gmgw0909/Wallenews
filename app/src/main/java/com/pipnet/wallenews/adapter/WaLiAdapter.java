@@ -1,5 +1,6 @@
 package com.pipnet.wallenews.adapter;
 
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
@@ -14,6 +15,7 @@ import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.bean.FeedResponse;
 import com.pipnet.wallenews.bean.FollowResponse;
 import com.pipnet.wallenews.bean.response.Response;
+import com.pipnet.wallenews.module.mine.UserDetailActivity;
 import com.pipnet.wallenews.util.TimeUtil;
 
 import java.util.List;
@@ -39,6 +41,12 @@ public class WaLiAdapter extends BaseQuickAdapter<FeedResponse.FeedsBean, BaseVi
         helper.setText(R.id.name, item.content.authorName);
         helper.setText(R.id.time, TimeUtil.intervalTime(item.content.createTime));
         helper.setText(R.id.title, item.content.title);
+        avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.startActivity(new Intent(mContext, UserDetailActivity.class));
+            }
+        });
     }
 
 }
