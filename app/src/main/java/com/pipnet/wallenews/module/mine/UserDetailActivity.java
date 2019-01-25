@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import com.jaeger.library.StatusBarUtil;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.adapter.MyPagerAdapter;
 import com.pipnet.wallenews.base.BaseActivity;
@@ -48,6 +49,7 @@ public class UserDetailActivity extends BaseActivity {
 
     @Override
     public void initViewData() {
+        StatusBarUtil.setTranslucentForCoordinatorLayout(this, 0);
         fragments.add(new WaPianFragment());
         fragments.add(new WaPianFragment());
         fragments.add(new WaPianFragment());
