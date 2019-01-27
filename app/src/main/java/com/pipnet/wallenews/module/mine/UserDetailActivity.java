@@ -1,23 +1,20 @@
 package com.pipnet.wallenews.module.mine;
 
 import android.content.Context;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.text.TextPaint;
-import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.jaeger.library.StatusBarUtil;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.adapter.MyPagerAdapter;
 import com.pipnet.wallenews.base.BaseActivity;
 import com.pipnet.wallenews.base.BaseFragment;
-import com.pipnet.wallenews.module.home.WaLiFragment;
 import com.pipnet.wallenews.util.DisplayUtil;
 import com.pipnet.wallenews.widgets.ScaleTransitionPagerTitleView;
-import com.scwang.smartrefresh.layout.util.DensityUtil;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -31,6 +28,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.Simple
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class UserDetailActivity extends BaseActivity {
 
@@ -38,6 +36,26 @@ public class UserDetailActivity extends BaseActivity {
     MagicIndicator magicIndicator;
     @BindView(R.id.viewpager)
     ViewPager mViewPager;
+    @BindView(R.id.iv_header_bg)
+    ImageView ivHeaderBg;
+    @BindView(R.id.btn_back)
+    ImageView btnBack;
+    @BindView(R.id.avatar)
+    SimpleDraweeView avatar;
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.intro)
+    TextView intro;
+    @BindView(R.id.zf_count)
+    TextView zfCount;
+    @BindView(R.id.xh_count)
+    TextView xhCount;
+    @BindView(R.id.btn_follow)
+    TextView btnFollow;
+    @BindView(R.id.bar_title)
+    TextView barTitle;
+    @BindView(R.id.bar_btn_back)
+    TextView barBtnBack;
 
     String[] tabTitles = {"瓦片", "回复", "喜欢"};
     private ArrayList<BaseFragment> fragments = new ArrayList<>();//页卡视图集合
@@ -94,5 +112,15 @@ public class UserDetailActivity extends BaseActivity {
         });
         magicIndicator.setNavigator(commonNavigator);
         ViewPagerHelper.bind(magicIndicator, mViewPager);
+    }
+
+    @OnClick({R.id.btn_back, R.id.bar_btn_back})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_back:
+                break;
+            case R.id.bar_btn_back:
+                break;
+        }
     }
 }
