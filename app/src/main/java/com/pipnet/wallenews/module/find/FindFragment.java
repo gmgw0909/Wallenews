@@ -1,5 +1,7 @@
 package com.pipnet.wallenews.module.find;
 
+import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by LeeBoo on 2019/1/12.
@@ -86,11 +89,20 @@ public class FindFragment extends LazyFragment implements OnRefreshListener {
     @Override
     public void onRefresh(final RefreshLayout refreshlayout) {
 
-        new android.os.Handler().postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 refreshlayout.finishRefresh();
             }
         }, 1000);
+    }
+
+    @OnClick({R.id.btn_search})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_search:
+                startActivity(new Intent(getActivity(), SearchActivity.class));
+                break;
+        }
     }
 }

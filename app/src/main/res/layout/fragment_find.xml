@@ -10,6 +10,7 @@
         android:background="@color/white">
 
         <TextView
+            android:id="@+id/btn_search"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:layout_centerInParent="true"
