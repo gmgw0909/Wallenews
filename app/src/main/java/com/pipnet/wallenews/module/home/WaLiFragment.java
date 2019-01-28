@@ -56,6 +56,7 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
     private long upCursor = 0;
     private long downCursor = 0;
     List<FeedResponse.FeedsBean> list = new ArrayList<>();
+    List<FeedResponse.TopTopicBean> topicBeans = new ArrayList<>();
     WaLiAdapter adapter;
 
     @Override
@@ -91,6 +92,10 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
         NetRequest.feeds(cursor, direction, new BaseSubscriber<FeedResponse>() {
             @Override
             public void onNext(FeedResponse followResponse) {
+                if (followResponse.topTopic != null && followResponse.topTopic.size() > 0 && direction.equals("newFeed")) {
+                    topicBeans.clear();
+                    topicBeans.addAll(followResponse.topTopic);
+                }
                 if (followResponse.feeds != null && followResponse.feeds.size() > 0) {
                     List<FeedResponse.FeedsBean> list_ = followResponse.feeds;
                     downCursor = list_.get(list_.size() - 1).cursor;
@@ -121,21 +126,13 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
     }
 
     private void initView(Context context, BaseQuickAdapter adapter) {
-        List<FeedResponse.TopTopicBean> list = new ArrayList<>();
-        list.add(new FeedResponse.TopTopicBean());
-        list.add(new FeedResponse.TopTopicBean());
-        list.add(new FeedResponse.TopTopicBean());
-        list.add(new FeedResponse.TopTopicBean());
-        list.add(new FeedResponse.TopTopicBean());
-        list.add(new FeedResponse.TopTopicBean());
-        list.add(new FeedResponse.TopTopicBean());
         //初始化头部
         View header = LayoutInflater.from(getActivity()).inflate(R.layout.header_wali, null);
         RecyclerView headerRV = header.findViewById(R.id.recycler_header);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(OrientationHelper.HORIZONTAL);
         headerRV.setLayoutManager(layoutManager);
-        headerRV.setAdapter(new WaLiHeaderAdapter(list));
+        headerRV.setAdapter(new WaLiHeaderAdapter(topicBeans));
         adapter.addHeaderView(header);
         //初始化Feeds列表
         refreshLayout.setRefreshHeader(new CarRefreshHeader(context));
