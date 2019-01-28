@@ -9,6 +9,7 @@ import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.adapter.WaLiAdapter;
 import com.pipnet.wallenews.adapter.WaLiHeaderAdapter;
 import com.pipnet.wallenews.base.LazyFragment;
+import com.pipnet.wallenews.bean.FeedResponse;
 import com.pipnet.wallenews.bean.PageList;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.uihelpers.IRefreshPage;
@@ -35,7 +36,7 @@ public class MessageFragment extends LazyFragment implements IRefreshPage, BaseQ
     @BindView(R.id.btn_left)
     TextView btnLeft;
 
-    private RefreshLoadMoreHelper<Response> refreshLoadMoreHelper;
+    private RefreshLoadMoreHelper<FeedResponse.TopTopicBean> refreshLoadMoreHelper;
 
     @Override
     protected int setContentView() {

@@ -62,15 +62,30 @@
         android:textSize="17sp" />
 
     <LinearLayout
+        android:id="@+id/ll_img"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_marginBottom="15dp"
         android:layout_marginLeft="75dp"
         android:layout_marginRight="15dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/img1"
+            android:id="@+id/img1_1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:actualImageScaleType="centerCrop"
+            app:placeholderImage="@mipmap/pic_tj_default"
+            app:placeholderImageScaleType="centerCrop"
+            app:roundBottomLeft="true"
+            app:roundBottomRight="true"
+            app:roundTopLeft="true"
+            app:roundTopRight="true"
+            app:roundedCornerRadius="10dp" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/img23_1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -83,7 +98,23 @@
             app:roundTopRight="false"
             app:roundedCornerRadius="10dp" />
 
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/img2_2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            app:actualImageScaleType="centerCrop"
+            app:placeholderImage="@mipmap/pic_tj_default"
+            app:placeholderImageScaleType="centerCrop"
+            app:roundBottomLeft="false"
+            app:roundBottomRight="true"
+            app:roundTopLeft="false"
+            app:roundTopRight="true"
+            app:roundedCornerRadius="10dp" />
+
         <LinearLayout
+            android:id="@+id/ll_3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
@@ -91,7 +122,7 @@
             android:orientation="vertical">
 
             <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/img2"
+                android:id="@+id/img3_2"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -105,7 +136,7 @@
                 app:roundedCornerRadius="10dp" />
 
             <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/img3"
+                android:id="@+id/img3_3"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="5dp"
@@ -121,5 +152,131 @@
         </LinearLayout>
     </LinearLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="75dp"
+            android:layout_marginRight="16dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/btn_comment"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:drawableLeft="@mipmap/icon_pl"
+                android:drawablePadding="5dp"
+                android:gravity="center|left"
+                android:text="0"
+                android:textColor="@color/text_666"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/btn_forward"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:drawableLeft="@mipmap/icon_zf"
+                android:drawablePadding="5dp"
+                android:gravity="center|left"
+                android:text="0"
+                android:textColor="@color/text_666"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/btn_like"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:drawableLeft="@mipmap/icon_dz"
+                android:drawablePadding="5dp"
+                android:gravity="center|left"
+                android:text="0"
+                android:textColor="@color/text_666"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/btn_topic"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:drawableLeft="@mipmap/icon_ts"
+                android:gravity="center|left"
+                android:textColor="@color/text_666" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_more"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="75dp"
+                android:layout_marginRight="16dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3" />
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3dp"
+                        android:src="@mipmap/icon_san_jiao" />
+                </FrameLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/more_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="瓦砾新闻"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="更多相关内容"
+                    android:textColor="@color/text_tab_blue"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="5dp" />
+        </LinearLayout>
+    </FrameLayout>
 </LinearLayout>

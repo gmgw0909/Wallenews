@@ -121,14 +121,14 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
     }
 
     private void initView(Context context, BaseQuickAdapter adapter) {
-        List<Response> list = new ArrayList<>();
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
-        list.add(new Response());
+        List<FeedResponse.TopTopicBean> list = new ArrayList<>();
+        list.add(new FeedResponse.TopTopicBean());
+        list.add(new FeedResponse.TopTopicBean());
+        list.add(new FeedResponse.TopTopicBean());
+        list.add(new FeedResponse.TopTopicBean());
+        list.add(new FeedResponse.TopTopicBean());
+        list.add(new FeedResponse.TopTopicBean());
+        list.add(new FeedResponse.TopTopicBean());
         //初始化头部
         View header = LayoutInflater.from(getActivity()).inflate(R.layout.header_wali, null);
         RecyclerView headerRV = header.findViewById(R.id.recycler_header);

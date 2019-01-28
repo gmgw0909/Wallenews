@@ -8,14 +8,17 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/rl_topic"
         android:layout_width="match_parent"
         android:layout_height="60dp">
 
         <ImageView
+            android:id="@+id/iv_topic_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <TextView
+            android:id="@+id/tv_tag"
             android:layout_width="match_parent"
             android:layout_height="18dp"
             android:layout_alignParentBottom="true"
@@ -27,6 +30,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/rl_user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -61,12 +65,12 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/time"
+                android:id="@+id/followCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/name"
                 android:layout_marginTop="5dp"
-                android:text="6小时前"
+                android:text="0人关注"
                 android:textColor="@color/text_999"
                 android:textSize="11sp" />
         </LinearLayout>

@@ -17,7 +17,7 @@
             android:layout_marginLeft="20dp"
             android:layout_toLeftOf="@+id/btn_right"
             android:background="@drawable/shape_find_search_bg"
-            android:drawableLeft="@mipmap/icon_xl"
+            android:drawableLeft="@mipmap/icon_ssl_ss"
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
             android:hint="搜索内容"
