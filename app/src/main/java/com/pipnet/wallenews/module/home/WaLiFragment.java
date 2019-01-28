@@ -16,14 +16,9 @@ import com.pipnet.wallenews.adapter.WaLiAdapter;
 import com.pipnet.wallenews.adapter.WaLiHeaderAdapter;
 import com.pipnet.wallenews.base.LazyFragment;
 import com.pipnet.wallenews.bean.FeedResponse;
-import com.pipnet.wallenews.bean.FollowResponse;
 import com.pipnet.wallenews.bean.LoginInfo;
-import com.pipnet.wallenews.bean.PageList;
-import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
-import com.pipnet.wallenews.uihelpers.IRefreshPage;
-import com.pipnet.wallenews.uihelpers.RefreshLoadMoreHelper;
 import com.pipnet.wallenews.util.SPUtils;
 import com.pipnet.wallenews.util.ToastUtil;
 import com.pipnet.wallenews.widgets.CarRefreshHeader;
@@ -107,9 +102,8 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
                     list.addAll(list_);
                     adapter.notifyDataSetChanged();
                     adapter.loadMoreComplete();
-                } else {
-                    adapter.loadMoreEnd();
                 }
+                adapter.loadMoreComplete();
                 refreshLayout.finishRefresh();
             }
         });

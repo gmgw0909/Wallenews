@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp">
 
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/iv_topic_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

@@ -3,9 +3,7 @@ package com.pipnet.wallenews.adapter;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -15,30 +13,11 @@ import com.pipnet.wallenews.bean.FeedResponse;
 
 import java.util.List;
 
-import butterknife.BindView;
-
 /**
  * Created by LeeBoo on 2019/1/13.
  */
 
 public class WaLiHeaderAdapter extends BaseQuickAdapter<FeedResponse.TopTopicBean, BaseViewHolder> {
-
-    @BindView(R.id.iv_topic_bg)
-    ImageView ivTopicBg;
-    @BindView(R.id.tv_tag)
-    TextView tvTag;
-    @BindView(R.id.rl_topic)
-    RelativeLayout rlTopic;
-    @BindView(R.id.avatar)
-    SimpleDraweeView avatar;
-    @BindView(R.id.name)
-    TextView name;
-    @BindView(R.id.followCount)
-    TextView followCount;
-    @BindView(R.id.rl_user)
-    RelativeLayout rlUser;
-    @BindView(R.id.title)
-    TextView title;
 
     public WaLiHeaderAdapter(@Nullable List<FeedResponse.TopTopicBean> data) {
         super(R.layout.item_header_wali, data);
@@ -52,9 +31,24 @@ public class WaLiHeaderAdapter extends BaseQuickAdapter<FeedResponse.TopTopicBea
         if (!TextUtils.isEmpty(item.type) && item.type.equals("recommendAuthor")) {
             rlUser.setVisibility(View.VISIBLE);
             rlTopic.setVisibility(View.GONE);
+            SimpleDraweeView avatar = helper.getView(R.id.avatar);
+            if (!TextUtils.isEmpty(item.content.image)) {
+                avatar.setImageURI(item.content.image);
+            } else {
+                avatar.setImageResource(R.mipmap.default_avatar);
+            }
+            helper.setText(R.id.name, item.content.name);
+            helper.setText(R.id.followCount, item.content.followerCount + "人关注");
+            helper.setText(R.id.title, item.content.latestContentTitle);
         } else {
             rlUser.setVisibility(View.GONE);
             rlTopic.setVisibility(View.VISIBLE);
+            SimpleDraweeView topicBg = helper.getView(R.id.iv_topic_bg);
+            if (!TextUtils.isEmpty(item.content.image)) {
+                topicBg.setImageURI(item.content.image);
+            }
+            helper.setText(R.id.tv_tag, "#" + item.content.name);
+            helper.setText(R.id.title, item.content.latestContentTitle);
         }
     }
 }
