@@ -47,6 +47,11 @@ public class ReplyActivity extends BaseActivity {
         if (!TextUtils.isEmpty(SPUtils.getObject(LoginInfo.class).avatar)) {
             myAvatar.setImageURI(SPUtils.getObject(LoginInfo.class).avatar);
         }
+        if (!TextUtils.isEmpty(contentBean.authorImage)) {
+            avatar.setImageURI(contentBean.authorImage);
+        }
+        name.setText(contentBean.authorName);
+        hfName.setText("@" + contentBean.authorName);
     }
 
     @OnClick({R.id.btn_left, R.id.btn_right})
