@@ -6,6 +6,7 @@ package com.pipnet.wallenews.base;
 
 public class Constants {
     public static final String REFRESH_USER = "refresh_user_info";
+    public static final String COMMENT_SUCCESS = "comment_success";
 
     //微信登录
     public static final String APP_ID = "wxc7143c99655fd622";

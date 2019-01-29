@@ -115,4 +115,37 @@ public interface ServiceInterface {
     @GET("we/content/{id}/replies")
     Flowable<RepliesResponse> replies(@Path("id") long id, @Query("page") int page);
 
+    /**
+     * 资讯话题列表
+     */
+    @GET("we/content/{id}/recommends")
+    Flowable<FeedDetailsInfo> recommends(@Path("id") long id);
+
+    /**
+     * 点赞和取消点赞
+     */
+    @POST("we/likeRel/submit")
+    @FormUrlEncoded
+    Flowable<Response> like(@Field("contentId") String contentId, @Field("relType") String relType, @Field("isConfirmed") String isConfirmed);
+
+    /**
+     * 转发
+     */
+    @POST("we/forward/submit")
+    @FormUrlEncoded
+    Flowable<Response> forward(@Field("friendId") String friendId, @Field("isConfirmed") String isConfirmed);
+
+    /**
+     * 回复
+     * sourceId:7
+     * content:转发API测试
+     * isAudit:0
+     * replyTos:@我的回复
+     * replyToIds:1 2 123
+     * relType:content(默认)/forward
+     */
+    @POST("we/reply/submit")
+    @FormUrlEncoded
+    Flowable<Response> reply(@Field("sourceId") String sourceId, @Field("content") String content, @Field("isAudit") int isAudit,
+                             @Field("replyTos") String replyTos, @Field("replyToIds") String replyToIds, @Field("relType") String relType);
 }

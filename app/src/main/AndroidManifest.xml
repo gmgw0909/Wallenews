@@ -42,6 +42,8 @@
         <activity android:name=".module.image.ImagePagerActivity" />
         <activity android:name=".module.mine.UserDetailActivity" />
         <activity android:name=".module.find.SearchActivity" />
+        <activity android:name=".module.home.ReplyActivity" />
+        <activity android:name=".module.home.ForwardActivity" />
 
         <activity
             android:name=".wxapi.WXEntryActivity"

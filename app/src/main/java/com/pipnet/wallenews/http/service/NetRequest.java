@@ -24,6 +24,7 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.http.Field;
 
 /**
  * Created by LeeBoo on 2017/8/18.
@@ -132,6 +133,36 @@ public class NetRequest {
         toSubscriber(RetrofitManager.getInstance().getServiceInterface().replies(id, page), subscriber);
     }
 
+    /**
+     * 资讯关联话题列表
+     */
+    public static void recommends(long id, Subscriber<FeedDetailsInfo> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().recommends(id), subscriber);
+    }
+
+    /**
+     * 点赞或取消点赞
+     * <p>
+     * contentId:1
+     * relType:content(默认)/forward/reply <非必填>
+     * isConfirmed:confirmed(默认)/tobe <非必填>
+     */
+    public static void like(String contentId, String relType, boolean like, Subscriber<Response> subscriber) {
+        String isConfirmed;
+        if (like) {
+            isConfirmed = "confirmed";
+        } else {
+            isConfirmed = "tobe";
+        }
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().like(contentId, relType, isConfirmed), subscriber);
+    }
+
+    /**
+     * 回复
+     */
+    public static void reply(String sourceId, String content, String replyTos, String replyToIds, String relType, Subscriber<Response> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().reply(sourceId, content, 0, replyTos, replyToIds, relType), subscriber);
+    }
     //======================================================上面是所有后台接口=========================================================
 
     /**

@@ -15,7 +15,15 @@
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/iv_topic_bg"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:actualImageScaleType="centerCrop"
+            app:placeholderImage="@mipmap/pic_tj_default"
+            app:placeholderImageScaleType="centerCrop"
+            app:roundBottomLeft="false"
+            app:roundBottomRight="false"
+            app:roundTopLeft="true"
+            app:roundTopRight="true"
+            app:roundedCornerRadius="5dp" />
 
         <TextView
             android:id="@+id/tv_tag"
@@ -34,6 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:paddingLeft="10dp"
         android:visibility="gone">
 
         <com.facebook.drawee.view.SimpleDraweeView

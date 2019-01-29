@@ -14,6 +14,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.adapter.WaLiAdapter;
 import com.pipnet.wallenews.adapter.WaLiHeaderAdapter;
+import com.pipnet.wallenews.base.Constants;
 import com.pipnet.wallenews.base.LazyFragment;
 import com.pipnet.wallenews.bean.FeedResponse;
 import com.pipnet.wallenews.bean.LoginInfo;
@@ -27,6 +28,10 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import net.arvin.itemdecorationhelper.ItemDecorationFactory;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +66,7 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
 
     @Override
     protected void lazyLoad() {
+        EventBus.getDefault().register(this);
         upCursor = SPUtils.getLong("upCursor", 0);
         title.setText("瓦砾");
         btnLeft.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
@@ -145,6 +151,27 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        view.findViewById(R.id.btn_topic).performClick();
         startActivity(new Intent(getActivity(), FeedDetailActivity.class).putExtra("FEED_ID", list.get(position).content.id));
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(String event) {
+        if (event.contains(Constants.COMMENT_SUCCESS)) {
+            for (int i = 0; i < list.size(); i++) {
+                FeedResponse.FeedsBean feedsBean = list.get(i);
+                if (feedsBean.content.id == Long.parseLong(event.replace(Constants.COMMENT_SUCCESS, ""))) {
+                    feedsBean.content.commentCount += 1;
+                    adapter.notifyDataSetChanged();
+                    return;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
     }
 }

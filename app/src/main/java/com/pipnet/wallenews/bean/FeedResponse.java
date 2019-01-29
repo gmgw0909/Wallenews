@@ -2,6 +2,7 @@ package com.pipnet.wallenews.bean;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class FeedResponse {
@@ -26,8 +27,9 @@ public class FeedResponse {
         public ContentBean content;
         public int cursor;
         public String type;
+        public boolean show;
 
-        public static class ContentBean {
+        public static class ContentBean implements Serializable{
             /**
              * authorId : 364
              * authorImage :
@@ -84,51 +86,13 @@ public class FeedResponse {
          * type : recommendTopic
          */
 
-        public ContentBeanX content;
+        public TopicsBean content;
         public int cursor;
         public String type;
 
-        public static class ContentBeanX {
-            /**
-             * contentCount : 8
-             * createTime : 1542020218000
-             * followerCount : 0
-             * id : 71
-             * ifFollowed : false
-             * image : http://www.mubbox.com/diting-web/empty
-             * introduction : 游戏
-             * isPrivate : 0
-             * labelId : 101
-             * latestContentId : 29274
-             * latestContentImageArray : ["https://pic.36krcnd.com/201901/22080116/ushs1nles6m1q6yu.png!heading","https://pic.36krcnd.com/201901/22080130/tnkjh4rwtdcevkoc.png!heading","https://pic.36krcnd.com/201901/22080302/ub2ima6gg5nb13ug.png!heading"]
-             * latestContentSubTitle :
-             * latestContentTitle : 铲屎官请注意 支付宝上线“宠物码”小程序：可提高走丢宠物找回率
-             * name : 游戏
-             * new : false
-             * rank : 0
-             * topicUUID : 游戏
-             * updateTime : 1542020218000
-             */
-
-            public int contentCount;
-            public long createTime;
-            public int followerCount;
-            public int id;
-            public boolean ifFollowed;
-            public String image;
-            public String introduction;
-            public int isPrivate;
-            public int labelId;
-            public int latestContentId;
-            public String latestContentSubTitle;
-            public String latestContentTitle;
-            public String name;
-            @SerializedName("new")
-            public boolean newX;
-            public int rank;
-            public String topicUUID;
-            public long updateTime;
-            public List<String> latestContentImageArray;
+        public TopTopicBean(TopicsBean content, String type) {
+            this.content = content;
+            this.type = type;
         }
     }
 }

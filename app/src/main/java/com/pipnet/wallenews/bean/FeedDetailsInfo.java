@@ -122,47 +122,4 @@ public class FeedDetailsInfo {
         public String url;
         public String video;
     }
-
-    public static class TopicsBean {
-        /**
-         * contentCount : 0
-         * createTime : 1544675598000
-         * followerCount : 0
-         * id : 80
-         * ifFollowed : false
-         * image : http://www.mubbox.com/diting-web/upload/2018/12/13/6268fb3a56f30d6a331bc55191c6ba69_mwz.jpeg
-         * introduction : 孟晚舟
-         * isPrivate : 0
-         * labelId : 7742
-         * latestContentId : 29317
-         * latestContentImageArray : ["http://nimg.ws.126.net/?url=http%3A%2F%2Fcms-bucket.ws.126.net%2F2019%2F01%2F22%2F8a22798351834146b2e0ad0543bdfe73.jpg&thumbnail=690x2147483647&quality=75&type=jpg"]
-         * latestContentSubTitle :
-         * latestContentTitle : 媒体:拒绝向美引渡孟晚舟 是加拿大应作的抉择
-         * name : 孟晚舟
-         * new : false
-         * rank : 0
-         * topicUUID : 孟晚舟
-         * updateTime : 1544675598000
-         */
-
-        public int contentCount;
-        public long createTime;
-        public int followerCount;
-        public int id;
-        public boolean ifFollowed;
-        public String image;
-        public String introduction;
-        public int isPrivate;
-        public int labelId;
-        public int latestContentId;
-        public String latestContentSubTitle;
-        public String latestContentTitle;
-        public String name;
-        @SerializedName("new")
-        public boolean newX;
-        public int rank;
-        public String topicUUID;
-        public long updateTime;
-        public List<String> latestContentImageArray;
-    }
 }
