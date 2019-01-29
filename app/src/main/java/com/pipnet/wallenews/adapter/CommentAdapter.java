@@ -1,13 +1,19 @@
 package com.pipnet.wallenews.adapter;
 
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.bean.RepliesResponse;
+import com.pipnet.wallenews.bean.response.Response;
+import com.pipnet.wallenews.http.service.NetRequest;
+import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
 import com.pipnet.wallenews.util.TimeUtil;
 
 import java.util.List;
@@ -23,7 +29,7 @@ public class CommentAdapter extends BaseQuickAdapter<RepliesResponse.RepliesBean
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, RepliesResponse.RepliesBean item) {
+    protected void convert(final BaseViewHolder helper, final RepliesResponse.RepliesBean item) {
         SimpleDraweeView avatar = helper.getView(R.id.avatar);
         if (!TextUtils.isEmpty(item.authorImage)) {
             avatar.setImageURI(item.authorImage);
@@ -33,5 +39,35 @@ public class CommentAdapter extends BaseQuickAdapter<RepliesResponse.RepliesBean
         helper.setText(R.id.name, item.authorName);
         helper.setText(R.id.title, item.content);
         helper.setText(R.id.time, TimeUtil.intervalTime(item.createTime));
+        TextView btnLike = helper.getView(R.id.btn_like);
+        btnLike.setText(item.likeCount + "");
+        if (item.ifLike) {
+            Drawable drawable = mContext.getResources().getDrawable(R.mipmap.icon_dz_h);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            btnLike.setCompoundDrawables(drawable, null, null, null);
+        } else {
+            Drawable drawable = mContext.getResources().getDrawable(R.mipmap.icon_dz);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            btnLike.setCompoundDrawables(drawable, null, null, null);
+        }
+        btnLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NetRequest.like(item.id + "", "content", !item.ifLike, new BaseSubscriber<Response>() {
+                    @Override
+                    public void onNext(Response response) {
+                        if (!TextUtils.isEmpty(response.status) && response.status.equals("OK")) {
+                            item.ifLike = !item.ifLike;
+                            if (item.ifLike) {
+                                item.likeCount += 1;
+                            } else {
+                                item.likeCount -= 1;
+                            }
+                            notifyItemChanged(helper.getAdapterPosition());
+                        }
+                    }
+                });
+            }
+        });
     }
 }

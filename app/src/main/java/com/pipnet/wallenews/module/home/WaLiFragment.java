@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.pipnet.wallenews.R;
-import com.pipnet.wallenews.adapter.WaLiAdapter;
 import com.pipnet.wallenews.adapter.WaLiHeaderAdapter;
+import com.pipnet.wallenews.adapter.WaLiMultAdapter;
 import com.pipnet.wallenews.base.Constants;
 import com.pipnet.wallenews.base.LazyFragment;
 import com.pipnet.wallenews.bean.FeedResponse;
@@ -57,7 +57,7 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
     private long downCursor = 0;
     List<FeedResponse.FeedsBean> list = new ArrayList<>();
     List<FeedResponse.TopTopicBean> topicBeans = new ArrayList<>();
-    WaLiAdapter adapter;
+    WaLiMultAdapter adapter;
 
     @Override
     protected int setContentView() {
@@ -71,7 +71,7 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
         title.setText("瓦砾");
         btnLeft.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         getUerInfo();
-        initView(getActivity(), adapter = new WaLiAdapter(list));
+        initView(getActivity(), adapter = new WaLiMultAdapter(list));
     }
 
     //网络获取用户信息
@@ -172,6 +172,21 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
                 if (feedsBean.content.id == Long.parseLong(event.replace(Constants.FORWARD_SUCCESS, ""))) {
                     feedsBean.content.forwardCount += 1;
                     feedsBean.content.ifForward = true;
+                    adapter.notifyDataSetChanged();
+                    return;
+                }
+            }
+        } else if (event.contains(Constants.LIKED_SUCCESS)) {
+            for (int i = 0; i < list.size(); i++) {
+                FeedResponse.FeedsBean feedsBean = list.get(i);
+                if (feedsBean.content.id == Long.parseLong(event.split(",")[2])) {
+                    if (event.split(",")[1].equals("true")) {
+                        feedsBean.content.likeCount += 1;
+                        feedsBean.content.ifLike = true;
+                    } else {
+                        feedsBean.content.likeCount -= 1;
+                        feedsBean.content.ifLike = false;
+                    }
                     adapter.notifyDataSetChanged();
                     return;
                 }

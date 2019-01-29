@@ -2,16 +2,22 @@ package com.pipnet.wallenews.module.home;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,12 +27,14 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.adapter.CommentAdapter;
 import com.pipnet.wallenews.base.BaseActivity;
+import com.pipnet.wallenews.base.Constants;
 import com.pipnet.wallenews.bean.FeedDetailsInfo;
-import com.pipnet.wallenews.bean.FeedResponse;
 import com.pipnet.wallenews.bean.RepliesResponse;
+import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
 import com.pipnet.wallenews.interfacee.JavascriptInterface;
+import com.pipnet.wallenews.module.mine.UserDetailActivity;
 import com.pipnet.wallenews.util.TimeUtil;
 import com.pipnet.wallenews.widgets.CarRefreshHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -34,6 +42,10 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import net.arvin.itemdecorationhelper.ItemDecorationFactory;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +71,13 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
     ImageView loadPageView;
     @BindView(R.id.commentCount)
     TextView commentCount;
+    @BindView(R.id.et_comment)
+    EditText etComment;
+    @BindView(R.id.iv_dz)
+    ImageView ivDz;
+    @BindView(R.id.iv_zf)
+    ImageView ivZf;
+    TextView btnFollow;
 
     TextView noComment;
     LinearLayout llTop;
@@ -67,11 +86,13 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
     WebView webView;
 
     long id = 0;
+    long authorId = 0;
     int page = 1;
     int commentCounts = 0;
     List<RepliesResponse.RepliesBean> list = new ArrayList<>();
     LinearLayoutManager linearLayoutManager;
     CommentAdapter adapter;
+    boolean ifFollowed;
 
     @Override
     public int setContentView() {
@@ -80,29 +101,43 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
 
     @Override
     public void initViewData() {
+        EventBus.getDefault().register(this);
         initView(this, adapter = new CommentAdapter(list));
         id = getIntent().getLongExtra("FEED_ID", 0);
         getComments(page);
-        NetRequest.detail(id, new BaseSubscriber<FeedDetailsInfo>() {
+        getDetail();
+        etComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onNext(FeedDetailsInfo feedDetailsInfo) {
-                zfCount.setText(feedDetailsInfo.content.forwardCount + "");
-                xhCount.setText(feedDetailsInfo.content.likeCount + "");
-                commentCounts = feedDetailsInfo.content.commentCount;
-                if (commentCounts != 0) {
-                    commentCount.setText(commentCounts + "条评论");
-                    commentCount.setVisibility(View.VISIBLE);
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND ||
+                        (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    switch (event.getAction()) {
+                        case KeyEvent.ACTION_UP:
+                            //发送请求
+                            String comment = etComment.getText().toString();
+                            if (!TextUtils.isEmpty(comment)) {
+                                NetRequest.reply(id + "", comment, "", "",
+                                        "content", new BaseSubscriber<Response>() {
+                                            @Override
+                                            public void onNext(Response response) {
+                                                if (!TextUtils.isEmpty(response.status) && response.status.equals("OK")) {
+                                                    etComment.setText("");
+                                                    hintKeyBoard();
+                                                    EventBus.getDefault().post(Constants.COMMENT_SUCCESS + id);
+                                                    commentCounts = commentCounts + 1;
+                                                    commentCount.setText(commentCounts + "条评论");
+                                                    commentCount.setVisibility(View.VISIBLE);
+                                                    getComments(page);
+                                                }
+                                            }
+                                        });
+                            }
+                            return true;
+                        default:
+                            return true;
+                    }
                 }
-                title.setText(feedDetailsInfo.content.title);
-                name.setText(feedDetailsInfo.content.authorName);
-                titleName.setText(feedDetailsInfo.content.authorName);
-                time.setText(TimeUtil.intervalTime(feedDetailsInfo.content.createTime));
-                if (!TextUtils.isEmpty(feedDetailsInfo.content.authorImage)) {
-                    avatar.setImageURI(feedDetailsInfo.content.authorImage);
-                    titleAvatar.setImageURI(feedDetailsInfo.content.authorImage);
-                }
-                webView.addJavascriptInterface(new JavascriptInterface(FeedDetailActivity.this, returnImageUrlsFromHtml(feedDetailsInfo.content.content)), "imagelistner");
-                webView.loadDataWithBaseURL(null, feedDetailsInfo.content.content, "text/html", "utf-8", null);
+                return false;
             }
         });
     }
@@ -114,6 +149,7 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
                 finish();
                 break;
             case R.id.btn_right:
+                followOrUnFollow();
                 break;
             case R.id.commentCount:
                 recyclerComment.scrollToPosition(1);
@@ -128,11 +164,24 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
         avatar = header.findViewById(R.id.avatar);
         time = header.findViewById(R.id.time);
         title = header.findViewById(R.id.title);
+        btnFollow = header.findViewById(R.id.btn_right);
         zfCount = header.findViewById(R.id.zf_count);
         xhCount = header.findViewById(R.id.xh_count);
         noComment = header.findViewById(R.id.no_comment);
         webView = header.findViewById(R.id.web_view);
         llTop = header.findViewById(R.id.ll_top);
+        btnFollow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                followOrUnFollow();
+            }
+        });
+        avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(FeedDetailActivity.this, UserDetailActivity.class).putExtra("authorId", authorId));
+            }
+        });
         intWebView(webView);
         adapter.addHeaderView(header);
         //初始化Feeds列表
@@ -229,6 +278,7 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
     public void onRefresh(RefreshLayout refreshlayout) {
         page = 1;
         getComments(page);
+        getDetail();
     }
 
 //    @Override
@@ -259,4 +309,137 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
         });
     }
 
+    private void getDetail() {
+        NetRequest.detail(id, new BaseSubscriber<FeedDetailsInfo>() {
+            @Override
+            public void onNext(final FeedDetailsInfo feedDetailsInfo) {
+                zfCount.setText(feedDetailsInfo.content.forwardCount + "");
+                xhCount.setText(feedDetailsInfo.content.likeCount + "");
+                commentCounts = feedDetailsInfo.content.commentCount;
+                if (commentCounts != 0) {
+                    commentCount.setText(commentCounts + "条评论");
+                    commentCount.setVisibility(View.VISIBLE);
+                }
+                title.setText(feedDetailsInfo.content.title);
+                name.setText(feedDetailsInfo.content.authorName);
+                titleName.setText(feedDetailsInfo.content.authorName);
+                time.setText(TimeUtil.intervalTime(feedDetailsInfo.content.createTime));
+                if (!TextUtils.isEmpty(feedDetailsInfo.content.authorImage)) {
+                    avatar.setImageURI(feedDetailsInfo.content.authorImage);
+                    titleAvatar.setImageURI(feedDetailsInfo.content.authorImage);
+                }
+                if (feedDetailsInfo.content.ifForward) {
+                    ivZf.setImageResource(R.mipmap.icon_xq_zf_h);
+                } else {
+                    ivZf.setImageResource(R.mipmap.icon_xq_zf);
+                }
+                if (feedDetailsInfo.content.ifLike) {
+                    ivDz.setImageResource(R.mipmap.icon_xq_dz_h);
+                } else {
+                    ivDz.setImageResource(R.mipmap.icon_xq_dz);
+                }
+                ivZf.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(FeedDetailActivity.this, ForwardActivity.class).putExtra("item", feedDetailsInfo.content));
+                    }
+                });
+                ivDz.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        NetRequest.like(id + "", "content", !feedDetailsInfo.content.ifLike, new BaseSubscriber<Response>() {
+                            @Override
+                            public void onNext(Response response) {
+                                if (!TextUtils.isEmpty(response.status) && response.status.equals("OK")) {
+                                    feedDetailsInfo.content.ifLike = !feedDetailsInfo.content.ifLike;
+                                    if (feedDetailsInfo.content.ifLike) {
+                                        ivDz.setImageResource(R.mipmap.icon_xq_dz_h);
+                                    } else {
+                                        ivDz.setImageResource(R.mipmap.icon_xq_dz);
+                                    }
+                                    EventBus.getDefault().post(Constants.LIKED_SUCCESS + "," + feedDetailsInfo.content.ifLike + "," + id);
+                                }
+                            }
+                        });
+                    }
+                });
+                authorId = feedDetailsInfo.content.authorId;
+                ifFollowed = feedDetailsInfo.content.authorIfFollowed;
+                if (feedDetailsInfo.content.authorIfFollowed) {
+                    btnRight.setText("正在关注");
+                    btnRight.setTextColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
+                    btnRight.setBackground(ContextCompat.getDrawable(FeedDetailActivity.this, R.drawable.shape_btn_follow_s));
+                    btnFollow.setText("正在关注");
+                    btnFollow.setTextColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
+                    btnFollow.setBackground(ContextCompat.getDrawable(FeedDetailActivity.this, R.drawable.shape_btn_follow_s));
+                } else {
+                    btnRight.setText("关注");
+                    btnRight.setTextColor(ResourcesCompat.getColor(getResources(), R.color.text_tab_blue, null));
+                    btnRight.setBackground(ContextCompat.getDrawable(FeedDetailActivity.this, R.drawable.shape_btn_follow));
+                    btnFollow.setText("关注");
+                    btnFollow.setTextColor(ResourcesCompat.getColor(getResources(), R.color.text_tab_blue, null));
+                    btnFollow.setBackground(ContextCompat.getDrawable(FeedDetailActivity.this, R.drawable.shape_btn_follow));
+                }
+                webView.addJavascriptInterface(new JavascriptInterface(FeedDetailActivity.this, returnImageUrlsFromHtml(feedDetailsInfo.content.content)), "imagelistner");
+                webView.loadDataWithBaseURL(null, feedDetailsInfo.content.content, "text/html", "utf-8", null);
+            }
+        });
+    }
+
+    //取消关注或者关注
+    private void followOrUnFollow() {
+        NetRequest.follow(authorId + "", !ifFollowed, new BaseSubscriber<Response>() {
+            @Override
+            public void onNext(Response response) {
+                if (!TextUtils.isEmpty(response.status) && response.status.equals("OK")) {
+                    ifFollowed = !ifFollowed;
+                    if (ifFollowed) {
+                        btnRight.setText("正在关注");
+                        btnRight.setTextColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
+                        btnRight.setBackground(ContextCompat.getDrawable(FeedDetailActivity.this, R.drawable.shape_btn_follow_s));
+                        btnFollow.setText("正在关注");
+                        btnFollow.setTextColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
+                        btnFollow.setBackground(ContextCompat.getDrawable(FeedDetailActivity.this, R.drawable.shape_btn_follow_s));
+                    } else {
+                        btnRight.setText("关注");
+                        btnRight.setTextColor(ResourcesCompat.getColor(getResources(), R.color.text_tab_blue, null));
+                        btnRight.setBackground(ContextCompat.getDrawable(FeedDetailActivity.this, R.drawable.shape_btn_follow));
+                        btnFollow.setText("关注");
+                        btnFollow.setTextColor(ResourcesCompat.getColor(getResources(), R.color.text_tab_blue, null));
+                        btnFollow.setBackground(ContextCompat.getDrawable(FeedDetailActivity.this, R.drawable.shape_btn_follow));
+                    }
+                }
+            }
+        });
+    }
+
+    //关闭键盘
+    public void hintKeyBoard() {
+        //拿到InputMethodManager
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        //如果window上view获取焦点 && view不为空
+        if (imm.isActive() && getCurrentFocus() != null) {
+            //拿到view的token 不为空
+            if (getCurrentFocus().getWindowToken() != null) {
+                //表示软键盘窗口总是隐藏，除非开始时以SHOW_FORCED显示。
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(String event) {
+        if (event.contains(Constants.FORWARD_SUCCESS)) {
+            if (id == Long.parseLong(event.replace(Constants.FORWARD_SUCCESS, ""))) {
+                ifFollowed = true;
+                ivZf.setImageResource(R.mipmap.icon_xq_zf_h);
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

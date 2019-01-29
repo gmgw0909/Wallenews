@@ -9,7 +9,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.base.BaseActivity;
 import com.pipnet.wallenews.base.Constants;
-import com.pipnet.wallenews.bean.FeedResponse;
+import com.pipnet.wallenews.bean.ContentBean;
 import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
@@ -34,7 +34,7 @@ public class ReplyActivity extends BaseActivity {
     @BindView(R.id.et_comment)
     EditText etComment;
 
-    FeedResponse.FeedsBean.ContentBean contentBean;
+    ContentBean contentBean;
 
     @Override
     public int setContentView() {
@@ -43,7 +43,7 @@ public class ReplyActivity extends BaseActivity {
 
     @Override
     public void initViewData() {
-        contentBean = (FeedResponse.FeedsBean.ContentBean) getIntent().getSerializableExtra("item");
+        contentBean = (ContentBean) getIntent().getSerializableExtra("item");
         if (!TextUtils.isEmpty(SPUtils.getObject(LoginInfo.class).avatar)) {
             myAvatar.setImageURI(SPUtils.getObject(LoginInfo.class).avatar);
         }

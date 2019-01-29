@@ -1,5 +1,6 @@
 package com.pipnet.wallenews.http.service;
 
+import com.pipnet.wallenews.bean.AuthorInfo;
 import com.pipnet.wallenews.bean.FeedDetailsInfo;
 import com.pipnet.wallenews.bean.FeedResponse;
 import com.pipnet.wallenews.bean.FollowResponse;
@@ -136,7 +137,7 @@ public interface ServiceInterface {
      */
     @POST("we/forward/submit")
     @FormUrlEncoded
-    Flowable<Response> forward(@Field("sourceId") String sourceId, @Field("content") String content, @Field("isAudit") String isAudit);
+    Flowable<Response> forward(@Field("content") String content, @Field("isAudit") String isAudit, @Field("sourceId") String sourceId);
 
     /**
      * 回复
@@ -151,4 +152,17 @@ public interface ServiceInterface {
     @FormUrlEncoded
     Flowable<Response> reply(@Field("sourceId") String sourceId, @Field("content") String content, @Field("isAudit") int isAudit,
                              @Field("replyTos") String replyTos, @Field("replyToIds") String replyToIds, @Field("relType") String relType);
+
+    /**
+     * 用户详情
+     */
+    @GET("we/author/{id}/detail")
+    Flowable<AuthorInfo> authorDetail(@Path("id") long id);
+
+    /**
+     * 用户详情-瓦砾
+     */
+    @GET("we/author/{id}/feeds")
+    Flowable<FeedResponse> authorFeeds(@Path("id") long id, @Query("feedType") String feedType);
+
 }

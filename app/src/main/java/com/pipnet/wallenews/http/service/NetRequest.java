@@ -2,6 +2,7 @@ package com.pipnet.wallenews.http.service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.pipnet.wallenews.bean.AuthorInfo;
 import com.pipnet.wallenews.bean.FeedDetailsInfo;
 import com.pipnet.wallenews.bean.FeedResponse;
 import com.pipnet.wallenews.bean.FollowResponse;
@@ -24,7 +25,6 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.http.Field;
 
 /**
  * Created by LeeBoo on 2017/8/18.
@@ -167,9 +167,24 @@ public class NetRequest {
     /**
      * 转发 confirmed / tobe
      */
-    public static void forward(String sourceId, String content, String isAudit, Subscriber<Response> subscriber) {
-        toSubscriber(RetrofitManager.getInstance().getServiceInterface().forward(sourceId, content, isAudit), subscriber);
+    public static void forward(String content, String isAudit, String sourceId, Subscriber<Response> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().forward(content, isAudit, sourceId), subscriber);
     }
+
+    /**
+     * 用户详情
+     */
+    public static void authorDetail(long id, Subscriber<AuthorInfo> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().authorDetail(id), subscriber);
+    }
+
+    /**
+     * 用户详情-瓦砾
+     */
+    public static void authorDetail(long id, String feedType, Subscriber<FeedResponse> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().authorFeeds(id, feedType), subscriber);
+    }
+
     //======================================================上面是所有后台接口=========================================================
 
     /**

@@ -40,6 +40,7 @@ public class RepliesResponse {
         public int id;
         public String isAudit;
         public int likeCount;
+        public boolean ifLike;
         @SerializedName("new")
         public boolean newX;
         public String relType;

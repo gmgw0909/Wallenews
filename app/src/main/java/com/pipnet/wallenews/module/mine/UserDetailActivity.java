@@ -1,8 +1,12 @@
 package com.pipnet.wallenews.module.mine;
 
 import android.content.Context;
+import android.support.design.widget.AppBarLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,7 +17,10 @@ import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.adapter.MyPagerAdapter;
 import com.pipnet.wallenews.base.BaseActivity;
 import com.pipnet.wallenews.base.BaseFragment;
-import com.pipnet.wallenews.bean.FeedResponse;
+import com.pipnet.wallenews.bean.AuthorInfo;
+import com.pipnet.wallenews.bean.response.Response;
+import com.pipnet.wallenews.http.service.NetRequest;
+import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
 import com.pipnet.wallenews.util.DisplayUtil;
 import com.pipnet.wallenews.widgets.ScaleTransitionPagerTitleView;
 
@@ -33,12 +40,14 @@ import butterknife.OnClick;
 
 public class UserDetailActivity extends BaseActivity {
 
+    @BindView(R.id.appbar)
+    AppBarLayout appbar;
     @BindView(R.id.magic_indicator)
     MagicIndicator magicIndicator;
     @BindView(R.id.viewpager)
     ViewPager mViewPager;
     @BindView(R.id.iv_header_bg)
-    ImageView ivHeaderBg;
+    SimpleDraweeView ivHeaderBg;
     @BindView(R.id.btn_back)
     ImageView btnBack;
     @BindView(R.id.avatar)
@@ -60,7 +69,8 @@ public class UserDetailActivity extends BaseActivity {
 
     String[] tabTitles = {"瓦片", "回复", "喜欢"};
     private ArrayList<BaseFragment> fragments = new ArrayList<>();//页卡视图集合
-    FeedResponse.FeedsBean.ContentBean contentBean;
+    int authorId = 0;
+    boolean ifFollowed;
 
     @Override
     public int setContentView() {
@@ -70,10 +80,10 @@ public class UserDetailActivity extends BaseActivity {
     @Override
     public void initViewData() {
         StatusBarUtil.setTranslucentForCoordinatorLayout(this, 0);
-        contentBean = (FeedResponse.FeedsBean.ContentBean) getIntent().getSerializableExtra("item");
-        fragments.add(new WaPianFragment());
-        fragments.add(new WaPianFragment());
-        fragments.add(new WaPianFragment());
+        authorId = getIntent().getIntExtra("authorId", 0);
+        fragments.add(WaPFragment.newInstance(authorId, "all"));
+        fragments.add(WaPFragment.newInstance(authorId, "content"));
+        fragments.add(WaPFragment.newInstance(authorId, "user"));
         MyPagerAdapter mAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragments);
         mViewPager.setAdapter(mAdapter);//给ViewPager设置适配器
         mViewPager.setOffscreenPageLimit(2);
@@ -115,9 +125,26 @@ public class UserDetailActivity extends BaseActivity {
         });
         magicIndicator.setNavigator(commonNavigator);
         ViewPagerHelper.bind(magicIndicator, mViewPager);
+        appbar.addOnOffsetChangedListener(new AppBarStateChangeListener() {
+            @Override
+            public void onStateChanged(AppBarLayout appBarLayout, State state) {
+                if (state == State.EXPANDED) {
+                    //展开状态
+                    barTitle.setVisibility(View.GONE);
+                } else if (state == State.COLLAPSED) {
+                    //折叠状态
+                    barTitle.setVisibility(View.VISIBLE);
+                } else {
+                    //中间状态
+                    barTitle.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        getAuthorDetail();
     }
 
-    @OnClick({R.id.btn_back, R.id.bar_btn_back})
+    @OnClick({R.id.btn_back, R.id.bar_btn_back, R.id.btn_follow})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_back:
@@ -126,6 +153,101 @@ public class UserDetailActivity extends BaseActivity {
             case R.id.bar_btn_back:
                 finish();
                 break;
+            case R.id.btn_follow:
+                followOrUnFollow();
+                break;
         }
+    }
+
+    private void getAuthorDetail() {
+        NetRequest.authorDetail(authorId, new BaseSubscriber<AuthorInfo>() {
+            @Override
+            public void onNext(AuthorInfo response) {
+                if (response.author != null) {
+                    if (!TextUtils.isEmpty(response.author.image)) {
+                        avatar.setImageURI(response.author.image);
+                    } else {
+                        avatar.setImageResource(R.mipmap.default_avatar);
+                    }
+                    if (response.author.latestContentImageArray != null && response.author.latestContentImageArray.size() > 0) {
+                        ivHeaderBg.setImageURI(response.author.latestContentImageArray.get(0));
+                    }
+                    if (!TextUtils.isEmpty(response.author.name)) {
+                        title.setText(response.author.name);
+                        barTitle.setText(response.author.name);
+                    }
+                    if (!TextUtils.isEmpty(response.author.introduction)) {
+                        intro.setText(response.author.introduction);
+                    }
+                    zfCount.setText(response.author.followCount + "");
+                    xhCount.setText(response.author.followerCount + "");
+                    ifFollowed = response.author.ifFollowed;
+                    if (response.author.ifFollowed) {
+                        btnFollow.setText("正在关注");
+                        btnFollow.setTextColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
+                        btnFollow.setBackground(ContextCompat.getDrawable(UserDetailActivity.this, R.drawable.shape_btn_follow_s));
+                    } else {
+                        btnFollow.setText("关注");
+                        btnFollow.setTextColor(ResourcesCompat.getColor(getResources(), R.color.text_tab_blue, null));
+                        btnFollow.setBackground(ContextCompat.getDrawable(UserDetailActivity.this, R.drawable.shape_btn_follow));
+                    }
+                }
+            }
+        });
+    }
+
+    //取消关注或者关注
+    private void followOrUnFollow() {
+        NetRequest.follow(authorId + "", !ifFollowed, new BaseSubscriber<Response>() {
+            @Override
+            public void onNext(Response response) {
+                if (!TextUtils.isEmpty(response.status) && response.status.equals("OK")) {
+                    ifFollowed = !ifFollowed;
+                    if (ifFollowed) {
+                        xhCount.setText(Integer.parseInt(xhCount.getText().toString()) + 1 + "");
+                        btnFollow.setText("正在关注");
+                        btnFollow.setTextColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
+                        btnFollow.setBackground(ContextCompat.getDrawable(UserDetailActivity.this, R.drawable.shape_btn_follow_s));
+                    } else {
+                        xhCount.setText(Integer.parseInt(xhCount.getText().toString()) - 1 + "");
+                        btnFollow.setText("关注");
+                        btnFollow.setTextColor(ResourcesCompat.getColor(getResources(), R.color.text_tab_blue, null));
+                        btnFollow.setBackground(ContextCompat.getDrawable(UserDetailActivity.this, R.drawable.shape_btn_follow));
+                    }
+                }
+            }
+        });
+    }
+
+    public abstract static class AppBarStateChangeListener implements AppBarLayout.OnOffsetChangedListener {
+        public enum State {
+            EXPANDED,
+            COLLAPSED,
+            IDLE
+        }
+
+        private State mCurrentState = State.IDLE;
+
+        @Override
+        public final void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+            if (i == 0) {
+                if (mCurrentState != State.EXPANDED) {
+                    onStateChanged(appBarLayout, State.EXPANDED);
+                }
+                mCurrentState = State.EXPANDED;
+            } else if (Math.abs(i) >= appBarLayout.getTotalScrollRange()) {
+                if (mCurrentState != State.COLLAPSED) {
+                    onStateChanged(appBarLayout, State.COLLAPSED);
+                }
+                mCurrentState = State.COLLAPSED;
+            } else {
+                if (mCurrentState != State.IDLE) {
+                    onStateChanged(appBarLayout, State.IDLE);
+                }
+                mCurrentState = State.IDLE;
+            }
+        }
+
+        public abstract void onStateChanged(AppBarLayout appBarLayout, State state);
     }
 }

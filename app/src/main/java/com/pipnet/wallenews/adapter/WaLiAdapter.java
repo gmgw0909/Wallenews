@@ -87,7 +87,7 @@ public class WaLiAdapter extends BaseQuickAdapter<FeedResponse.FeedsBean, BaseVi
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContext.startActivity(new Intent(mContext, UserDetailActivity.class).putExtra("item", item.content));
+                mContext.startActivity(new Intent(mContext, UserDetailActivity.class).putExtra("authorId", item.content.authorId));
             }
         });
         btnLike.setOnClickListener(new View.OnClickListener() {

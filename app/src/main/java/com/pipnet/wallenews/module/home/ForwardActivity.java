@@ -8,7 +8,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.base.BaseActivity;
 import com.pipnet.wallenews.base.Constants;
-import com.pipnet.wallenews.bean.FeedResponse;
+import com.pipnet.wallenews.bean.ContentBean;
 import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
@@ -27,7 +27,7 @@ public class ForwardActivity extends BaseActivity {
     @BindView(R.id.et_comment)
     EditText etComment;
 
-    FeedResponse.FeedsBean.ContentBean contentBean;
+    ContentBean contentBean;
 
     @Override
     public int setContentView() {
@@ -39,7 +39,7 @@ public class ForwardActivity extends BaseActivity {
         if (!TextUtils.isEmpty(SPUtils.getObject(LoginInfo.class).avatar)) {
             myAvatar.setImageURI(SPUtils.getObject(LoginInfo.class).avatar);
         }
-        contentBean = (FeedResponse.FeedsBean.ContentBean) getIntent().getSerializableExtra("item");
+        contentBean = (ContentBean) getIntent().getSerializableExtra("item");
     }
 
     @OnClick({R.id.btn_left, R.id.btn_right})
@@ -50,7 +50,10 @@ public class ForwardActivity extends BaseActivity {
                 break;
             case R.id.btn_right:
                 String comment = etComment.getText().toString();
-                NetRequest.forward(contentBean.id + "", comment, "confirmed", new BaseSubscriber<Response>() {
+                if (TextUtils.isEmpty(comment)) {
+                    comment = "转发";
+                }
+                NetRequest.forward(comment, "confirmed", contentBean.id + "", new BaseSubscriber<Response>() {
                     @Override
                     public void onNext(Response response) {
                         if (!TextUtils.isEmpty(response.status) && response.status.equals("OK")) {

@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="14dp"
+            app:placeholderImage="@mipmap/default_avatar"
+            app:placeholderImageScaleType="centerCrop"
+            app:roundAsCircle="true" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="11dp"
+            android:layout_toRightOf="@id/avatar"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="瓦砾新闻"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/name"
+                android:layout_marginTop="5dp"
+                android:text="6小时前"
+                android:textColor="@color/text_999"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="75dp"
+        android:layout_marginRight="15dp"
+        android:text="瓦砾新闻瓦砾新闻瓦砾新闻瓦砾新闻瓦砾新闻瓦砾新闻瓦砾新闻瓦砾新闻瓦砾新闻"
+        android:textColor="@color/text_333"
+        android:textSize="15sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="75dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/shape_find_topic_item_bg"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/sourceAuthorName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="瓦砾新闻"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/sourceContentTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:text="瓦砾新闻瓦砾新闻瓦砾新闻瓦砾新闻瓦砾新闻瓦砾新闻瓦砾新闻瓦砾新闻瓦砾新闻"
+            android:textColor="@color/text_333"
+            android:textSize="17sp" />
+
+        <LinearLayout
+            android:id="@+id/ll_img"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/img1_1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:actualImageScaleType="centerCrop"
+                app:placeholderImage="@mipmap/pic_tj_default"
+                app:placeholderImageScaleType="centerCrop"
+                app:roundBottomLeft="true"
+                app:roundBottomRight="true"
+                app:roundTopLeft="true"
+                app:roundTopRight="true"
+                app:roundedCornerRadius="10dp" />
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/img23_1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:actualImageScaleType="centerCrop"
+                app:placeholderImage="@mipmap/pic_tj_default"
+                app:placeholderImageScaleType="centerCrop"
+                app:roundBottomLeft="true"
+                app:roundBottomRight="false"
+                app:roundTopLeft="true"
+                app:roundTopRight="false"
+                app:roundedCornerRadius="10dp" />
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/img2_2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                app:actualImageScaleType="centerCrop"
+                app:placeholderImage="@mipmap/pic_tj_default"
+                app:placeholderImageScaleType="centerCrop"
+                app:roundBottomLeft="false"
+                app:roundBottomRight="true"
+                app:roundTopLeft="false"
+                app:roundTopRight="true"
+                app:roundedCornerRadius="10dp" />
+
+            <LinearLayout
+                android:id="@+id/ll_3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/img3_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    app:actualImageScaleType="centerCrop"
+                    app:placeholderImage="@mipmap/pic_tj_default"
+                    app:placeholderImageScaleType="centerCrop"
+                    app:roundBottomLeft="false"
+                    app:roundBottomRight="false"
+                    app:roundTopLeft="false"
+                    app:roundTopRight="true"
+                    app:roundedCornerRadius="10dp" />
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/img3_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    app:actualImageScaleType="centerCrop"
+                    app:placeholderImage="@mipmap/pic_tj_default"
+                    app:placeholderImageScaleType="centerCrop"
+                    app:roundBottomLeft="false"
+                    app:roundBottomRight="true"
+                    app:roundTopLeft="false"
+                    app:roundTopRight="false"
+                    app:roundedCornerRadius="10dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="75dp"
+            android:layout_marginRight="16dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/btn_comment"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:drawableLeft="@mipmap/icon_pl"
+                android:drawablePadding="5dp"
+                android:gravity="center|left"
+                android:text="0"
+                android:textColor="@color/text_666"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/btn_forward"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:drawableLeft="@mipmap/icon_zf"
+                android:drawablePadding="5dp"
+                android:gravity="center|left"
+                android:text="0"
+                android:textColor="@color/text_666"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/btn_like"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:drawableLeft="@mipmap/icon_dz"
+                android:drawablePadding="5dp"
+                android:gravity="center|left"
+                android:text="0"
+                android:textColor="@color/text_666"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/btn_topic"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:drawableLeft="@mipmap/icon_ts"
+                android:gravity="center|left"
+                android:textColor="@color/text_666"
+                android:visibility="invisible" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+</LinearLayout>
