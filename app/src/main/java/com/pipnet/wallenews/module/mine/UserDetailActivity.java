@@ -13,6 +13,7 @@ import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.adapter.MyPagerAdapter;
 import com.pipnet.wallenews.base.BaseActivity;
 import com.pipnet.wallenews.base.BaseFragment;
+import com.pipnet.wallenews.bean.FeedResponse;
 import com.pipnet.wallenews.util.DisplayUtil;
 import com.pipnet.wallenews.widgets.ScaleTransitionPagerTitleView;
 
@@ -59,6 +60,7 @@ public class UserDetailActivity extends BaseActivity {
 
     String[] tabTitles = {"瓦片", "回复", "喜欢"};
     private ArrayList<BaseFragment> fragments = new ArrayList<>();//页卡视图集合
+    FeedResponse.FeedsBean.ContentBean contentBean;
 
     @Override
     public int setContentView() {
@@ -68,6 +70,7 @@ public class UserDetailActivity extends BaseActivity {
     @Override
     public void initViewData() {
         StatusBarUtil.setTranslucentForCoordinatorLayout(this, 0);
+        contentBean = (FeedResponse.FeedsBean.ContentBean) getIntent().getSerializableExtra("item");
         fragments.add(new WaPianFragment());
         fragments.add(new WaPianFragment());
         fragments.add(new WaPianFragment());
@@ -118,8 +121,10 @@ public class UserDetailActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_back:
+                finish();
                 break;
             case R.id.bar_btn_back:
+                finish();
                 break;
         }
     }
