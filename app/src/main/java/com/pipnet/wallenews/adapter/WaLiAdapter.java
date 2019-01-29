@@ -17,7 +17,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.bean.FeedDetailsInfo;
 import com.pipnet.wallenews.bean.FeedResponse;
-import com.pipnet.wallenews.bean.RepliesResponse;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
