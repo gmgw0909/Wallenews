@@ -21,6 +21,7 @@ import com.pipnet.wallenews.bean.RepliesResponse;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
+import com.pipnet.wallenews.module.home.ForwardActivity;
 import com.pipnet.wallenews.module.home.ReplyActivity;
 import com.pipnet.wallenews.module.mine.UserDetailActivity;
 import com.pipnet.wallenews.util.TimeUtil;
@@ -113,6 +114,12 @@ public class WaLiAdapter extends BaseQuickAdapter<FeedResponse.FeedsBean, BaseVi
             @Override
             public void onClick(View v) {
                 mContext.startActivity(new Intent(mContext, ReplyActivity.class).putExtra("item", item.content));
+            }
+        });
+        btnForward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.startActivity(new Intent(mContext, ForwardActivity.class).putExtra("item", item.content));
             }
         });
 

@@ -166,6 +166,16 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
                     return;
                 }
             }
+        } else if (event.contains(Constants.FORWARD_SUCCESS)) {
+            for (int i = 0; i < list.size(); i++) {
+                FeedResponse.FeedsBean feedsBean = list.get(i);
+                if (feedsBean.content.id == Long.parseLong(event.replace(Constants.FORWARD_SUCCESS, ""))) {
+                    feedsBean.content.forwardCount += 1;
+                    feedsBean.content.ifForward = true;
+                    adapter.notifyDataSetChanged();
+                    return;
+                }
+            }
         }
     }
 

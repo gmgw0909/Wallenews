@@ -163,6 +163,13 @@ public class NetRequest {
     public static void reply(String sourceId, String content, String replyTos, String replyToIds, String relType, Subscriber<Response> subscriber) {
         toSubscriber(RetrofitManager.getInstance().getServiceInterface().reply(sourceId, content, 0, replyTos, replyToIds, relType), subscriber);
     }
+
+    /**
+     * 转发 confirmed / tobe
+     */
+    public static void forward(String sourceId, String content, String isAudit, Subscriber<Response> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().forward(sourceId, content, isAudit), subscriber);
+    }
     //======================================================上面是所有后台接口=========================================================
 
     /**

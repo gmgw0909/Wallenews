@@ -130,10 +130,13 @@ public interface ServiceInterface {
 
     /**
      * 转发
+     * sourceId:7
+     * content:转发API测试（取消时候，非必填）
+     * isAudit:confirmed(默认)/tobe(取消)/deleted
      */
     @POST("we/forward/submit")
     @FormUrlEncoded
-    Flowable<Response> forward(@Field("friendId") String friendId, @Field("isConfirmed") String isConfirmed);
+    Flowable<Response> forward(@Field("sourceId") String sourceId, @Field("content") String content, @Field("isAudit") String isAudit);
 
     /**
      * 回复
