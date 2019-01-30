@@ -18,7 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public final class RetrofitManager {
 
-    private static final int DEFAULT_TIMEOUT = 10;//超时时间10s
+    private static final int DEFAULT_TIMEOUT = 20;//超时时间10s
     private Retrofit retrofit;
     private OkHttpClient.Builder builder;
 

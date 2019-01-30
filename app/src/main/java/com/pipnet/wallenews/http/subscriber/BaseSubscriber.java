@@ -46,9 +46,9 @@ public abstract class BaseSubscriber<T> extends ResourceSubscriber<T> {
             mErrorMsg = "网络连接超时！";
         } else {
             mErrorMsg = e.toString();
-            ToastUtil.show("出现未知错误");
         }
         XLog.e(mErrorMsg);
+        ToastUtil.show(mErrorMsg);
     }
 
     @Override
