@@ -5,9 +5,11 @@ import com.google.gson.GsonBuilder;
 import com.pipnet.wallenews.bean.AuthorInfo;
 import com.pipnet.wallenews.bean.FeedDetailsInfo;
 import com.pipnet.wallenews.bean.FeedResponse;
+import com.pipnet.wallenews.bean.FindResponse;
 import com.pipnet.wallenews.bean.FollowResponse;
 import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.bean.RepliesResponse;
+import com.pipnet.wallenews.bean.SearchRecommend;
 import com.pipnet.wallenews.bean.UploadResponse;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.RetrofitManager;
@@ -183,6 +185,20 @@ public class NetRequest {
      */
     public static void authorDetail(long id, String feedType, Subscriber<FeedResponse> subscriber) {
         toSubscriber(RetrofitManager.getInstance().getServiceInterface().authorFeeds(id, feedType), subscriber);
+    }
+
+    /**
+     * 发现首页
+     */
+    public static void findHome(int cursor, Subscriber<FindResponse> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().findHome(cursor), subscriber);
+    }
+
+    /**
+     * 搜索记录
+     */
+    public static void searchRecommend(Subscriber<SearchRecommend> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().searchRecommend(), subscriber);
     }
 
     //======================================================上面是所有后台接口=========================================================

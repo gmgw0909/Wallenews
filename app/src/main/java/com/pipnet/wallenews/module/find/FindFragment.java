@@ -8,11 +8,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.pipnet.wallenews.R;
+import com.pipnet.wallenews.adapter.AuthorAdapter;
 import com.pipnet.wallenews.adapter.FindTopicAdapter;
 import com.pipnet.wallenews.adapter.FollowAdapter;
 import com.pipnet.wallenews.base.LazyFragment;
+import com.pipnet.wallenews.bean.AuthorBean;
+import com.pipnet.wallenews.bean.AuthorInfo;
+import com.pipnet.wallenews.bean.ContentBean;
+import com.pipnet.wallenews.bean.FeedResponse;
+import com.pipnet.wallenews.bean.FindResponse;
 import com.pipnet.wallenews.bean.FollowResponse;
 import com.pipnet.wallenews.bean.response.Response;
+import com.pipnet.wallenews.http.service.NetRequest;
+import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
 import com.pipnet.wallenews.widgets.CarRefreshHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -40,8 +48,11 @@ public class FindFragment extends LazyFragment implements OnRefreshListener {
     @BindView(R.id.refresh_layout)
     SmartRefreshLayout refreshLayout;
 
-    FollowAdapter followAdapter;
+    AuthorAdapter followAdapter;
     FindTopicAdapter findTopicAdapter;
+
+    List<FeedResponse.TopTopicBean> topList = new ArrayList();
+    List<AuthorBean> authList = new ArrayList();
 
     @Override
     protected int setContentView() {
@@ -68,33 +79,16 @@ public class FindFragment extends LazyFragment implements OnRefreshListener {
         recyclerTopic.addItemDecoration(new ItemDecorationFactory.DividerBuilder()
                 .dividerColor(getActivity().getResources().getColor(R.color.line_light))
                 .build(recyclerTopic));
-        refreshLayout.autoRefresh();
-
-        List<FollowResponse.Feeds> l = new ArrayList();
-        l.add(new FollowResponse.Feeds());
-        l.add(new FollowResponse.Feeds());
-        l.add(new FollowResponse.Feeds());
-        l.add(new FollowResponse.Feeds());
-        List<Response> li = new ArrayList();
-        li.add(new Response());
-        li.add(new Response());
-        li.add(new Response());
-        li.add(new Response());
-        recyclerFollow.setAdapter(followAdapter = new FollowAdapter(l));
-        recyclerTopic.setAdapter(findTopicAdapter = new FindTopicAdapter(li));
+        recyclerFollow.setAdapter(followAdapter = new AuthorAdapter(authList));
+        recyclerTopic.setAdapter(findTopicAdapter = new FindTopicAdapter(topList));
         followAdapter.addHeaderView(header);
         followAdapter.addFooterView(footer);
+        refreshLayout.autoRefresh();
     }
 
     @Override
     public void onRefresh(final RefreshLayout refreshlayout) {
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                refreshlayout.finishRefresh();
-            }
-        }, 1000);
+        getNetData();
     }
 
     @OnClick({R.id.btn_search})
@@ -104,5 +98,25 @@ public class FindFragment extends LazyFragment implements OnRefreshListener {
                 startActivity(new Intent(getActivity(), SearchActivity.class));
                 break;
         }
+    }
+
+    private void getNetData() {
+        NetRequest.findHome(1, new BaseSubscriber<FindResponse>() {
+            @Override
+            public void onNext(FindResponse response) {
+                authList.clear();
+                topList.clear();
+                List<AuthorInfo> list_ = response.authFeeds;
+                if (list_ != null && list_.size() > 0) {
+                    for (int i = 0; i < list_.size(); i++) {
+                        authList.add(list_.get(i).content);
+                    }
+                }
+                topList.addAll(response.topicFeeds);
+                findTopicAdapter.notifyDataSetChanged();
+                followAdapter.notifyDataSetChanged();
+                refreshLayout.finishRefresh();
+            }
+        });
     }
 }

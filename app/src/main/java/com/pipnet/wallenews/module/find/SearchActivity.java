@@ -7,6 +7,9 @@ import android.widget.EditText;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.adapter.SearchTagAdapter;
 import com.pipnet.wallenews.base.BaseActivity;
+import com.pipnet.wallenews.bean.SearchRecommend;
+import com.pipnet.wallenews.http.service.NetRequest;
+import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +35,9 @@ public class SearchActivity extends BaseActivity {
     SearchTagAdapter historyAdapter;
     SearchTagAdapter likeAdapter;
 
-    List<String> list = new ArrayList<>();
+    List<SearchRecommend.TagBean> hotList = new ArrayList<>();
+    List<SearchRecommend.TagBean> historyList = new ArrayList<>();
+    List<SearchRecommend.TagBean> likeList = new ArrayList<>();
 
     @Override
     public int setContentView() {
@@ -41,24 +46,28 @@ public class SearchActivity extends BaseActivity {
 
     @Override
     public void initViewData() {
-        list.add("特朗普");
-        list.add("特朗普");
-        list.add("特朗普");
-        list.add("特朗普");
-        list.add("特朗普");
-        list.add("特朗普");
-        list.add("特朗普");
-        list.add("特朗普");
-        list.add("特朗普");
-        list.add("特朗普");
-        hotAdapter = new SearchTagAdapter(list);
-        historyAdapter = new SearchTagAdapter(list);
-        likeAdapter = new SearchTagAdapter(list);
+        hotAdapter = new SearchTagAdapter(hotList);
+        historyAdapter = new SearchTagAdapter(historyList);
+        likeAdapter = new SearchTagAdapter(likeList);
+        hotAdapter.needNumber = true;
         rvHot.setLayoutManager(new GridLayoutManager(SearchActivity.this, 2));
         rvHistory.setLayoutManager(new GridLayoutManager(SearchActivity.this, 2));
         rvLike.setLayoutManager(new GridLayoutManager(SearchActivity.this, 2));
         rvHot.setAdapter(hotAdapter);
         rvHistory.setAdapter(historyAdapter);
         rvLike.setAdapter(likeAdapter);
+        getSearchRecommend();
+    }
+
+    private void getSearchRecommend() {
+        NetRequest.searchRecommend(new BaseSubscriber<SearchRecommend>() {
+            @Override
+            public void onNext(SearchRecommend searchRecommend) {
+                hotList.addAll(searchRecommend.hotTopics);
+                likeList.addAll(searchRecommend.suggTopics);
+                hotAdapter.notifyDataSetChanged();
+                likeAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }

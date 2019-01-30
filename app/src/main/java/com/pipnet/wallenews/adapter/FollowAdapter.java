@@ -1,5 +1,6 @@
 package com.pipnet.wallenews.adapter;
 
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
@@ -11,10 +12,16 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.pipnet.wallenews.R;
+import com.pipnet.wallenews.base.Constants;
 import com.pipnet.wallenews.bean.FollowResponse;
+import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
+import com.pipnet.wallenews.module.mine.UserDetailActivity;
+import com.pipnet.wallenews.util.SPUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -55,6 +62,12 @@ public class FollowAdapter extends BaseQuickAdapter<FollowResponse.Feeds, BaseVi
                     followOrUnFollow(item, !item.content.get(0).ifFollowed);
                 }
             });
+            avatar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mContext.startActivity(new Intent(mContext, UserDetailActivity.class).putExtra("authorId", item.content.get(0).id));
+                }
+            });
         }
     }
 
@@ -68,6 +81,14 @@ public class FollowAdapter extends BaseQuickAdapter<FollowResponse.Feeds, BaseVi
                     mData.remove(item);
                     item.content.get(0).ifFollowed = !item.content.get(0).ifFollowed;
                     mData.add(i, item);
+                    LoginInfo info = SPUtils.getObject(LoginInfo.class);
+                    if (item.content.get(0).ifFollowed) {
+                        info.followCount += 1;
+                    } else {
+                        info.followCount -= 1;
+                    }
+                    SPUtils.setObject(info);
+                    EventBus.getDefault().post(Constants.REFRESH_USER);
                     notifyDataSetChanged();
                 }
             }

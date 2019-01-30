@@ -3,9 +3,11 @@ package com.pipnet.wallenews.http.service;
 import com.pipnet.wallenews.bean.AuthorInfo;
 import com.pipnet.wallenews.bean.FeedDetailsInfo;
 import com.pipnet.wallenews.bean.FeedResponse;
+import com.pipnet.wallenews.bean.FindResponse;
 import com.pipnet.wallenews.bean.FollowResponse;
 import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.bean.RepliesResponse;
+import com.pipnet.wallenews.bean.SearchRecommend;
 import com.pipnet.wallenews.bean.UploadResponse;
 import com.pipnet.wallenews.bean.response.Response;
 
@@ -164,5 +166,17 @@ public interface ServiceInterface {
      */
     @GET("we/author/{id}/feeds")
     Flowable<FeedResponse> authorFeeds(@Path("id") long id, @Query("feedType") String feedType);
+
+    /**
+     * 发现首页
+     */
+    @GET("we/feedFlow/search")
+    Flowable<FindResponse> findHome(@Query("cursor") int cursor);
+
+    /**
+     * 搜索记录
+     */
+    @GET("we/feedFlow/searchRecommend")
+    Flowable<SearchRecommend> searchRecommend();
 
 }
