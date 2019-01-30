@@ -179,4 +179,18 @@ public interface ServiceInterface {
     @GET("we/feedFlow/searchRecommend")
     Flowable<SearchRecommend> searchRecommend();
 
+    /**
+     * 搜索
+     */
+    @POST("we/feedFlow/search")
+    @FormUrlEncoded
+    Flowable<FeedResponse> search(@Field("keyword") String keyword);
+
+    /**
+     * 搜索联想
+     */
+    @POST("we/feedFlow/searchSuggest")
+    @FormUrlEncoded
+    Flowable<SearchRecommend> searchSuggest(@Field("keyword") String keyword);
+
 }

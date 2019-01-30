@@ -1,5 +1,6 @@
 package com.pipnet.wallenews.adapter;
 
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
@@ -10,6 +11,8 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.bean.FeedResponse;
+import com.pipnet.wallenews.module.find.SearchActivity;
+import com.pipnet.wallenews.module.mine.UserDetailActivity;
 
 import java.util.List;
 
@@ -24,8 +27,7 @@ public class WaLiHeaderAdapter extends BaseQuickAdapter<FeedResponse.TopTopicBea
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, FeedResponse.TopTopicBean item) {
-
+    protected void convert(BaseViewHolder helper, final FeedResponse.TopTopicBean item) {
         RelativeLayout rlTopic = helper.getView(R.id.rl_topic);
         RelativeLayout rlUser = helper.getView(R.id.rl_user);
         if (!TextUtils.isEmpty(item.type) && item.type.equals("recommendAuthor")) {
@@ -40,6 +42,12 @@ public class WaLiHeaderAdapter extends BaseQuickAdapter<FeedResponse.TopTopicBea
             helper.setText(R.id.name, item.content.name);
             helper.setText(R.id.followCount, item.content.followerCount + "人关注");
             helper.setText(R.id.title, item.content.latestContentTitle);
+            helper.getView(R.id.ll_item).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mContext.startActivity(new Intent(mContext, UserDetailActivity.class).putExtra("authorId", item.content.id));
+                }
+            });
         } else {
             rlUser.setVisibility(View.GONE);
             rlTopic.setVisibility(View.VISIBLE);
@@ -49,6 +57,12 @@ public class WaLiHeaderAdapter extends BaseQuickAdapter<FeedResponse.TopTopicBea
             }
             helper.setText(R.id.tv_tag, "#" + item.content.name);
             helper.setText(R.id.title, item.content.latestContentTitle);
+            helper.getView(R.id.ll_item).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mContext.startActivity(new Intent(mContext, SearchActivity.class).putExtra("keyword", item.content.name));
+                }
+            });
         }
     }
 }

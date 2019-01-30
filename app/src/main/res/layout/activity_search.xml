@@ -9,7 +9,7 @@
         android:layout_height="46dp"
         android:background="@color/background">
 
-        <EditText
+        <com.pipnet.wallenews.widgets.ClearEditText
             android:id="@+id/et_search"
             android:layout_width="match_parent"
             android:layout_height="30dp"
@@ -46,6 +46,7 @@
     </RelativeLayout>
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nest_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -155,15 +156,15 @@
                     android:layout_marginRight="20dp"
                     android:background="@color/line_light" />
 
-                <TextView
+                <ImageView
                     android:id="@+id/show"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:drawableRight="@mipmap/icon_yc"
                     android:paddingLeft="16dp"
-                    android:paddingRight="16dp" />
+                    android:paddingRight="16dp"
+                    android:src="@mipmap/icon_yc" />
             </RelativeLayout>
 
             <android.support.v7.widget.RecyclerView
@@ -174,4 +175,16 @@
             </android.support.v7.widget.RecyclerView>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_association"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 </LinearLayout>

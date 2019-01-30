@@ -32,9 +32,9 @@ import java.util.List;
  * Created by LeeBoo on 2019/1/13.
  */
 
-public class WaLiMultAdapter extends BaseMultiItemQuickAdapter<FeedResponse.FeedsBean, BaseViewHolder> {
+public class WaLiMultiAdapter extends BaseMultiItemQuickAdapter<FeedResponse.FeedsBean, BaseViewHolder> {
 
-    public WaLiMultAdapter(@Nullable List<FeedResponse.FeedsBean> data) {
+    public WaLiMultiAdapter(@Nullable List<FeedResponse.FeedsBean> data) {
         super(data);
         addItemType(0, R.layout.item_wali);
         addItemType(1, R.layout.item_wali_forward);

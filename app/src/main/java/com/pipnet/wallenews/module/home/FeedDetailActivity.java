@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -26,9 +27,11 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.adapter.CommentAdapter;
+import com.pipnet.wallenews.adapter.WaLiHeaderAdapter;
 import com.pipnet.wallenews.base.BaseActivity;
 import com.pipnet.wallenews.base.Constants;
 import com.pipnet.wallenews.bean.FeedDetailsInfo;
+import com.pipnet.wallenews.bean.FeedResponse;
 import com.pipnet.wallenews.bean.RepliesResponse;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
@@ -80,9 +83,10 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
     TextView btnFollow;
 
     TextView noComment;
-    LinearLayout llTop;
+    LinearLayout llTop, llMore;
     TextView name, time, title, zfCount, xhCount;
     SimpleDraweeView avatar;
+    RecyclerView headerRV;
     WebView webView;
 
     long id = 0;
@@ -106,6 +110,7 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
         id = getIntent().getLongExtra("FEED_ID", 0);
         getComments(page);
         getDetail();
+        getTopic();
         etComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -170,6 +175,11 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
         noComment = header.findViewById(R.id.no_comment);
         webView = header.findViewById(R.id.web_view);
         llTop = header.findViewById(R.id.ll_top);
+        llMore = header.findViewById(R.id.ll_more);
+        headerRV = header.findViewById(R.id.recycler_header);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(OrientationHelper.HORIZONTAL);
+        headerRV.setLayoutManager(layoutManager);
         btnFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -382,6 +392,22 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
                 }
                 webView.addJavascriptInterface(new JavascriptInterface(FeedDetailActivity.this, returnImageUrlsFromHtml(feedDetailsInfo.content.content)), "imagelistner");
                 webView.loadDataWithBaseURL(null, feedDetailsInfo.content.content, "text/html", "utf-8", null);
+            }
+        });
+    }
+
+    private void getTopic() {
+        NetRequest.recommends(id, new BaseSubscriber<FeedDetailsInfo>() {
+            @Override
+            public void onNext(FeedDetailsInfo info) {
+                if (info.topics != null) {
+                    llMore.setVisibility(View.VISIBLE);
+                    List<FeedResponse.TopTopicBean> data = new ArrayList<>();
+                    for (int i = 0; i < info.topics.size(); i++) {
+                        data.add(new FeedResponse.TopTopicBean(info.topics.get(i), ""));
+                    }
+                    headerRV.setAdapter(new WaLiHeaderAdapter(data));
+                }
             }
         });
     }

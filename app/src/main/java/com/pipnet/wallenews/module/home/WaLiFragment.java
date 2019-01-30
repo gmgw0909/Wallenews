@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.adapter.WaLiHeaderAdapter;
-import com.pipnet.wallenews.adapter.WaLiMultAdapter;
+import com.pipnet.wallenews.adapter.WaLiMultiAdapter;
 import com.pipnet.wallenews.base.Constants;
 import com.pipnet.wallenews.base.LazyFragment;
 import com.pipnet.wallenews.bean.FeedResponse;
@@ -57,7 +57,7 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
     private long downCursor = 0;
     List<FeedResponse.FeedsBean> list = new ArrayList<>();
     List<FeedResponse.TopTopicBean> topicBeans = new ArrayList<>();
-    WaLiMultAdapter adapter;
+    WaLiMultiAdapter adapter;
 
     @Override
     protected int setContentView() {
@@ -71,7 +71,7 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
         title.setText("瓦砾");
         btnLeft.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         getUerInfo();
-        initView(getActivity(), adapter = new WaLiMultAdapter(list));
+        initView(getActivity(), adapter = new WaLiMultiAdapter(list));
     }
 
     //网络获取用户信息

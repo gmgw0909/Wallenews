@@ -6,6 +6,7 @@ public class SearchRecommend {
 
     public List<TagBean> hotTopics;
     public List<TagBean> suggTopics;
+    public List<TagBean> feeds;
 
     public static class TagBean {
         /**
@@ -13,5 +14,9 @@ public class SearchRecommend {
          */
 
         public String name;
+
+        public TagBean(String name) {
+            this.name = name;
+        }
     }
 }

@@ -8,7 +8,7 @@ public class TopicsBean {
     public int contentCount;
     public long createTime;
     public int followerCount;
-    public long id;
+    public int id;
     public boolean ifFollowed;
     public String image;
     public String introduction;

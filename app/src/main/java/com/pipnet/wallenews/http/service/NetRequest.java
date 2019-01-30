@@ -201,6 +201,20 @@ public class NetRequest {
         toSubscriber(RetrofitManager.getInstance().getServiceInterface().searchRecommend(), subscriber);
     }
 
+    /**
+     * 搜索
+     */
+    public static void search(String keyword, Subscriber<FeedResponse> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().search(keyword), subscriber);
+    }
+
+    /**
+     * 搜索联想
+     */
+    public static void searchSuggest(String keyword, Subscriber<SearchRecommend> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().searchSuggest(keyword), subscriber);
+    }
+
     //======================================================上面是所有后台接口=========================================================
 
     /**

@@ -125,6 +125,42 @@
             android:textColor="@color/text_333" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/ll_more"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="5dp"
+            android:text="相关推荐"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:padding="15dp" />
+
+        <TextView
+            android:layout_width="75dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/shape_btn_follow"
+            android:gravity="center"
+            android:text="查看全部"
+            android:textColor="@color/text_tab_blue"
+            android:textSize="13sp" />
+    </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="10dp"
