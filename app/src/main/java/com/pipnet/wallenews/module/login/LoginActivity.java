@@ -46,7 +46,6 @@ public class LoginActivity extends BaseActivity {
     @Override
     public void initViewData() {
         regToWx();
-        etPhone.setText("15656238290");
     }
 
     private void regToWx() {
