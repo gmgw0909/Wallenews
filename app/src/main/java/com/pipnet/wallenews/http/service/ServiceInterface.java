@@ -193,4 +193,10 @@ public interface ServiceInterface {
     @FormUrlEncoded
     Flowable<SearchRecommend> searchSuggest(@Field("keyword") String keyword);
 
+    /**
+     * @ 搜索用户联想
+     */
+    @GET("we/author/search")
+    Flowable<AuthorInfo> authorSearch(@Query("keyword") String keyword);
+
 }

@@ -215,6 +215,13 @@ public class NetRequest {
         toSubscriber(RetrofitManager.getInstance().getServiceInterface().searchSuggest(keyword), subscriber);
     }
 
+    /**
+     * @ 用户搜索联想
+     */
+    public static void authorSearch(String keyword, Subscriber<AuthorInfo> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().authorSearch(keyword), subscriber);
+    }
+
     //======================================================上面是所有后台接口=========================================================
 
     /**

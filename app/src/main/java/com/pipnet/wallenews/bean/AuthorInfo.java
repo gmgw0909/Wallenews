@@ -1,5 +1,7 @@
 package com.pipnet.wallenews.bean;
 
+import java.util.List;
+
 /**
  * Created by LeeBoo on 2019/1/29.
  */
@@ -12,4 +14,6 @@ public class AuthorInfo {
 
     public AuthorBean author;
     public AuthorBean content;
+
+    public List<AuthorBean> authors;
 }
