@@ -51,6 +51,7 @@ public class ContentBean implements Serializable {
     public int forwardCount;
     public String gif;
     public long id;
+    public long sourceId;
     public boolean ifForward;
     public boolean ifLike;
     public int likeCount;

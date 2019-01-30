@@ -20,6 +20,7 @@ import com.pipnet.wallenews.bean.FeedResponse;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
+import com.pipnet.wallenews.module.home.FeedDetailActivity;
 import com.pipnet.wallenews.module.home.ForwardActivity;
 import com.pipnet.wallenews.module.home.ReplyActivity;
 import com.pipnet.wallenews.module.mine.UserDetailActivity;
@@ -305,6 +306,12 @@ public class WaLiMultiAdapter extends BaseMultiItemQuickAdapter<FeedResponse.Fee
                 } else {
                     llImg.setVisibility(View.GONE);
                 }
+                helper.getView(R.id.ll_forward).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mContext.startActivity(new Intent(mContext, FeedDetailActivity.class).putExtra("FEED_ID", item.content.sourceId));
+                    }
+                });
                 break;
         }
     }

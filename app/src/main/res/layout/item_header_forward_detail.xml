@@ -2,74 +2,67 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/white"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="46dp"
-        android:background="@color/white">
-
-        <TextView
-            android:id="@+id/btn_left"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:drawableLeft="@mipmap/icon_fh"
-            android:gravity="center"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:textColor="@color/text_333"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/btn_right"
-            android:layout_width="75dp"
-            android:layout_height="28dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:background="@drawable/shape_btn_follow_s"
-            android:gravity="center"
-            android:text="转发"
-            android:textColor="@color/white"
-            android:textSize="14sp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/line_light" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp">
+        android:layout_marginTop="10dp">
 
         <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/my_avatar"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginLeft="16dp"
+            android:id="@+id/avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="14dp"
             app:placeholderImage="@mipmap/default_avatar"
             app:placeholderImageScaleType="centerCrop"
             app:roundAsCircle="true" />
 
-
-        <EditText
-            android:id="@+id/et_comment"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/my_avatar"
-            android:background="@android:color/transparent"
-            android:hint="添加评论" />
+            android:layout_marginLeft="11dp"
+            android:layout_toRightOf="@id/avatar"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="瓦砾新闻"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/name"
+                android:layout_marginTop="5dp"
+                android:text="6小时前"
+                android:textColor="@color/text_999"
+                android:textSize="11sp" />
+        </LinearLayout>
+
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="75dp"
+        android:layout_marginRight="15dp"
+        android:text="瓦砾新闻瓦砾新闻瓦砾新闻瓦砾新闻瓦砾新闻瓦砾新闻瓦砾新闻瓦砾新闻瓦砾新闻"
+        android:textColor="@color/text_333"
+        android:textSize="15sp" />
+
     <LinearLayout
+        android:id="@+id/ll_forward"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="75dp"
@@ -187,4 +180,13 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="15dp"
+        android:text="最新评论"
+        android:textColor="@color/black"
+        android:textStyle="bold" />
 </LinearLayout>

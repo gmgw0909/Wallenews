@@ -151,8 +151,12 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        view.findViewById(R.id.btn_topic).performClick();
-        startActivity(new Intent(getActivity(), FeedDetailActivity.class).putExtra("FEED_ID", list.get(position).content.id));
+        if (list.get(position).type.equals("forward")) {
+            startActivity(new Intent(getActivity(), ForwardDetailActivity.class).putExtra("FORWARD_CONTENT", list.get(position).content));
+        } else {
+            view.findViewById(R.id.btn_topic).performClick();
+            startActivity(new Intent(getActivity(), FeedDetailActivity.class).putExtra("FEED_ID", list.get(position).content.id));
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

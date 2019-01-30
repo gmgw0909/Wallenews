@@ -44,6 +44,7 @@
         <activity android:name=".module.find.SearchActivity" />
         <activity android:name=".module.home.ReplyActivity" />
         <activity android:name=".module.home.ForwardActivity" />
+        <activity android:name=".module.home.ForwardDetailActivity" />
 
         <activity
             android:name=".wxapi.WXEntryActivity"
