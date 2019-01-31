@@ -30,6 +30,7 @@ import com.pipnet.wallenews.adapter.CommentAdapter;
 import com.pipnet.wallenews.adapter.WaLiHeaderAdapter;
 import com.pipnet.wallenews.base.BaseActivity;
 import com.pipnet.wallenews.base.Constants;
+import com.pipnet.wallenews.bean.ContentBean;
 import com.pipnet.wallenews.bean.FeedDetailsInfo;
 import com.pipnet.wallenews.bean.FeedResponse;
 import com.pipnet.wallenews.bean.RepliesResponse;
@@ -92,7 +93,7 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
     long authorId = 0;
     int page = 1;
     int commentCounts = 0;
-    List<RepliesResponse.RepliesBean> list = new ArrayList<>();
+    List<ContentBean> list = new ArrayList<>();
     LinearLayoutManager linearLayoutManager;
     CommentAdapter adapter;
     boolean ifFollowed;
@@ -301,7 +302,7 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
             @Override
             public void onNext(RepliesResponse repliesResponse) {
                 if (repliesResponse.replies != null && repliesResponse.replies.size() > 0) {
-                    List<RepliesResponse.RepliesBean> list_ = repliesResponse.replies;
+                    List<ContentBean> list_ = repliesResponse.replies;
                     if (page == 1) {
                         list.clear();
                     }

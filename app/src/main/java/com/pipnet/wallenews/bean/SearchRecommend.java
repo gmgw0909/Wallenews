@@ -8,6 +8,9 @@ public class SearchRecommend {
     public List<TagBean> suggTopics;
     public List<TagBean> feeds;
 
+    public List<TopicsBean> authors;
+    public List<TopicsBean> topics;
+
     public static class TagBean {
         /**
          * name : 孙杨

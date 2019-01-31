@@ -218,8 +218,15 @@ public class NetRequest {
     /**
      * @ 用户搜索联想
      */
-    public static void authorSearch(String keyword, Subscriber<AuthorInfo> subscriber) {
+    public static void authorSearch(String keyword, Subscriber<SearchRecommend> subscriber) {
         toSubscriber(RetrofitManager.getInstance().getServiceInterface().authorSearch(keyword), subscriber);
+    }
+
+    /**
+     * # 话题搜索联想
+     */
+    public static void topicSearch(String keyword, Subscriber<SearchRecommend> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().topicSearch(keyword), subscriber);
     }
 
     //======================================================上面是所有后台接口=========================================================

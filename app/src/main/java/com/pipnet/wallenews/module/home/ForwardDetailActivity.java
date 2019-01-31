@@ -75,7 +75,7 @@ public class ForwardDetailActivity extends BaseActivity implements OnRefreshList
     long authorId = 0;
     int page = 1;
     int commentCounts = 0;
-    List<RepliesResponse.RepliesBean> list = new ArrayList<>();
+    List<ContentBean> list = new ArrayList<>();
     CommentAdapter adapter;
     boolean ifFollowed;
 
@@ -239,7 +239,7 @@ public class ForwardDetailActivity extends BaseActivity implements OnRefreshList
             @Override
             public void onNext(RepliesResponse repliesResponse) {
                 if (repliesResponse.replies != null && repliesResponse.replies.size() > 0) {
-                    List<RepliesResponse.RepliesBean> list_ = repliesResponse.replies;
+                    List<ContentBean> list_ = repliesResponse.replies;
                     if (page == 1) {
                         list.clear();
                     }

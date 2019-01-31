@@ -62,4 +62,8 @@ public class ContentBean implements Serializable {
     public long updateTime;
     public String url;
     public String video;
+    public String isAudit;
+    public String relType;
+    public String replyToIds;
+    public String replyTos;
 }

@@ -53,4 +53,9 @@
         <!--<item name="android:windowBackground">@android:color/white</item>-->
         <!--<item name="android:windowBackground">@color/loading_background</item>-->
     </style>
+
+    <style name="PopupAnimation" mce_bogus="1" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/popup_enter</item>
+        <item name="android:windowExitAnimation">@anim/popup_exit</item>
+    </style>
 </resources>

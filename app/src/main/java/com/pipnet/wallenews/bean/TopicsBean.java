@@ -24,4 +24,8 @@ public class TopicsBean {
     public String topicUUID;
     public long updateTime;
     public List<String> latestContentImageArray;
+    public int canLogin;
+    public int followCount;
+    public int loginId;
+    public String userUUID;
 }

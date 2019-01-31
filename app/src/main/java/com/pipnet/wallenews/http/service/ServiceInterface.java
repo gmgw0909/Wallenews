@@ -197,6 +197,12 @@ public interface ServiceInterface {
      * @ 搜索用户联想
      */
     @GET("we/author/search")
-    Flowable<AuthorInfo> authorSearch(@Query("keyword") String keyword);
+    Flowable<SearchRecommend> authorSearch(@Query("keyword") String keyword);
+
+    /**
+     * # 搜索话题联想
+     */
+    @GET("we/topic/search")
+    Flowable<SearchRecommend> topicSearch(@Query("keyword") String keyword);
 
 }

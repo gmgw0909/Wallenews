@@ -1,5 +1,6 @@
 package com.pipnet.wallenews.adapter;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -10,10 +11,12 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.pipnet.wallenews.R;
+import com.pipnet.wallenews.bean.ContentBean;
 import com.pipnet.wallenews.bean.RepliesResponse;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
+import com.pipnet.wallenews.module.home.ReplyActivity;
 import com.pipnet.wallenews.util.TimeUtil;
 
 import java.util.List;
@@ -22,14 +25,14 @@ import java.util.List;
  * Created by LeeBoo on 2019/1/13.
  */
 
-public class CommentAdapter extends BaseQuickAdapter<RepliesResponse.RepliesBean, BaseViewHolder> {
+public class CommentAdapter extends BaseQuickAdapter<ContentBean, BaseViewHolder> {
 
-    public CommentAdapter(@Nullable List<RepliesResponse.RepliesBean> data) {
+    public CommentAdapter(@Nullable List<ContentBean> data) {
         super(R.layout.item_comment, data);
     }
 
     @Override
-    protected void convert(final BaseViewHolder helper, final RepliesResponse.RepliesBean item) {
+    protected void convert(final BaseViewHolder helper, final ContentBean item) {
         SimpleDraweeView avatar = helper.getView(R.id.avatar);
         if (!TextUtils.isEmpty(item.authorImage)) {
             avatar.setImageURI(item.authorImage);
@@ -40,6 +43,7 @@ public class CommentAdapter extends BaseQuickAdapter<RepliesResponse.RepliesBean
         helper.setText(R.id.title, item.content);
         helper.setText(R.id.time, TimeUtil.intervalTime(item.createTime));
         TextView btnLike = helper.getView(R.id.btn_like);
+        TextView btnComment = helper.getView(R.id.btn_comment);
         btnLike.setText(item.likeCount + "");
         if (item.ifLike) {
             Drawable drawable = mContext.getResources().getDrawable(R.mipmap.icon_dz_h);
@@ -67,6 +71,12 @@ public class CommentAdapter extends BaseQuickAdapter<RepliesResponse.RepliesBean
                         }
                     }
                 });
+            }
+        });
+        btnComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.startActivity(new Intent(mContext, ReplyActivity.class).putExtra("item", item));
             }
         });
     }
