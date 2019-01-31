@@ -1,9 +1,15 @@
 package com.pipnet.wallenews.adapter;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.TextView;
 
@@ -40,7 +46,7 @@ public class CommentAdapter extends BaseQuickAdapter<ContentBean, BaseViewHolder
             avatar.setImageResource(R.mipmap.default_avatar);
         }
         helper.setText(R.id.name, item.authorName);
-        helper.setText(R.id.title, item.content);
+        helper.setText(R.id.title, spanString(item.content));
         helper.setText(R.id.time, TimeUtil.intervalTime(item.createTime));
         TextView btnLike = helper.getView(R.id.btn_like);
         TextView btnComment = helper.getView(R.id.btn_comment);
@@ -79,5 +85,21 @@ public class CommentAdapter extends BaseQuickAdapter<ContentBean, BaseViewHolder
                 mContext.startActivity(new Intent(mContext, ReplyActivity.class).putExtra("item", item));
             }
         });
+    }
+
+    private SpannableString spanString(String str) {
+        SpannableString spannableString = new SpannableString(str);
+        String[] strings = str.split(" ");
+        for (int i = 0; i < strings.length; i++) {
+            if (strings[i].contains("@")) {
+                spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#1c9df3")),
+                        str.indexOf(strings[i]) + strings[i].indexOf("@"), str.indexOf(strings[i]) + strings[i].length(), 0);
+            }
+            if (strings[i].contains("#")) {
+                spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#1c9df3")),
+                        str.indexOf(strings[i]) + strings[i].indexOf("#"), str.indexOf(strings[i]) + strings[i].length(), 0);
+            }
+        }
+        return spannableString;
     }
 }
