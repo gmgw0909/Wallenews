@@ -1,5 +1,6 @@
 package com.pipnet.wallenews.http.interceptor;
 
+import com.pipnet.wallenews.http.Router;
 import com.pipnet.wallenews.util.SPUtils;
 
 import java.io.IOException;
@@ -17,7 +18,8 @@ public class ReceivedCookiesInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Response originalResponse = chain.proceed(chain.request());
-        if (!originalResponse.headers("Set-Cookie").isEmpty()) {
+        if (!originalResponse.headers("Set-Cookie").isEmpty() &&
+                originalResponse.request().url().toString().contains(Router.BASE_URL + "myspace/me")) {
             HashSet<String> cookies = new HashSet<>();
             for (String header : originalResponse.headers("Set-Cookie")) {
                 cookies.add(header);

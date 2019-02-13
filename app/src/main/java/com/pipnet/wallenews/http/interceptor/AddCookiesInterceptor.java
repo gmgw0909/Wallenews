@@ -25,21 +25,18 @@ public class AddCookiesInterceptor implements Interceptor {
         Request.Builder builder = chain.request().newBuilder();
         HashSet<String> header = new HashSet<>();
         LoginInfo info = SPUtils.getObject(LoginInfo.class);
-        if (info != null && !TextUtils.isEmpty(info.uid) &&
-                !chain.request().url().toString().contains(Router.BASE_URL + "login")) {
-            header.add("uid=" + info.uid);
+        if (info != null && !chain.request().url().toString().contains(Router.BASE_URL + "login")) {
+            if (!TextUtils.isEmpty(info.uid)) {
+                header.add("uid=" + info.uid);
+            }
+            if (!TextUtils.isEmpty(info.rememberMe)) {
+                header.add("rememberMe" + info.rememberMe);
+            }
         }
-//        HashSet<String> preferences = (HashSet<String>) SPUtils.getStringSet("cookie",null);
-//        if (preferences != null) {
-//            header.addAll(preferences);
-//        }
-//        LoginInfo info = SPUtils.getObject(LoginInfo.class);
-//        if (info != null) {
-//            if (!TextUtils.isEmpty(info.uid)) {
-//                header.add("uid=" + info.uid);
-//            }
-//            if (!TextUtils.isEmpty(info.rememberMe)) {
-//                header.add("rememberMe" + info.rememberMe);
+//        if (!chain.request().url().toString().contains(Router.BASE_URL + "login")) {
+//            HashSet<String> preferences = (HashSet<String>) SPUtils.getStringSet("cookie", null);
+//            if (preferences != null) {
+//                header.addAll(preferences);
 //            }
 //        }
         if (header != null) {
