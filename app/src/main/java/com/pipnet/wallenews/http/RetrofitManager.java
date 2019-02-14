@@ -32,7 +32,7 @@ public final class RetrofitManager {
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         builder.addInterceptor(httpLoggingInterceptor);//打印日志(放最后)
         builder.addInterceptor(new AddCookiesInterceptor());
-//        builder.addInterceptor(new ReceivedCookiesInterceptor());
+        builder.addInterceptor(new ReceivedCookiesInterceptor());
         //Retrofit
         retrofit = new Retrofit.Builder()
                 .client(builder.build())
