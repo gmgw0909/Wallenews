@@ -1,9 +1,11 @@
 package com.pipnet.wallenews.http;
 
-import com.pipnet.wallenews.http.interceptor.AddCookiesInterceptor;
+import com.franmontiel.persistentcookiejar.PersistentCookieJar;
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+import com.pipnet.wallenews.App;
 import com.pipnet.wallenews.http.interceptor.HeaderInterceptor;
 import com.pipnet.wallenews.http.interceptor.HttpLoggingInterceptor;
-import com.pipnet.wallenews.http.interceptor.ReceivedCookiesInterceptor;
 import com.pipnet.wallenews.http.service.ServiceInterface;
 
 import java.util.concurrent.TimeUnit;
@@ -31,8 +33,9 @@ public final class RetrofitManager {
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         builder.addInterceptor(httpLoggingInterceptor);//打印日志(放最后)
-        builder.addInterceptor(new AddCookiesInterceptor());
-        builder.addInterceptor(new ReceivedCookiesInterceptor());
+//        builder.addInterceptor(new AddCookiesInterceptor());
+//        builder.addInterceptor(new ReceivedCookiesInterceptor());
+        builder.cookieJar(new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(App.getInstance())));
         //Retrofit
         retrofit = new Retrofit.Builder()
                 .client(builder.build())
