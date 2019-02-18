@@ -19,6 +19,7 @@ import com.pipnet.wallenews.util.CheckUtils;
 import com.pipnet.wallenews.util.SPUtils;
 import com.pipnet.wallenews.util.ToastUtil;
 import com.pipnet.wallenews.widgets.ClearEditText;
+import com.pipnet.wallenews.widgets.PhoneEditText;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -29,7 +30,7 @@ import butterknife.OnClick;
 public class LoginActivity extends BaseActivity {
 
     @BindView(R.id.et_phone)
-    ClearEditText etPhone;
+    PhoneEditText etPhone;
     @BindView(R.id.et_code)
     EditText etCode;
     @BindView(R.id.btn_get_code)
@@ -72,7 +73,7 @@ public class LoginActivity extends BaseActivity {
      * 获取验证码
      */
     private void getVerCode() {
-        String mobileNumber = etPhone.getText().toString().trim();
+        String mobileNumber = etPhone.getPhoneText();
         if (TextUtils.isEmpty(mobileNumber)) {
             ToastUtil.show("请输入手机号");
             etPhone.requestFocus();
@@ -80,12 +81,13 @@ public class LoginActivity extends BaseActivity {
         }
         if (!CheckUtils.isMobileNO(mobileNumber) && !CheckUtils.isTestNO(mobileNumber)) {
             ToastUtil.show("请输入正确手机号");
-            etPhone.setSelection(mobileNumber.length());
+            etPhone.setSelection(etPhone.getText().toString().length());
             etPhone.requestFocus();
             return;
         }
         //创建倒计时任务
         myCount = new MyCount(61000, 1000);
+        etCode.requestFocus();
         NetRequest.sendMobileCode(mobileNumber, new BaseSubscriber<Response>() {
             @Override
             public void onNext(Response response) {
@@ -102,7 +104,7 @@ public class LoginActivity extends BaseActivity {
      * 登陆
      */
     private void login() {
-        String phone = etPhone.getText().toString().trim();
+        String phone = etPhone.getPhoneText();
         String code = etCode.getText().toString().trim();
         if (TextUtils.isEmpty(phone)) {
             ToastUtil.show("请输入手机号");
@@ -111,7 +113,7 @@ public class LoginActivity extends BaseActivity {
         }
         if (!CheckUtils.isMobileNO(phone) && !CheckUtils.isTestNO(phone)) {
             ToastUtil.show("请输入正确手机号");
-            etPhone.setSelection(phone.length());
+            etPhone.setSelection(etPhone.getText().toString().length());
             etPhone.requestFocus();
             return;
         }

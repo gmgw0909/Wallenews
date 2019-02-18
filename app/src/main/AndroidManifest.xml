@@ -26,25 +26,63 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".module.login.LoginActivity" />
-        <activity android:name=".module.login.BindPhoneActivity" />
-        <activity android:name=".module.MainActivity" />
-        <activity android:name=".module.WebViewActivity" />
-        <activity android:name=".module.mine.EditActivity" />
-        <activity android:name=".module.mine.EditNameActivity" />
-        <activity android:name=".module.mine.EditIntroActivity" />
-        <activity android:name=".module.mine.SettingActivity" />
-        <activity android:name=".module.mine.AboutActivity" />
-        <activity android:name=".module.mine.ModifyPhoneActivity" />
-        <activity android:name=".module.mine.FollowingActivity" />
-        <activity android:name=".module.mine.FollowerActivity" />
-        <activity android:name=".module.home.FeedDetailActivity" />
-        <activity android:name=".module.image.ImagePagerActivity" />
-        <activity android:name=".module.mine.UserDetailActivity" />
-        <activity android:name=".module.find.SearchActivity" />
-        <activity android:name=".module.home.ReplyActivity" />
-        <activity android:name=".module.home.ForwardActivity" />
-        <activity android:name=".module.home.ForwardDetailActivity" />
+        <activity
+            android:name=".module.login.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".module.login.BindPhoneActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".module.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".module.WebViewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".module.mine.EditActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".module.mine.EditNameActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".module.mine.EditIntroActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".module.mine.SettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".module.mine.AboutActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".module.mine.ModifyPhoneActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".module.mine.FollowingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".module.mine.FollowerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".module.home.FeedDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".module.image.ImagePagerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".module.mine.UserDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".module.find.SearchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".module.home.ReplyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".module.home.ForwardActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".module.home.ForwardDetailActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".wxapi.WXEntryActivity"

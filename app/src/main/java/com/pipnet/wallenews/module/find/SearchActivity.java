@@ -23,6 +23,7 @@ import com.pipnet.wallenews.adapter.SearchTagAdapter;
 import com.pipnet.wallenews.adapter.WaLiMultiAdapter;
 import com.pipnet.wallenews.base.BaseActivity;
 import com.pipnet.wallenews.bean.FeedResponse;
+import com.pipnet.wallenews.bean.FeedsBean;
 import com.pipnet.wallenews.bean.SearchRecommend;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
@@ -77,7 +78,7 @@ public class SearchActivity extends BaseActivity implements BaseQuickAdapter.OnI
     List<SearchRecommend.TagBean> historyList = new ArrayList<>();
     List<SearchRecommend.TagBean> likeList = new ArrayList<>();
     List<SearchRecommend.TagBean> suggestList = new ArrayList<>();
-    List<FeedResponse.FeedsBean> list = new ArrayList<>();
+    List<FeedsBean> list = new ArrayList<>();
 
     LoadingDialog loadingDialog;
     Gson gson;

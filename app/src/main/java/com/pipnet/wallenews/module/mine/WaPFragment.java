@@ -11,6 +11,7 @@ import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.adapter.WaLiAdapter;
 import com.pipnet.wallenews.base.LazyFragment;
 import com.pipnet.wallenews.bean.FeedResponse;
+import com.pipnet.wallenews.bean.FeedsBean;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
 import com.pipnet.wallenews.module.home.FeedDetailActivity;
@@ -28,7 +29,7 @@ public class WaPFragment extends LazyFragment implements  BaseQuickAdapter.OnIte
     RecyclerView recyclerView;
 
     WaLiAdapter adapter;
-    List<FeedResponse.FeedsBean> list = new ArrayList<>();
+    List<FeedsBean> list = new ArrayList<>();
 
     boolean isInit = false;
 
@@ -64,7 +65,7 @@ public class WaPFragment extends LazyFragment implements  BaseQuickAdapter.OnIte
             @Override
             public void onNext(FeedResponse followResponse) {
                 if (followResponse.feeds != null && followResponse.feeds.size() > 0) {
-                    List<FeedResponse.FeedsBean> list_ = followResponse.feeds;
+                    List<FeedsBean> list_ = followResponse.feeds;
                     list.addAll(list_);
                     adapter.notifyDataSetChanged();
                 }
