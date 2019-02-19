@@ -24,13 +24,15 @@ public class FeedsBean implements MultiItemEntity {
     public int cursor;
     public String type;
     public boolean show;
+    public boolean isRead;
 
-    @Generated(hash = 144462814)
-    public FeedsBean(ContentBean content, int cursor, String type, boolean show) {
+    @Generated(hash = 1254768886)
+    public FeedsBean(ContentBean content, int cursor, String type, boolean show, boolean isRead) {
         this.content = content;
         this.cursor = cursor;
         this.type = type;
         this.show = show;
+        this.isRead = isRead;
     }
 
     @Generated(hash = 1241035532)
@@ -76,6 +78,14 @@ public class FeedsBean implements MultiItemEntity {
 
     public void setShow(boolean show) {
         this.show = show;
+    }
+
+    public boolean getIsRead() {
+        return this.isRead;
+    }
+
+    public void setIsRead(boolean isRead) {
+        this.isRead = isRead;
     }
 
     public static class ContentBeanConverter implements PropertyConverter<ContentBean, String> {

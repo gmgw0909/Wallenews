@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -60,9 +61,11 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
     private long downCursor = 0;
     List<FeedsBean> list = new ArrayList<>();
     List<FeedResponse.TopTopicBean> topicBeans = new ArrayList<>();
+    List<FeedsBean> feedsBeans = null;
     WaLiMultiAdapter adapter;
+    WaLiHeaderAdapter headerAdapter;
 
-    FeedsBeanDao contentBeanDao;
+    FeedsBeanDao feedsBeanDao;
 
     @Override
     protected int setContentView() {
@@ -72,8 +75,8 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
     @Override
     protected void lazyLoad() {
         EventBus.getDefault().register(this);
-        contentBeanDao = App.getInstance().getDaoSession().getFeedsBeanDao();
-        upCursor = SPUtils.getLong("upCursor", 0);
+        feedsBeanDao = App.getInstance().getDaoSession().getFeedsBeanDao();
+//        upCursor = SPUtils.getLong("upCursor", 0);
         title.setText("瓦砾");
         btnLeft.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         getUerInfo();
@@ -96,35 +99,53 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
     }
 
     private void getNetData(final String direction, final long cursor) {
-        List<FeedsBean> feedsBeans = contentBeanDao.queryBuilder().limit(50).list();
-        if (feedsBeans != null && feedsBeans.size() > 0) {
-            List<FeedsBean> list_ = feedsBeans;
-            downCursor = list_.get(list_.size() - 1).cursor;
+        if (cursor == 0) {
+            feedsBeans = feedsBeanDao.queryBuilder().orderDesc(FeedsBeanDao.Properties.Cursor).limit(50).list();
+        } else {
             if (direction.equals("newFeed")) {
-                upCursor = list_.get(0).cursor;
-                SPUtils.setLong("upCursor", cursor);
-                list.clear();
+                feedsBeans = feedsBeanDao.queryBuilder().orderDesc(FeedsBeanDao.Properties.Cursor).where(FeedsBeanDao.Properties.Cursor.gt(cursor)).limit(50).list();
+            } else {
+                feedsBeans = feedsBeanDao.queryBuilder().orderDesc(FeedsBeanDao.Properties.Cursor).where(FeedsBeanDao.Properties.Cursor.lt(cursor)).limit(50).list();
             }
-            list.addAll(list_);
-            adapter.notifyDataSetChanged();
         }
         NetRequest.feeds(cursor, direction, new BaseSubscriber<FeedResponse>() {
             @Override
             public void onNext(FeedResponse followResponse) {
+                //下拉刷新获取热门话题
                 if (followResponse.topTopic != null && followResponse.topTopic.size() > 0 && direction.equals("newFeed")) {
                     topicBeans.clear();
                     topicBeans.addAll(followResponse.topTopic);
+                    headerAdapter.notifyDataSetChanged();
                 }
-                if (followResponse.feeds != null && followResponse.feeds.size() > 0) {
-                    List<FeedsBean> list_ = followResponse.feeds;
-                    downCursor = list_.get(list_.size() - 1).cursor;
-                    if (direction.equals("newFeed")) {
-                        upCursor = list_.get(0).cursor;
-                        SPUtils.setLong("upCursor", cursor);
-                        list.clear();
+                if (feedsBeans != null && feedsBeans.size() > 0) {
+                    list.addAll(feedsBeans);
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i).show) {
+                            list.get(i).show = false;
+                        }
                     }
-                    list.addAll(list_);
                     adapter.notifyDataSetChanged();
+                    adapter.loadMoreComplete();
+                    refreshLayout.finishRefresh();
+                    upCursor = list.get(0).cursor;
+                    downCursor = list.get(list.size() - 1).cursor;
+                } else {
+                    if (followResponse.feeds != null && followResponse.feeds.size() > 0) {
+                        List<FeedsBean> list_ = followResponse.feeds;
+                        if (direction.equals("newFeed")) {
+                            list.clear();
+                        }
+                        feedsBeanDao.insertOrReplaceInTx(list_);
+                        list.addAll(list_);
+                        for (int i = 0; i < list.size(); i++) {
+                            if (list.get(i).show) {
+                                list.get(i).show = false;
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
+                        upCursor = list.get(0).cursor;
+                        downCursor = list.get(list.size() - 1).cursor;
+                    }
                 }
                 adapter.loadMoreComplete();
                 refreshLayout.finishRefresh();
@@ -174,7 +195,7 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(OrientationHelper.HORIZONTAL);
         headerRV.setLayoutManager(layoutManager);
-        headerRV.setAdapter(new WaLiHeaderAdapter(topicBeans));
+        headerRV.setAdapter(headerAdapter = new WaLiHeaderAdapter(topicBeans));
         adapter.addHeaderView(header);
         //初始化Feeds列表
         refreshLayout.setRefreshHeader(new CarRefreshHeader(context));
@@ -199,6 +220,9 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
             view.findViewById(R.id.btn_topic).performClick();
             startActivity(new Intent(getActivity(), FeedDetailActivity.class).putExtra("FEED_ID", list.get(position).content.id));
         }
+        list.get(position).isRead = true;
+        adapter.notifyDataSetChanged();
+        feedsBeanDao.insertOrReplace(list.get(position));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

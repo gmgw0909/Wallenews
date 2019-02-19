@@ -1,6 +1,7 @@
 package com.pipnet.wallenews.adapter;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -202,6 +203,13 @@ public class WaLiMultiAdapter extends BaseMultiItemQuickAdapter<FeedsBean, BaseV
                     llMore.setVisibility(View.GONE);
                     headerRV.setAdapter(null);
                 }
+                if (item.isRead) {
+                    ((TextView) helper.getView(R.id.name)).setTextColor(mContext.getResources().getColor(R.color.text_999));
+                    ((TextView) helper.getView(R.id.title)).setTextColor(mContext.getResources().getColor(R.color.text_999));
+                } else {
+                    ((TextView) helper.getView(R.id.name)).setTextColor(mContext.getResources().getColor(R.color.black));
+                    ((TextView) helper.getView(R.id.title)).setTextColor(mContext.getResources().getColor(R.color.text_333));
+                }
                 break;
             case 1:
                 if (!TextUtils.isEmpty(item.content.authorImage)) {
@@ -313,6 +321,17 @@ public class WaLiMultiAdapter extends BaseMultiItemQuickAdapter<FeedsBean, BaseV
                         mContext.startActivity(new Intent(mContext, FeedDetailActivity.class).putExtra("FEED_ID", item.content.sourceId));
                     }
                 });
+                if (item.isRead) {
+                    ((TextView) helper.getView(R.id.name)).setTextColor(mContext.getResources().getColor(R.color.text_999));
+                    ((TextView) helper.getView(R.id.content)).setTextColor(mContext.getResources().getColor(R.color.text_999));
+                    ((TextView) helper.getView(R.id.sourceAuthorName)).setTextColor(mContext.getResources().getColor(R.color.text_999));
+                    ((TextView) helper.getView(R.id.sourceContentTitle)).setTextColor(mContext.getResources().getColor(R.color.text_999));
+                } else {
+                    ((TextView) helper.getView(R.id.name)).setTextColor(mContext.getResources().getColor(R.color.black));
+                    ((TextView) helper.getView(R.id.content)).setTextColor(mContext.getResources().getColor(R.color.text_333));
+                    ((TextView) helper.getView(R.id.sourceAuthorName)).setTextColor(mContext.getResources().getColor(R.color.black));
+                    ((TextView) helper.getView(R.id.sourceContentTitle)).setTextColor(mContext.getResources().getColor(R.color.text_333));
+                }
                 break;
         }
     }
