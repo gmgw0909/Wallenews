@@ -169,6 +169,11 @@ public class WaLiMultiAdapter extends BaseMultiItemQuickAdapter<FeedsBean, BaseV
                     btnTopic.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            for (int i = 0; i < mData.size(); i++) {
+                                if (mData.get(i).show && mData.get(i).cursor != item.cursor) {
+                                    mData.get(i).show = false;
+                                }
+                            }
                             if (item.show) {
                                 item.show = false;
                                 notifyDataSetChanged();

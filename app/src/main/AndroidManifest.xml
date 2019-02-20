@@ -64,6 +64,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".module.home.FeedDetailActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".module.image.ImagePagerActivity"

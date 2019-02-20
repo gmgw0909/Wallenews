@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.pipnet.wallenews.App;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.adapter.CommentAdapter;
 import com.pipnet.wallenews.adapter.WaLiHeaderAdapter;
@@ -33,17 +34,16 @@ import com.pipnet.wallenews.base.Constants;
 import com.pipnet.wallenews.bean.ContentBean;
 import com.pipnet.wallenews.bean.FeedDetailsInfo;
 import com.pipnet.wallenews.bean.FeedResponse;
+import com.pipnet.wallenews.bean.FeedsBean;
 import com.pipnet.wallenews.bean.RepliesResponse;
 import com.pipnet.wallenews.bean.response.Response;
+import com.pipnet.wallenews.db.FeedsBeanDao;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
 import com.pipnet.wallenews.interfacee.JavascriptInterface;
 import com.pipnet.wallenews.module.mine.UserDetailActivity;
 import com.pipnet.wallenews.util.TimeUtil;
-import com.pipnet.wallenews.widgets.CarRefreshHeader;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.pipnet.wallenews.util.ToastUtil;
 
 import net.arvin.itemdecorationhelper.ItemDecorationFactory;
 
@@ -59,7 +59,7 @@ import java.util.regex.Pattern;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class FeedDetailActivity extends BaseActivity implements OnRefreshListener {
+public class FeedDetailActivity extends BaseActivity {
 
     @BindView(R.id.title_avatar)
     SimpleDraweeView titleAvatar;
@@ -69,8 +69,6 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
     TextView btnRight;
     @BindView(R.id.recycler_comment)
     RecyclerView recyclerComment;
-    @BindView(R.id.refresh_layout)
-    SmartRefreshLayout refreshLayout;
     @BindView(R.id.load_page_view)
     ImageView loadPageView;
     @BindView(R.id.commentCount)
@@ -90,12 +88,15 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
     WebView webView;
 
     long id = 0;
+    int cursor = 0;
+    int flag = 0;//滑动距离
     long authorId = 0;
     int page = 1;
     int commentCounts = 0;
     List<ContentBean> list = new ArrayList<>();
     LinearLayoutManager linearLayoutManager;
     CommentAdapter adapter;
+    FeedsBean feedsBean;
     boolean ifFollowed;
 
     @Override
@@ -108,6 +109,8 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
         EventBus.getDefault().register(this);
         initView(this, adapter = new CommentAdapter(list));
         id = getIntent().getLongExtra("FEED_ID", 0);
+        cursor = getIntent().getIntExtra("FEED_CURSOR", 0);
+        feedsBean = App.getInstance().getDaoSession().getFeedsBeanDao().queryBuilder().where(FeedsBeanDao.Properties.Cursor.eq(cursor)).unique();
         getComments(page);
         getDetail();
         getTopic();
@@ -192,17 +195,18 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
                 startActivity(new Intent(FeedDetailActivity.this, UserDetailActivity.class).putExtra("authorId", authorId));
             }
         });
-        intWebView(webView);
+        linearLayoutManager = new LinearLayoutManager(context);
         adapter.addHeaderView(header);
         //初始化Feeds列表
-        refreshLayout.setRefreshHeader(new CarRefreshHeader(context));
-        refreshLayout.setEnableLoadmore(false);//加载更多由BaseQuickAdapter完成
-        refreshLayout.setOnRefreshListener(this);
-        recyclerComment.setLayoutManager(linearLayoutManager = new LinearLayoutManager(context));
+//        refreshLayout.setRefreshHeader(new CarRefreshHeader(context));
+//        refreshLayout.setEnableLoadmore(false);//加载更多由BaseQuickAdapter完成
+//        refreshLayout.setOnRefreshListener(this);
+        recyclerComment.setLayoutManager(linearLayoutManager);
         recyclerComment.addItemDecoration(new ItemDecorationFactory.DividerBuilder()
                 .dividerColor(context.getResources().getColor(R.color.line_light))
                 .build(recyclerComment));
         recyclerComment.setAdapter(adapter);
+        intWebView(webView);
         recyclerComment.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -214,7 +218,7 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
                 //获取当前显示条目的高度
                 int itemHeight = firstVisibleChildView.getHeight();
                 //获取当前RecyclerView 偏移量
-                int flag = (position) * itemHeight - firstVisibleChildView.getTop();
+                flag = (position) * itemHeight - firstVisibleChildView.getTop();
                 if (flag >= llTop.getHeight()) {
                     //做显示布局操作
                     titleAvatar.setVisibility(View.VISIBLE);
@@ -255,8 +259,11 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
                         + "    objs[i].onclick=function()  " + "    {  "
                         + "        window.imagelistner.openImage(this.src);  "
                         + "    }  " + "}" + "})()");
-
                 loadPageView.setVisibility(View.GONE);
+
+                if (feedsBean != null) {
+                    recyclerComment.scrollBy(0, feedsBean.scrollDt);
+                }
             }
         });
     }
@@ -284,12 +291,12 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
         return pics.toArray(new String[pics.size()]);
     }
 
-    @Override
-    public void onRefresh(RefreshLayout refreshlayout) {
-        page = 1;
-        getComments(page);
-        getDetail();
-    }
+//    @Override
+//    public void onRefresh(RefreshLayout refreshlayout) {
+//        page = 1;
+//        getComments(page);
+//        getDetail();
+//    }
 
 //    @Override
 //    public void onLoadMoreRequested() {
@@ -314,7 +321,7 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
                     noComment.setVisibility(View.VISIBLE);
                     adapter.loadMoreEnd();
                 }
-                refreshLayout.finishRefresh();
+//                refreshLayout.finishRefresh();
             }
         });
     }
@@ -467,5 +474,9 @@ public class FeedDetailActivity extends BaseActivity implements OnRefreshListene
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        if (feedsBean != null) {
+            feedsBean.scrollDt = flag;
+            App.getInstance().getDaoSession().getFeedsBeanDao().update(feedsBean);
+        }
     }
 }

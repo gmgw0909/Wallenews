@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -119,11 +118,6 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
                 }
                 if (feedsBeans != null && feedsBeans.size() > 0) {
                     list.addAll(feedsBeans);
-                    for (int i = 0; i < list.size(); i++) {
-                        if (list.get(i).show) {
-                            list.get(i).show = false;
-                        }
-                    }
                     adapter.notifyDataSetChanged();
                     adapter.loadMoreComplete();
                     refreshLayout.finishRefresh();
@@ -137,14 +131,16 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
                         }
                         feedsBeanDao.insertOrReplaceInTx(list_);
                         list.addAll(list_);
+                        adapter.notifyDataSetChanged();
+                        upCursor = list.get(0).cursor;
+                        downCursor = list.get(list.size() - 1).cursor;
+                    } else {
                         for (int i = 0; i < list.size(); i++) {
                             if (list.get(i).show) {
                                 list.get(i).show = false;
                             }
                         }
                         adapter.notifyDataSetChanged();
-                        upCursor = list.get(0).cursor;
-                        downCursor = list.get(list.size() - 1).cursor;
                     }
                 }
                 adapter.loadMoreComplete();
@@ -218,7 +214,9 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
             startActivity(new Intent(getActivity(), ForwardDetailActivity.class).putExtra("FORWARD_CONTENT", list.get(position).content));
         } else {
             view.findViewById(R.id.btn_topic).performClick();
-            startActivity(new Intent(getActivity(), FeedDetailActivity.class).putExtra("FEED_ID", list.get(position).content.id));
+            startActivity(new Intent(getActivity(), FeedDetailActivity.class)
+                    .putExtra("FEED_ID", list.get(position).content.id)
+                    .putExtra("FEED_CURSOR",list.get(position).cursor));
         }
         list.get(position).isRead = true;
         adapter.notifyDataSetChanged();
