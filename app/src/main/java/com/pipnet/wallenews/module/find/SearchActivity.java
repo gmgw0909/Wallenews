@@ -183,8 +183,9 @@ public class SearchActivity extends BaseActivity implements BaseQuickAdapter.OnI
         String key = getIntent().getStringExtra("keyword");
         if (!TextUtils.isEmpty(key)) {
             etSearch.setText(key);
-            etSearch.setSelection(etSearch.getText().length());
             search();
+        } else {
+            etSearch.requestFocus();
         }
         //获取搜索记录
         getSearchRecommend();
