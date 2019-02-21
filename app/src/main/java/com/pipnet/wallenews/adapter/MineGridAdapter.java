@@ -11,6 +11,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.module.WebViewActivity;
+import com.pipnet.wallenews.util.SPUtils;
 
 import java.util.List;
 
@@ -26,7 +27,11 @@ public class MineGridAdapter extends BaseQuickAdapter<LoginInfo.PropertiesBean, 
 
     @Override
     protected void convert(BaseViewHolder helper, final LoginInfo.PropertiesBean item) {
-        helper.setText(R.id.tv, item.name);
+        if (!TextUtils.isEmpty(item.name) && item.name.equals("个人积分")) {
+            helper.setText(R.id.tv, item.name + "\n" + item.count);
+        } else {
+            helper.setText(R.id.tv, item.name);
+        }
         SimpleDraweeView img = helper.getView(R.id.iv);
         img.setImageURI(item.image);
         helper.getView(R.id.item).setOnClickListener(new View.OnClickListener() {
