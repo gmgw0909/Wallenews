@@ -99,12 +99,12 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
 
     private void getNetData(final String direction, final long cursor) {
         if (cursor == 0) {
-            feedsBeans = feedsBeanDao.queryBuilder().orderDesc(FeedsBeanDao.Properties.Cursor).limit(50).list();
+            feedsBeans = feedsBeanDao.queryBuilder().orderDesc(FeedsBeanDao.Properties.Cursor).limit(20).list();
         } else {
             if (direction.equals("newFeed")) {
-                feedsBeans = feedsBeanDao.queryBuilder().orderDesc(FeedsBeanDao.Properties.Cursor).where(FeedsBeanDao.Properties.Cursor.gt(cursor)).limit(50).list();
+                feedsBeans = feedsBeanDao.queryBuilder().orderDesc(FeedsBeanDao.Properties.Cursor).where(FeedsBeanDao.Properties.Cursor.gt(cursor)).limit(20).list();
             } else {
-                feedsBeans = feedsBeanDao.queryBuilder().orderDesc(FeedsBeanDao.Properties.Cursor).where(FeedsBeanDao.Properties.Cursor.lt(cursor)).limit(50).list();
+                feedsBeans = feedsBeanDao.queryBuilder().orderDesc(FeedsBeanDao.Properties.Cursor).where(FeedsBeanDao.Properties.Cursor.lt(cursor)).limit(20).list();
             }
         }
         NetRequest.feeds(cursor, direction, new BaseSubscriber<FeedResponse>() {
@@ -119,8 +119,6 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
                 if (feedsBeans != null && feedsBeans.size() > 0) {
                     list.addAll(feedsBeans);
                     adapter.notifyDataSetChanged();
-                    adapter.loadMoreComplete();
-                    refreshLayout.finishRefresh();
                     upCursor = list.get(0).cursor;
                     downCursor = list.get(list.size() - 1).cursor;
                 } else {
@@ -230,6 +228,7 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
                 FeedsBean feedsBean = list.get(i);
                 if (feedsBean.content.id == Long.parseLong(event.replace(Constants.COMMENT_SUCCESS, ""))) {
                     feedsBean.content.commentCount += 1;
+                    App.getInstance().getDaoSession().getFeedsBeanDao().update(feedsBean);
                     adapter.notifyDataSetChanged();
                     return;
                 }
@@ -240,6 +239,7 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
                 if (feedsBean.content.id == Long.parseLong(event.replace(Constants.FORWARD_SUCCESS, ""))) {
                     feedsBean.content.forwardCount += 1;
                     feedsBean.content.ifForward = true;
+                    App.getInstance().getDaoSession().getFeedsBeanDao().update(feedsBean);
                     adapter.notifyDataSetChanged();
                     return;
                 }
@@ -255,6 +255,7 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
                         feedsBean.content.likeCount -= 1;
                         feedsBean.content.ifLike = false;
                     }
+                    App.getInstance().getDaoSession().getFeedsBeanDao().update(feedsBean);
                     adapter.notifyDataSetChanged();
                     return;
                 }

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.pipnet.wallenews.App;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.bean.FeedDetailsInfo;
 import com.pipnet.wallenews.bean.FeedResponse;
@@ -111,6 +112,7 @@ public class WaLiMultiAdapter extends BaseMultiItemQuickAdapter<FeedsBean, BaseV
                                     } else {
                                         item.content.likeCount -= 1;
                                     }
+                                    App.getInstance().getDaoSession().getFeedsBeanDao().update(item);
                                     notifyDataSetChanged();
                                 }
                             }

@@ -135,23 +135,28 @@ public class MainActivity extends BaseActivity {
                 .commit();
     }
 
-    //对返回键进行监听
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            exit();
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+//    //对返回键进行监听
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+//            exit();
+//            return true;
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
 
-    public void exit() {
-        if ((System.currentTimeMillis() - mExitTime) > 2000) {
-            ToastUtil.show("再按一次退出瓦砾");
-            mExitTime = System.currentTimeMillis();
-        } else {
-            finish();
-            System.exit(0);
-        }
+//    public void exit() {
+//        if ((System.currentTimeMillis() - mExitTime) > 2000) {
+//            ToastUtil.show("再按一次退出瓦砾");
+//            mExitTime = System.currentTimeMillis();
+//        } else {
+//            finish();
+//            System.exit(0);
+//        }
+//    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(false);
     }
 }
