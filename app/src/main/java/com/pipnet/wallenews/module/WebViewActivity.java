@@ -123,7 +123,7 @@ public class WebViewActivity extends BaseActivity {
         cookieManager.removeAllCookie();
         List<Cookie> cookies = new SharedPrefsCookiePersistor(App.getInstance()).loadAll();
         cookieManager.setCookie(url,cookies.toString().replace("[","").replace("]",""));
-//        cookieManager.setCookie(url,"uid="+SPUtils.getObject(LoginInfo.class).uid);
+        cookieManager.setCookie(url,"uid="+SPUtils.getObject(LoginInfo.class).uid);
 //        StringBuffer sb = new StringBuffer();
 //        for (Cookie cookie : cookies) {
 //
