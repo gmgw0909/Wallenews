@@ -273,7 +273,8 @@ public class SearchActivity extends BaseActivity implements BaseQuickAdapter.OnI
                 return;
             }
         }
-        historyList.add(new SearchRecommend.TagBean(keyword));
+        historyList.add(0, new SearchRecommend.TagBean(keyword));
+        historyAdapter.notifyDataSetChanged();
         String str = gson.toJson(historyList);
         SPUtils.setString("historyList", str);
     }

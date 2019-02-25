@@ -11,11 +11,14 @@ import android.widget.Toast;
 
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.base.BaseActivity;
+import com.pipnet.wallenews.base.Constants;
 import com.pipnet.wallenews.module.find.FindFragment;
 import com.pipnet.wallenews.module.home.WaLiFragment;
 import com.pipnet.wallenews.module.message.MessageFragment;
 import com.pipnet.wallenews.module.mine.MineFragment;
 import com.pipnet.wallenews.util.ToastUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,6 +89,7 @@ public class MainActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.llHome:
                 selectTab(index = 0);
+                EventBus.getDefault().post(Constants.HOME_REFRESH);
                 break;
             case R.id.llFind:
                 selectTab(index = 1);

@@ -66,6 +66,8 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
 
     FeedsBeanDao feedsBeanDao;
 
+    boolean scrollTop;
+
     @Override
     protected int setContentView() {
         return R.layout.fragment_wali;
@@ -89,7 +91,7 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
             public void onNext(LoginInfo info) {
                 if (!TextUtils.isEmpty(info.status) && info.status.equals("OK") && info.isLogged) {
                     //刷新用户信息
-//                    SPUtils.setObject(info);
+                    SPUtils.setObject(info);
                 } else {
                     ToastUtil.show("登录失效,重新登录");
                 }
@@ -118,9 +120,6 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
                 }
                 if (feedsBeans != null && feedsBeans.size() > 0) {
                     list.addAll(feedsBeans);
-                    adapter.notifyDataSetChanged();
-                    upCursor = list.get(0).cursor;
-                    downCursor = list.get(list.size() - 1).cursor;
                 } else {
                     if (followResponse.feeds != null && followResponse.feeds.size() > 0) {
                         List<FeedsBean> list_ = followResponse.feeds;
@@ -129,18 +128,18 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
                         }
                         feedsBeanDao.insertOrReplaceInTx(list_);
                         list.addAll(list_);
-                        adapter.notifyDataSetChanged();
-                        upCursor = list.get(0).cursor;
-                        downCursor = list.get(list.size() - 1).cursor;
-                    } else {
-                        for (int i = 0; i < list.size(); i++) {
-                            if (list.get(i).show) {
-                                list.get(i).show = false;
-                            }
-                        }
-                        adapter.notifyDataSetChanged();
                     }
                 }
+                if (list.size() > 0 && direction.equals("newFeed")) {
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i).show) {
+                            list.get(i).show = false;
+                        }
+                    }
+                }
+                upCursor = list.get(0).cursor;
+                downCursor = list.get(list.size() - 1).cursor;
+                adapter.notifyDataSetChanged();
                 adapter.loadMoreComplete();
                 refreshLayout.finishRefresh();
             }
@@ -203,6 +202,20 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
         adapter.setOnLoadMoreListener(this, recyclerView);
         adapter.setOnItemClickListener(this);
         adapter.setEmptyView(R.layout.layout_empty);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int firstCompletelyVisibleItemPosition = layoutManager.findFirstCompletelyVisibleItemPosition();
+                if (firstCompletelyVisibleItemPosition == 0) {
+                    scrollTop = true;
+                } else {
+                    scrollTop = false;
+                }
+            }
+        });
         refreshLayout.autoRefresh();
     }
 
@@ -214,7 +227,7 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
             view.findViewById(R.id.btn_topic).performClick();
             startActivity(new Intent(getActivity(), FeedDetailActivity.class)
                     .putExtra("FEED_ID", list.get(position).content.id)
-                    .putExtra("FEED_CURSOR",list.get(position).cursor));
+                    .putExtra("FEED_CURSOR", list.get(position).cursor));
         }
         list.get(position).isRead = true;
         adapter.notifyDataSetChanged();
@@ -258,6 +271,14 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
                     App.getInstance().getDaoSession().getFeedsBeanDao().update(feedsBean);
                     adapter.notifyDataSetChanged();
                     return;
+                }
+            }
+        } else if (event.contains(Constants.HOME_REFRESH)) {
+            if (!isHidden()) {
+                if (scrollTop) {
+                    refreshLayout.autoRefresh();
+                } else {
+                    recyclerView.smoothScrollToPosition(0);
                 }
             }
         }
