@@ -80,6 +80,7 @@ public class MineFragment extends LazyFragment {
                     SPUtils.setObject(info);
                     initUserInfo(info);
                     if (info.properties != null) {
+                        list.clear();
                         list.addAll(info.properties);
                         for (int i = 0; i < 9 - info.properties.size(); i++) {
                             list.add(new LoginInfo.PropertiesBean());
@@ -129,8 +130,7 @@ public class MineFragment extends LazyFragment {
         if (event.equals(Constants.REFRESH_USER)) {
             initUserInfo(SPUtils.getObject(LoginInfo.class));
         } else if (event.equals(Constants.REFRESH_USER_NET)) {
-            if (!isHidden())
-                getUerInfo();
+            getUerInfo();
         }
     }
 
