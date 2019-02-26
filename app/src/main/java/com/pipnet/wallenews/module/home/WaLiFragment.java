@@ -91,7 +91,7 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
             public void onNext(LoginInfo info) {
                 if (!TextUtils.isEmpty(info.status) && info.status.equals("OK") && info.isLogged) {
                     //刷新用户信息
-                    SPUtils.setObject(info);
+//                    SPUtils.setObject(info);
                 } else {
                     ToastUtil.show("登录失效,重新登录");
                 }

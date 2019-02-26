@@ -99,6 +99,7 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.llMy:
                 selectTab(index = 3);
+                EventBus.getDefault().post(Constants.REFRESH_USER_NET);
                 break;
         }
         if (index == currentIndex) {

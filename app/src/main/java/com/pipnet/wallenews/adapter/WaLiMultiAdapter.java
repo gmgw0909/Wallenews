@@ -187,6 +187,17 @@ public class WaLiMultiAdapter extends BaseMultiItemQuickAdapter<FeedsBean, BaseV
                     });
                 } else {
                     btnTopic.setVisibility(View.INVISIBLE);
+                    btnTopic.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            for (int i = 0; i < mData.size(); i++) {
+                                if (mData.get(i).show && mData.get(i).cursor != item.cursor) {
+                                    mData.get(i).show = false;
+                                }
+                            }
+                            notifyDataSetChanged();
+                        }
+                    });
                 }
                 if (item.show) {
                     llMore.setVisibility(View.VISIBLE);
