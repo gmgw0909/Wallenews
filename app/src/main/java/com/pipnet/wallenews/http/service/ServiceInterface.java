@@ -205,4 +205,10 @@ public interface ServiceInterface {
     @GET("we/topic/search")
     Flowable<SearchRecommend> topicSearch(@Query("keyword") String keyword);
 
+    /**
+     * 消息
+     */
+    @GET("we/feedFlow/mine")
+    Flowable<Response> getMsg(@Query("type") String keyword);
+
 }

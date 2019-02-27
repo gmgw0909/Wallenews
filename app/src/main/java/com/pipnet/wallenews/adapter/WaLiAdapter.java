@@ -17,6 +17,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.bean.FeedDetailsInfo;
 import com.pipnet.wallenews.bean.FeedResponse;
+import com.pipnet.wallenews.bean.FeedsBean;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
@@ -32,14 +33,14 @@ import java.util.List;
  * Created by LeeBoo on 2019/1/13.
  */
 
-public class WaLiAdapter extends BaseQuickAdapter<FeedResponse.FeedsBean, BaseViewHolder> {
+public class WaLiAdapter extends BaseQuickAdapter<FeedsBean, BaseViewHolder> {
 
-    public WaLiAdapter(@Nullable List<FeedResponse.FeedsBean> data) {
+    public WaLiAdapter(@Nullable List<FeedsBean> data) {
         super(R.layout.item_wali, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, final FeedResponse.FeedsBean item) {
+    protected void convert(BaseViewHolder helper, final FeedsBean item) {
         SimpleDraweeView avatar = helper.getView(R.id.avatar);
         final LinearLayout llImg = helper.getView(R.id.ll_img);
         LinearLayout ll3 = helper.getView(R.id.ll_3);

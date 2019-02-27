@@ -2,17 +2,23 @@ package com.pipnet.wallenews.module;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.base.BaseActivity;
+import com.pipnet.wallenews.base.Constants;
 import com.pipnet.wallenews.module.find.FindFragment;
 import com.pipnet.wallenews.module.home.WaLiFragment;
 import com.pipnet.wallenews.module.message.MessageFragment;
 import com.pipnet.wallenews.module.mine.MineFragment;
+import com.pipnet.wallenews.util.ToastUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +89,7 @@ public class MainActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.llHome:
                 selectTab(index = 0);
+                EventBus.getDefault().post(Constants.HOME_REFRESH);
                 break;
             case R.id.llFind:
                 selectTab(index = 1);
@@ -92,6 +99,7 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.llMy:
                 selectTab(index = 3);
+                EventBus.getDefault().post(Constants.REFRESH_USER_NET);
                 break;
         }
         if (index == currentIndex) {
@@ -130,5 +138,30 @@ public class MainActivity extends BaseActivity {
                 .show(showFragment)
                 .hide(hideFragment)
                 .commit();
+    }
+
+//    //对返回键进行监听
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+//            exit();
+//            return true;
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
+
+//    public void exit() {
+//        if ((System.currentTimeMillis() - mExitTime) > 2000) {
+//            ToastUtil.show("再按一次退出瓦砾");
+//            mExitTime = System.currentTimeMillis();
+//        } else {
+//            finish();
+//            System.exit(0);
+//        }
+//    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(false);
     }
 }

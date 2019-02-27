@@ -23,6 +23,7 @@ import com.pipnet.wallenews.adapter.SearchTagAdapter;
 import com.pipnet.wallenews.adapter.WaLiMultiAdapter;
 import com.pipnet.wallenews.base.BaseActivity;
 import com.pipnet.wallenews.bean.FeedResponse;
+import com.pipnet.wallenews.bean.FeedsBean;
 import com.pipnet.wallenews.bean.SearchRecommend;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
@@ -77,7 +78,7 @@ public class SearchActivity extends BaseActivity implements BaseQuickAdapter.OnI
     List<SearchRecommend.TagBean> historyList = new ArrayList<>();
     List<SearchRecommend.TagBean> likeList = new ArrayList<>();
     List<SearchRecommend.TagBean> suggestList = new ArrayList<>();
-    List<FeedResponse.FeedsBean> list = new ArrayList<>();
+    List<FeedsBean> list = new ArrayList<>();
 
     LoadingDialog loadingDialog;
     Gson gson;
@@ -182,8 +183,9 @@ public class SearchActivity extends BaseActivity implements BaseQuickAdapter.OnI
         String key = getIntent().getStringExtra("keyword");
         if (!TextUtils.isEmpty(key)) {
             etSearch.setText(key);
-            etSearch.setSelection(etSearch.getText().length());
             search();
+        } else {
+            etSearch.requestFocus();
         }
         //获取搜索记录
         getSearchRecommend();
@@ -271,7 +273,8 @@ public class SearchActivity extends BaseActivity implements BaseQuickAdapter.OnI
                 return;
             }
         }
-        historyList.add(new SearchRecommend.TagBean(keyword));
+        historyList.add(0, new SearchRecommend.TagBean(keyword));
+        historyAdapter.notifyDataSetChanged();
         String str = gson.toJson(historyList);
         SPUtils.setString("historyList", str);
     }

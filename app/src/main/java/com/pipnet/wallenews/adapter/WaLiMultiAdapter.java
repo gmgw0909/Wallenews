@@ -1,6 +1,7 @@
 package com.pipnet.wallenews.adapter;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,9 +15,11 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.pipnet.wallenews.App;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.bean.FeedDetailsInfo;
 import com.pipnet.wallenews.bean.FeedResponse;
+import com.pipnet.wallenews.bean.FeedsBean;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
@@ -33,16 +36,16 @@ import java.util.List;
  * Created by LeeBoo on 2019/1/13.
  */
 
-public class WaLiMultiAdapter extends BaseMultiItemQuickAdapter<FeedResponse.FeedsBean, BaseViewHolder> {
+public class WaLiMultiAdapter extends BaseMultiItemQuickAdapter<FeedsBean, BaseViewHolder> {
 
-    public WaLiMultiAdapter(@Nullable List<FeedResponse.FeedsBean> data) {
+    public WaLiMultiAdapter(@Nullable List<FeedsBean> data) {
         super(data);
         addItemType(0, R.layout.item_wali);
         addItemType(1, R.layout.item_wali_forward);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, final FeedResponse.FeedsBean item) {
+    protected void convert(BaseViewHolder helper, final FeedsBean item) {
         SimpleDraweeView avatar = helper.getView(R.id.avatar);
         final LinearLayout llImg = helper.getView(R.id.ll_img);
         LinearLayout ll3 = helper.getView(R.id.ll_3);
@@ -109,6 +112,7 @@ public class WaLiMultiAdapter extends BaseMultiItemQuickAdapter<FeedResponse.Fee
                                     } else {
                                         item.content.likeCount -= 1;
                                     }
+                                    App.getInstance().getDaoSession().getFeedsBeanDao().update(item);
                                     notifyDataSetChanged();
                                 }
                             }
@@ -167,6 +171,11 @@ public class WaLiMultiAdapter extends BaseMultiItemQuickAdapter<FeedResponse.Fee
                     btnTopic.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            for (int i = 0; i < mData.size(); i++) {
+                                if (mData.get(i).show && mData.get(i).cursor != item.cursor) {
+                                    mData.get(i).show = false;
+                                }
+                            }
                             if (item.show) {
                                 item.show = false;
                                 notifyDataSetChanged();
@@ -178,6 +187,17 @@ public class WaLiMultiAdapter extends BaseMultiItemQuickAdapter<FeedResponse.Fee
                     });
                 } else {
                     btnTopic.setVisibility(View.INVISIBLE);
+                    btnTopic.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            for (int i = 0; i < mData.size(); i++) {
+                                if (mData.get(i).show && mData.get(i).cursor != item.cursor) {
+                                    mData.get(i).show = false;
+                                }
+                            }
+                            notifyDataSetChanged();
+                        }
+                    });
                 }
                 if (item.show) {
                     llMore.setVisibility(View.VISIBLE);
@@ -200,6 +220,13 @@ public class WaLiMultiAdapter extends BaseMultiItemQuickAdapter<FeedResponse.Fee
                 } else {
                     llMore.setVisibility(View.GONE);
                     headerRV.setAdapter(null);
+                }
+                if (item.isRead) {
+                    ((TextView) helper.getView(R.id.name)).setTextColor(mContext.getResources().getColor(R.color.text_999));
+                    ((TextView) helper.getView(R.id.title)).setTextColor(mContext.getResources().getColor(R.color.text_999));
+                } else {
+                    ((TextView) helper.getView(R.id.name)).setTextColor(mContext.getResources().getColor(R.color.black));
+                    ((TextView) helper.getView(R.id.title)).setTextColor(mContext.getResources().getColor(R.color.text_333));
                 }
                 break;
             case 1:
@@ -312,6 +339,17 @@ public class WaLiMultiAdapter extends BaseMultiItemQuickAdapter<FeedResponse.Fee
                         mContext.startActivity(new Intent(mContext, FeedDetailActivity.class).putExtra("FEED_ID", item.content.sourceId));
                     }
                 });
+                if (item.isRead) {
+                    ((TextView) helper.getView(R.id.name)).setTextColor(mContext.getResources().getColor(R.color.text_999));
+                    ((TextView) helper.getView(R.id.content)).setTextColor(mContext.getResources().getColor(R.color.text_999));
+                    ((TextView) helper.getView(R.id.sourceAuthorName)).setTextColor(mContext.getResources().getColor(R.color.text_999));
+                    ((TextView) helper.getView(R.id.sourceContentTitle)).setTextColor(mContext.getResources().getColor(R.color.text_999));
+                } else {
+                    ((TextView) helper.getView(R.id.name)).setTextColor(mContext.getResources().getColor(R.color.black));
+                    ((TextView) helper.getView(R.id.content)).setTextColor(mContext.getResources().getColor(R.color.text_333));
+                    ((TextView) helper.getView(R.id.sourceAuthorName)).setTextColor(mContext.getResources().getColor(R.color.black));
+                    ((TextView) helper.getView(R.id.sourceContentTitle)).setTextColor(mContext.getResources().getColor(R.color.text_333));
+                }
                 break;
         }
     }

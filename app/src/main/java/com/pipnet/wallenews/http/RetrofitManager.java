@@ -28,13 +28,10 @@ public final class RetrofitManager {
         //OkHttpClient.Builder
         builder = new OkHttpClient.Builder();
         builder.connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-//        builder.addNetworkInterceptor(RewriteCacheControlInterceptor.getInstance());
         builder.addInterceptor(HeaderInterceptor.getInstance());//设置请求头
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         builder.addInterceptor(httpLoggingInterceptor);//打印日志(放最后)
-//        builder.addInterceptor(new AddCookiesInterceptor());
-//        builder.addInterceptor(new ReceivedCookiesInterceptor());
         builder.cookieJar(new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(App.getInstance())));
         //Retrofit
         retrofit = new Retrofit.Builder()

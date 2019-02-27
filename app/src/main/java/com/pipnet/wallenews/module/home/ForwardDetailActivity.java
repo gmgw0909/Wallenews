@@ -91,7 +91,7 @@ public class ForwardDetailActivity extends BaseActivity implements OnRefreshList
         contentBean = (ContentBean) getIntent().getSerializableExtra("FORWARD_CONTENT");
         initView(this, adapter = new CommentAdapter(list));
         getComments(page);
-        getDetail();
+//        getDetail();
         etComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -231,7 +231,7 @@ public class ForwardDetailActivity extends BaseActivity implements OnRefreshList
     public void onRefresh(RefreshLayout refreshlayout) {
         page = 1;
         getComments(page);
-        getDetail();
+//        getDetail();
     }
 
     private void getComments(final int page) {

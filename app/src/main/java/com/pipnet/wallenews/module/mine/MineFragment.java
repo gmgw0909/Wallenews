@@ -13,8 +13,11 @@ import com.pipnet.wallenews.adapter.MineGridAdapter;
 import com.pipnet.wallenews.base.Constants;
 import com.pipnet.wallenews.base.LazyFragment;
 import com.pipnet.wallenews.bean.LoginInfo;
+import com.pipnet.wallenews.http.service.NetRequest;
+import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
 import com.pipnet.wallenews.uihelpers.GridItemDecoration;
 import com.pipnet.wallenews.util.SPUtils;
+import com.pipnet.wallenews.util.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -42,6 +45,7 @@ public class MineFragment extends LazyFragment {
     TextView followedCount;
     @BindView(R.id.avatar)
     SimpleDraweeView avatar;
+    MineGridAdapter adapter;
 
     List<LoginInfo.PropertiesBean> list = new ArrayList<>();
 
@@ -53,14 +57,6 @@ public class MineFragment extends LazyFragment {
     @Override
     protected void lazyLoad() {
         EventBus.getDefault().register(this);
-        LoginInfo info = SPUtils.getObject(LoginInfo.class);
-        if (info.properties != null) {
-            list.addAll(info.properties);
-            for (int i = 0; i < 9 - info.properties.size(); i++) {
-                list.add(new LoginInfo.PropertiesBean());
-            }
-        }
-        initUserInfo(info);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3);
         GridItemDecoration divider = new GridItemDecoration.Builder(getActivity())
                 .setHorizontalSpan(2f)
@@ -70,7 +66,32 @@ public class MineFragment extends LazyFragment {
                 .build();
         gridRv.addItemDecoration(divider);
         gridRv.setLayoutManager(gridLayoutManager);
-        gridRv.setAdapter(new MineGridAdapter(list));
+        gridRv.setAdapter(adapter = new MineGridAdapter(list));
+        getUerInfo();
+    }
+
+    //网络获取用户信息
+    private void getUerInfo() {
+        NetRequest.mySpace(new BaseSubscriber<LoginInfo>() {
+            @Override
+            public void onNext(LoginInfo info) {
+                if (!TextUtils.isEmpty(info.status) && info.status.equals("OK") && info.isLogged) {
+                    //刷新用户信息
+                    SPUtils.setObject(info);
+                    initUserInfo(info);
+                    if (info.properties != null) {
+                        list.clear();
+                        list.addAll(info.properties);
+                        for (int i = 0; i < 9 - info.properties.size(); i++) {
+                            list.add(new LoginInfo.PropertiesBean());
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                } else {
+                    ToastUtil.show("登录失效,重新登录");
+                }
+            }
+        });
     }
 
     private void initUserInfo(LoginInfo info) {
@@ -108,6 +129,8 @@ public class MineFragment extends LazyFragment {
     public void onEvent(String event) {
         if (event.equals(Constants.REFRESH_USER)) {
             initUserInfo(SPUtils.getObject(LoginInfo.class));
+        } else if (event.equals(Constants.REFRESH_USER_NET)) {
+            getUerInfo();
         }
     }
 
