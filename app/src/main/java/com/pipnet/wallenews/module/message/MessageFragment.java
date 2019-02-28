@@ -1,5 +1,6 @@
 package com.pipnet.wallenews.module.message;
 
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -68,13 +69,14 @@ public class MessageFragment extends LazyFragment implements OnRefreshListener, 
         refreshLayout.setRefreshHeader(new CarRefreshHeader(getActivity()));
         adapter.bindToRecyclerView(recyclerView);
         adapter.setEmptyView(R.layout.layout_empty);
+        adapter.setOnItemClickListener(this);
         refreshLayout.setEnableLoadmore(false);//加载更多由BaseQuickAdapter完成
         refreshLayout.autoRefresh();
     }
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-
+        startActivity(new Intent(getActivity(), MessageActivity.class));
     }
 
     private void getNetData() {

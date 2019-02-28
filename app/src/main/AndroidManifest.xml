@@ -86,6 +86,9 @@
         <activity
             android:name=".module.home.ForwardDetailActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".module.message.MessageActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".wxapi.WXEntryActivity"
