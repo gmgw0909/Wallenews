@@ -33,8 +33,6 @@ public class MsgDtlAdapter extends BaseQuickAdapter<FeedsBean, BaseViewHolder> {
         SimpleDraweeView img = helper.getView(R.id.img);
         if (item.content.sourceContentImageAry != null && item.content.sourceContentImageAry.size() > 0) {
             img.setImageURI(item.content.sourceContentImageAry.get(0));
-        } else {
-            img.setImageResource(R.mipmap.default_avatar);
         }
         helper.setText(R.id.name, item.content.authorName);
         helper.setText(R.id.wpCount, item.content.content);

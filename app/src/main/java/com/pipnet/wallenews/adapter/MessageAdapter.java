@@ -32,8 +32,8 @@ public class MessageAdapter extends BaseQuickAdapter<FeedsBean, BaseViewHolder> 
         } else {
             avatar.setImageResource(R.mipmap.default_avatar);
         }
-        helper.setText(R.id.name, item.content.authorName);
-        helper.setText(R.id.intro, item.content.authorName);
+        helper.setText(R.id.name, item.content.title);
+        helper.setText(R.id.intro, item.content.subTitle);
         if (item.content.commentCount == 0) {
             helper.getView(R.id.count).setVisibility(View.GONE);
         } else {

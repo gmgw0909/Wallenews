@@ -97,12 +97,10 @@
                 android:textSize="13sp" />
         </LinearLayout>
 
-
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/img"
             android:layout_width="80dp"
             android:layout_height="match_parent"
-            app:actualImageScaleType="centerCrop"
             app:placeholderImage="@mipmap/pic_tj_default"
             app:placeholderImageScaleType="centerCrop"
             app:roundBottomLeft="true"

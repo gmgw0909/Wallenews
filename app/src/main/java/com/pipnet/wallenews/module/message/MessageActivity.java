@@ -2,6 +2,7 @@ package com.pipnet.wallenews.module.message;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -23,7 +24,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class MessageActivity extends BaseActivity implements OnRefreshListener{
+public class MessageActivity extends BaseActivity implements OnRefreshListener {
 
     @BindView(R.id.recycler_article)
     RecyclerView recyclerView;
@@ -34,6 +35,7 @@ public class MessageActivity extends BaseActivity implements OnRefreshListener{
 
     List<FeedsBean> list = new ArrayList<>();
     MsgDtlAdapter adapter;
+    String titleName, type = "";
 
     @Override
     public int setContentView() {
@@ -42,7 +44,21 @@ public class MessageActivity extends BaseActivity implements OnRefreshListener{
 
     @Override
     public void initViewData() {
-        title.setText("赞");
+        titleName = getIntent().getStringExtra("TYPE");
+        if (TextUtils.isEmpty(titleName)) {
+            titleName = "";
+        } else {
+            if (titleName.equals("赞")) {
+                type = "like";
+            } else if (titleName.equals("评论")) {
+                type = "reply";
+            } else if (titleName.equals("@我的")) {
+                type = "mention";
+            } else if (titleName.equals("系统消息")) {
+                type = "sysPub";
+            }
+        }
+        title.setText(titleName);
         refreshLayout.setRefreshHeader(new CarRefreshHeader(this));
         refreshLayout.setEnableLoadmore(false);//加载更多由BaseQuickAdapter完成
         refreshLayout.setOnRefreshListener(this);
@@ -60,7 +76,7 @@ public class MessageActivity extends BaseActivity implements OnRefreshListener{
     }
 
     private void getNetData() {
-        NetRequest.getMsg("reply", new BaseSubscriber<FeedResponse>() {
+        NetRequest.getMsg(type, new BaseSubscriber<FeedResponse>() {
             @Override
             public void onNext(FeedResponse followResponse) {
                 if (followResponse.feeds != null && followResponse.feeds.size() > 0) {

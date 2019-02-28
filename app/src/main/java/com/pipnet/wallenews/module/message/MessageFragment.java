@@ -76,7 +76,7 @@ public class MessageFragment extends LazyFragment implements OnRefreshListener, 
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        startActivity(new Intent(getActivity(), MessageActivity.class));
+        startActivity(new Intent(getActivity(), MessageActivity.class).putExtra("TYPE", list.get(position).content.title));
     }
 
     private void getNetData() {
