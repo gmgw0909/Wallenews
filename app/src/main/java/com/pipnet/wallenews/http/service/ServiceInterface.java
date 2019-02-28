@@ -209,6 +209,6 @@ public interface ServiceInterface {
      * 消息
      */
     @GET("we/feedFlow/mine")
-    Flowable<Response> getMsg(@Query("type") String keyword);
+    Flowable<FeedResponse> getMsg(@Query("type") String type);
 
 }

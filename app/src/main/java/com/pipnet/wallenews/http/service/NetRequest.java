@@ -229,6 +229,13 @@ public class NetRequest {
         toSubscriber(RetrofitManager.getInstance().getServiceInterface().topicSearch(keyword), subscriber);
     }
 
+    /**
+     * # 话题搜索联想
+     */
+    public static void getMsg(String type, Subscriber<FeedResponse> subscriber) {
+        toSubscriber(RetrofitManager.getInstance().getServiceInterface().getMsg(type), subscriber);
+    }
+
     //======================================================上面是所有后台接口=========================================================
 
     /**
