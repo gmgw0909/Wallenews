@@ -58,8 +58,6 @@ public class ForwardDetailActivity extends BaseActivity implements OnRefreshList
     TextView btnRight;
     @BindView(R.id.recycler_comment)
     RecyclerView recyclerComment;
-    @BindView(R.id.refresh_layout)
-    SmartRefreshLayout refreshLayout;
     @BindView(R.id.commentCount)
     TextView commentCount;
     @BindView(R.id.et_comment)
@@ -217,9 +215,9 @@ public class ForwardDetailActivity extends BaseActivity implements OnRefreshList
         });
         adapter.addHeaderView(header);
         //初始化Feeds列表
-        refreshLayout.setRefreshHeader(new CarRefreshHeader(context));
-        refreshLayout.setEnableLoadmore(false);//加载更多由BaseQuickAdapter完成
-        refreshLayout.setOnRefreshListener(this);
+//        refreshLayout.setRefreshHeader(new CarRefreshHeader(context));
+//        refreshLayout.setEnableLoadmore(false);//加载更多由BaseQuickAdapter完成
+//        refreshLayout.setOnRefreshListener(this);
         recyclerComment.setLayoutManager(new LinearLayoutManager(context));
         recyclerComment.addItemDecoration(new ItemDecorationFactory.DividerBuilder()
                 .dividerColor(context.getResources().getColor(R.color.line_light))
@@ -249,7 +247,7 @@ public class ForwardDetailActivity extends BaseActivity implements OnRefreshList
                 } else {
                     adapter.loadMoreEnd();
                 }
-                refreshLayout.finishRefresh();
+//                refreshLayout.finishRefresh();
             }
         });
     }
