@@ -94,4 +94,6 @@ dependencies {
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
     // GreenDao
     implementation 'org.greenrobot:greendao:3.2.2'
+    // exoplayer
+    implementation 'com.google.android.exoplayer:exoplayer:2.8.1'
 }
