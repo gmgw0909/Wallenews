@@ -6,8 +6,10 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.pipnet.wallenews.R;
 import com.pipnet.wallenews.adapter.MsgDtlAdapter;
+import com.pipnet.wallenews.adapter.MsgSystemAdapter;
 import com.pipnet.wallenews.base.BaseActivity;
 import com.pipnet.wallenews.bean.FeedResponse;
 import com.pipnet.wallenews.bean.FeedsBean;
@@ -34,7 +36,7 @@ public class MessageActivity extends BaseActivity implements OnRefreshListener {
     TextView title;
 
     List<FeedsBean> list = new ArrayList<>();
-    MsgDtlAdapter adapter;
+    BaseQuickAdapter adapter;
     String titleName, type = "";
 
     @Override
@@ -50,12 +52,16 @@ public class MessageActivity extends BaseActivity implements OnRefreshListener {
         } else {
             if (titleName.equals("赞")) {
                 type = "like";
+                adapter = new MsgDtlAdapter(list);
             } else if (titleName.equals("评论")) {
                 type = "reply";
+                adapter = new MsgDtlAdapter(list);
             } else if (titleName.equals("@我的")) {
                 type = "mention";
-            } else if (titleName.equals("系统消息")) {
+                adapter = new MsgDtlAdapter(list);
+            } else if (titleName.equals("系统公告")) {
                 type = "sysPub";
+                adapter = new MsgSystemAdapter(list);
             }
         }
         title.setText(titleName);
@@ -63,7 +69,6 @@ public class MessageActivity extends BaseActivity implements OnRefreshListener {
         refreshLayout.setEnableLoadmore(false);//加载更多由BaseQuickAdapter完成
         refreshLayout.setOnRefreshListener(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new MsgDtlAdapter(list);
         recyclerView.setAdapter(adapter);
         adapter.bindToRecyclerView(recyclerView);
         adapter.setEmptyView(R.layout.layout_empty);
