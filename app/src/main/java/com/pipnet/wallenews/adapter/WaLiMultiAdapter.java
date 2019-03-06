@@ -10,9 +10,11 @@ import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -20,9 +22,12 @@ import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.pipnet.wallenews.App;
@@ -41,6 +46,9 @@ import com.pipnet.wallenews.util.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.jzvd.Jzvd;
+import cn.jzvd.JzvdStd;
 
 /**
  * Created by LeeBoo on 2019/1/13.
@@ -371,6 +379,7 @@ public class WaLiMultiAdapter extends BaseMultiItemQuickAdapter<FeedsBean, BaseV
                 final LinearLayout llMore_ = helper.getView(R.id.ll_more);
                 final TextView btnTopic_ = helper.getView(R.id.btn_topic);
                 final RecyclerView headerRV_ = helper.getView(R.id.recycler_header);
+                JzvdStd jzvdStd = helper.getView(R.id.video_view);
                 if (!TextUtils.isEmpty(item.content.authorImage)) {
                     avatar.setImageURI(item.content.authorImage);
                 } else {
@@ -440,9 +449,11 @@ public class WaLiMultiAdapter extends BaseMultiItemQuickAdapter<FeedsBean, BaseV
                     }
                 });
 
-//                if (!TextUtils.isEmpty(item.content.video)) {
-//                    initializePlayer(playerView,item.content.video);
-//                }
+                if (!TextUtils.isEmpty(item.content.video)) {
+                    jzvdStd.setUp(item.content.video, "", Jzvd.SCREEN_WINDOW_LIST);
+                    jzvdStd.thumbImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    Glide.with(mContext).load(item.content.imageArray.get(0)).into(jzvdStd.thumbImageView);
+                }
                 if (item.content.hasRecommend) {
                     btnTopic_.setVisibility(View.VISIBLE);
                     btnTopic_.setOnClickListener(new View.OnClickListener() {

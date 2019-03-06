@@ -63,13 +63,12 @@ import java.util.List;
 
 public class ExoPlayerRecyclerView extends RecyclerView {
 
-    private List<FeedsBean> videoInfoList = new ArrayList<>();
     private int videoSurfaceDefaultHeight = 0;
     private int screenDefaultHeight = 0;
     SimpleExoPlayer player;
     //surface view for playing video
     private PlayerView videoSurfaceView;
-//    private ImageView mCoverImage;
+    //    private ImageView mCoverImage;
     private Context appContext;
 
 
@@ -117,12 +116,6 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         initialize(context);
     }
 
-    public void setVideoInfoList(List<FeedsBean> videoInfoList) {
-        this.videoInfoList = videoInfoList;
-
-    }
-
-
     /**
      * prepare for video play
      */
@@ -167,6 +160,9 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         if (targetPosition < 0 || targetPosition == playPosition) {
             return;
         }
+        if (!((WaLiMultiAdapter) getAdapter()).getData().get(targetPosition).type.equals("video")) {
+            return;
+        }
         playPosition = targetPosition;
         if (videoSurfaceView == null) {
             return;
@@ -177,7 +173,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         // get target View targetPosition in RecyclerView
         int at = targetPosition - ((LinearLayoutManager) getLayoutManager()).findFirstVisibleItemPosition();
 
-        View child = getChildAt(at);
+        View child = getChildAt(at + 1);
         if (child == null) {
             return;
         }
@@ -203,7 +199,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(appContext,
                 Util.getUserAgent(appContext, "android_wave_list"), defaultBandwidthMeter);
         // This is the MediaSource representing the media to be played.
-        String uriString = videoInfoList.get(targetPosition).content.video;
+        String uriString = ((WaLiMultiAdapter) getAdapter()).getData().get(targetPosition).content.video;
         if (uriString != null) {
             MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
                     .createMediaSource(Uri.parse(uriString));

@@ -28,6 +28,11 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
@@ -96,4 +101,6 @@ dependencies {
     implementation 'org.greenrobot:greendao:3.2.2'
     // exoplayer
     implementation 'com.google.android.exoplayer:exoplayer:2.8.1'
+    // jiaozivideoplayer
+    implementation 'cn.jzvd:jiaozivideoplayer:6.4.1'
 }
