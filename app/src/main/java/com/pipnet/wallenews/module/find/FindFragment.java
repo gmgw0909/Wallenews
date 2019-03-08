@@ -112,7 +112,9 @@ public class FindFragment extends LazyFragment implements OnRefreshListener {
                         authList.add(list_.get(i).content);
                     }
                 }
-                topList.addAll(response.topicFeeds);
+                if (response.topicFeeds != null && response.topicFeeds.size() > 0) {
+                    topList.addAll(response.topicFeeds);
+                }
                 findTopicAdapter.notifyDataSetChanged();
                 followAdapter.notifyDataSetChanged();
                 refreshLayout.finishRefresh();
