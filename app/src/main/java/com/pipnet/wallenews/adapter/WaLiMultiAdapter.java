@@ -38,6 +38,7 @@ import com.pipnet.wallenews.bean.FeedsBean;
 import com.pipnet.wallenews.bean.response.Response;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
+import com.pipnet.wallenews.module.WebViewActivity;
 import com.pipnet.wallenews.module.home.FeedDetailActivity;
 import com.pipnet.wallenews.module.home.ForwardActivity;
 import com.pipnet.wallenews.module.home.ReplyActivity;
@@ -359,7 +360,13 @@ public class WaLiMultiAdapter extends BaseMultiItemQuickAdapter<FeedsBean, BaseV
                 helper.getView(R.id.ll_forward).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mContext.startActivity(new Intent(mContext, FeedDetailActivity.class).putExtra("FEED_ID", item.content.sourceId));
+                        if (item.type.equals("content")) {
+                            mContext.startActivity(new Intent(mContext, FeedDetailActivity.class).putExtra("FEED_ID", item.content.sourceId));
+                        } else if (item.type.equals("redirect")) {
+                            mContext.startActivity(new Intent(mContext, WebViewActivity.class)
+                                    .putExtra(WebViewActivity.KEY_TITLE, item.content.title)
+                                    .putExtra(WebViewActivity.KEY_URL, item.content.url));
+                        }
                     }
                 });
                 if (item.isRead) {

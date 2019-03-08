@@ -25,6 +25,7 @@ import com.pipnet.wallenews.bean.LoginInfo;
 import com.pipnet.wallenews.db.FeedsBeanDao;
 import com.pipnet.wallenews.http.service.NetRequest;
 import com.pipnet.wallenews.http.subscriber.BaseSubscriber;
+import com.pipnet.wallenews.module.WebViewActivity;
 import com.pipnet.wallenews.util.SPUtils;
 import com.pipnet.wallenews.util.ToastUtil;
 import com.pipnet.wallenews.widgets.CarRefreshHeader;
@@ -228,6 +229,10 @@ public class WaLiFragment extends LazyFragment implements OnRefreshListener, Bas
                     .putExtra("FEED_CURSOR", list.get(position).cursor));
         } else if (list.get(position).type.equals("video")) {
             startActivity(new Intent(getActivity(), FeedVideoDetailActivity.class).putExtra("FORWARD_CONTENT", list.get(position).content));
+        } else if (list.get(position).type.equals("redirect")) {
+            startActivity(new Intent(getActivity(), WebViewActivity.class)
+                    .putExtra(WebViewActivity.KEY_TITLE, list.get(position).content.title)
+                    .putExtra(WebViewActivity.KEY_URL, list.get(position).content.url));
         }
         list.get(position).isRead = true;
         adapter.notifyDataSetChanged();
