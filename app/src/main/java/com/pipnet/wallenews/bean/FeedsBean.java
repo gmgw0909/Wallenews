@@ -51,7 +51,7 @@ public class FeedsBean implements MultiItemEntity, Serializable {
     @Override
     public int getItemType() {
         if (!TextUtils.isEmpty(type)) {
-            if (type.equals("content")) {
+            if (type.equals("content")||type.equals("redirect")) {
                 return 0;
             } else if (type.equals("forward")) {
                 return 1;
