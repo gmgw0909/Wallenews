@@ -6,6 +6,7 @@ package com.pipnet.wallenews.http;
 
 public class Router {
 
-    public static final String BASE_URL = "http://www.mubbox.com/diting-web/";
+//    public static final String BASE_URL = "http://www.mubbox.com/diting-web/";
+    public static final String BASE_URL = "https://sec.walinews.com/diting-web/";
 
 }
